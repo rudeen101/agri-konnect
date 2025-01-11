@@ -1,0 +1,39 @@
+/********* details sidebar *********/
+.rightPart.sidebarContainer{
+    display: flex;
+    justify-content: end;
+ }
+ 
+ .rightPart.sidebarContainer .sidebar{
+    /* border: 1px solid #ccc; */
+    padding: 25px !important;
+    border-radius: 5px;
+    width: 90%;
+    height: max-content;
+    box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
+ }
+ .rightPart.sidebarContainer .sidebar .item{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    opacity: 0.9;
+ 
+     
+ }
+ .rightPart.sidebarContainer .sidebar .item .imgDiv svg{
+     font-size: 30px
+ }
+ .rightPart.sidebarContainer .sidebar .item .textDiv h5 {
+    font-size: 16px;
+    font-weight: 700
+ }
+ .rightPart.sidebarContainer .sidebar .item .textDiv p {
+    color: gray;
+    font-size: 16px;
+
+ }
+ 
+ 
+ .productDetails .part1, .productDetails .part1 .sliderContainer{
+     padding-left: 0px !important
+ }

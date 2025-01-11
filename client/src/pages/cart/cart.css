@@ -1,0 +1,67 @@
+
+.cartSection{
+    width: 100%;
+    height: auto;
+    padding: 35px 0px;
+}
+.cartSection .clearCart{
+    font-weight: 600;
+    font-size: 13px;
+}
+.cartSection .clearCart svg{
+    font-size: 20px !important;
+}
+
+.cartWrapper table thead th{
+    background: #f1f1f1;
+    overflow: hidden;
+}
+.cartWrapper table thead th:first-child{
+    border-top-left-radius: 15px;
+    border-bottom-left-radius: 15px;
+}
+.cartWrapper table thead th:last-child{
+    border-top-right-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+
+.cartWrapper table tbody td{
+    vertical-align: middle;
+}
+.cartWrapper table tbody td .img{
+    width: 100px;
+    padding: 5px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 5px; 
+    margin-right: 10px
+}
+.cartWrapper table tbody td .info svg{
+    font-size: 20px;
+}
+.cartWrapper table tbody .info a{
+    color: rgba(0,0,0,0.7);
+    font-size: 13px;
+}
+.cartWrapper table tbody .info a:hover{
+    text-decoration: none;
+}
+
+.cartWrapper table tbody td span{
+    font-weight: 600;
+    font-size: 15px;
+}
+.cartWrapper table tbody td span.text-g{
+    font-weight: bold
+}
+
+.checkoutBox{
+   padding-left: 7%;
+   padding-top: 20px;
+   
+}
+.checkoutBox .card button{
+    font-size: 15px !important;
+    font-weight: bold !important;  
+}
+

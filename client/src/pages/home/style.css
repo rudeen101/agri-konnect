@@ -1,0 +1,80 @@
+.homeProducts{
+    /* margin-bottom: 200px; */
+    /* padding-bottom: 70px; */
+}
+
+.homeProducts .container-fluid .wrapper{
+    margin-top: 30px;
+    overflow: hidden;
+    
+    /* display: flex; */
+    /* justify-content: space-between;
+    align-items: center; */
+}
+.homeProducts .container-fluid .wrapper .row{
+    padding: 15px 5px !important
+}
+.homeProducts .container-fluid .wrapper .productCardHeader{
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+    background-color: goldenrod;
+    color: white
+}
+.homeProducts .container-fluid .wrapper .productCardHeader h3{
+    font-size: 18px !important;
+    text-transform:capitalize;
+}
+
+.filterTab li{
+    margin-left: 10px;
+}
+.filterTab li a{
+    color: #000;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    position: relative;
+}
+.filterTab li:hover a{
+    color: #3bb77e !important;
+    transform: translateY(-10px);
+    font-weight: 700px;
+}
+
+
+.homeProducts .productRow{
+    display: flex;
+    padding-top: 20px;
+    /* justify-content: space-between; */
+    gap: 15px;
+    flex-wrap: wrap
+}
+
+.homeProducts .productRow .item{
+    width: 100%;
+    /* padding: 15px 15px; */
+}
+
+
+.homeProductsSection2 .productSlider .item{
+    padding: 0px 2px; 
+    padding-right: 10px !important
+}
+
+.slick-arrow.slick-prev {
+    left: 1% !important;
+    top: 41% !important;
+}
+.slick-arrow.slick-next {
+    right: 1% !important;
+    top: 41% !important;
+}
+
+.topSellerSection .top .col-md-3 .banner{
+    background-color: #ebfbeb;  
+    height: auto !important;
+    border-radius: 8px !important;
+    height: 320px !important;
+    margin-right: 20px !important
+}

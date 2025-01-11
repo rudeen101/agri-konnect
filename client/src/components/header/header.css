@@ -1,0 +1,316 @@
+header{
+    /* width: 100%; */
+    height: auto;
+    margin: auto;
+    padding: 10px 0px;
+    /* display: flex */
+   
+}
+.headerContainer{
+    transition: all 0.3s ease-in-out
+}
+.headerContainer .fixed{
+    position: fixed;
+    top: -100px;
+    left: 0px;
+    width: 100%;
+    z-index: 1000;
+    background-color: #fff;
+}
+.headerContainer{
+    position: sticky;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    z-index: 1000;
+    background: #fff
+}
+
+.logo{
+    width: 80%;
+}
+
+header .headerSearchContainer{
+    display: flex;
+    align-items: center
+}
+header .headerSearch{
+    width: 100%; 
+    /* height: 50px; */
+    border: 1px solid #bce3c9;
+    padding-left: 40px;
+    border-radius: 3px;
+    overflow: hidden;
+    height: 40px;
+    box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+}
+/* header .headerSearch .selectDropdownWrapper{
+    width: 25%;
+    font-size: 14px;
+    font-weight: 500;
+    position: relative;
+} */
+/* header .headerSearch .selectDropdownWrapper:after{
+    content: "";
+    width: 1px;
+    background-color: rgba(0,0,0,0.2);
+    height: 30px;
+    position: absolute;
+    top: 0px; 
+    right: 0px
+} */
+
+header .headerSearch .search{
+    width: 100%;
+    position: relative;
+} 
+
+header .headerSearch .search input{
+    width: 100%;
+    border: 0px;
+    outline: none !important;
+    font-size: 14px;
+    /* height: 30px; */
+}
+
+header .headerSearch .searchIconContainer{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #279a65;
+    height: 100%;
+    width: 100px;
+}
+header .headerSearch .searchIcon{
+    font-size: 25px !important;
+    color: #fff
+}
+
+.cursor{
+    cursor: pointer;
+}
+
+.postion-relative{
+    position: relative;
+}
+
+header .countyWrapper svg{
+    font-size: 20px
+}
+header .countyWrapper .selectDropdownWrapper{
+    width: 115px !important; 
+    padding-left: 5px; 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between;
+    border: 1px solid #ececec; 
+    border-radius: 3px;
+    /* -webkit-box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);  */
+    /* box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.05);  */
+    box-shadow: rgba(14, 63, 126, 0.04) 0px 0px 0px 1px, rgba(42, 51, 69, 0.04) 0px 1px 1px -0.5px, rgba(42, 51, 70, 0.04) 0px 3px 3px -1.5px, rgba(42, 51, 70, 0.04) 0px 6px 6px -3px, rgba(14, 63, 126, 0.04) 0px 12px 12px -6px, rgba(14, 63, 126, 0.04) 0px 24px 24px -12px;
+}
+.selectDropdownWrapper .openSelect {
+    display: block;
+    padding: 5px 5px !important;
+}
+header .countyWrapper .selectDropdownWrapper .openSelect{
+    width: 100%
+}
+
+header .countyWrapper .selectDropdownWrapper .selectDrop{
+    left: 0px !important
+}
+
+header .countyWrapper .openSelect{
+    color: #279a65 !important;
+    font-size: 15px !important;
+}
+
+.selectDropdownWrapper .openSelect .arrow {
+    position: absolute;
+    top: 9px;
+    right: 10px;
+    font-size: 20px !important;
+    /* margin-left: 2px !important */
+}
+.selectDropdownWrapper .icon {
+   
+    font-size: 19px !important;
+    /* margin-left: 2px !important */
+}
+
+header .headerTabs{
+    /* padding-left: 30px; */
+    display: flex;
+    justify-content: space-between;
+    gap: 5px
+}
+
+header .headerTabs li{
+    position: relative;
+    display: flex;
+    align-items: end;
+    margin-right: 18px !important;
+}
+
+header .headerTabs  span{
+    font-size: 13px;
+    cursor: pointer;
+}
+
+header .headerTabs  .actionsIcon{
+    font-size: 25px;
+    margin-right: 2px
+}
+/* header .headerTabs  .actionsIcon .text{
+    font-size: 10px;
+    color: red !important
+} */
+
+header .headerTabs li button .badge{
+    width: 17px; 
+    height: 17px; 
+    color: #fff;
+    font-size: 10px;
+    font-weight: 400px;
+    position: absolute;
+    top: -0px;
+    left: 25px
+}
+
+header .headerTabs li button{
+    color: #313133 !important
+}
+
+header .headerTabs li button.signup{
+    color: #fff !important;
+}
+
+header .headerTabs li button .iconText{
+    padding-top: 10px;
+    padding-left: 1px
+}
+
+.css-1xomo8h-MuiPaper-root-MuiPopover-paper-MuiMenu-paper {
+    /* top: 60px !important; */
+    padding: 15px 0px;
+}
+.css-1xomo8h-MuiPaper-root-MuiPopover-paper-MuiMenu-paper ul li {
+    font-size: 15px !important;
+    /* left: 970px !important */
+}
+
+
+.dropdownMenu{
+    position: absolute; 
+    top: 30px;
+    right: 0px;
+    width: 230px;
+    height: auto;
+    background-color: #fff;
+    box-shadow: 0 3px 6px   rgb(0 0 0/ 20%);
+    padding: 10px 0px;
+    z-index: 100
+}
+
+.dropdownMenu li{
+    width: 100% !important;
+    list-style: none;
+    margin: 0px !important
+}
+
+.dropdownMenu li button {
+    width: 100% !important;
+    text-align: left;
+    justify-content: flex-start !important;
+    color: rgba(0, 0, 0, 0.7) !important;
+    text-transform: capitalize !important;
+    font-size: 15px !important;
+    padding: 10px 15px !important;
+}
+
+.dropdownMenu li button .icon{
+    opacity: 0.7;
+    margin-right: 8px !important;
+}
+
+.dropdownMenu li button:hover{
+    background-color: #f1f1f1 !important;
+
+}
+
+.dropdownListItem {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+
+.dropdownListItem .cartDropdownContainer{
+    display: flex;
+    align-items: center;
+    padding: 0px 15px;
+    width: 100%
+}
+.dropdownListItem .cartListActionsWrapper{
+    padding: 0px 15px;
+    width: 100%
+}
+.dropdownListItem .cartDropdownContainer .imgDiv{
+    width: 30%;
+    background-color: #cecece;
+}
+.dropdownListItem .cartDropdownContainer .infoDiv{
+    width: 60% !important;
+    margin-left: 5px;
+}
+.dropdownListItem .infoDiv h5{
+    font-size: 15px;
+    color:#279a65;
+    margin: 0px
+}
+
+.dropdownListItem .cartDropdownContainer .infoDiv p{
+    font-size: 13px;
+    margin: 0px
+}
+
+.dropdownListItem .cancelCart {
+    position: absolute;
+    top: 0;
+    right: 15px
+}
+
+/* .cartDropdownContainer.actionsBtn{
+    margin-top: 15px
+} */
+
+.dropdownListItem .cartListActionsWrapper .viewCartBtn{
+    border: 1px solid #279a65 !important;
+    padding: 3px 5px !important;
+    display: flex !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+    margin-right: 20px
+}
+.dropdownListItem .cartListActionsWrapper .checkoutBtn{
+    background-color: #279a65;
+    color: white !important;
+    padding: 3px 5px !important;
+    display: flex !important;
+    justify-content: center !important;
+    font-size: 15px !important;
+
+}
+
+.dropdownListItem .lineDiv{
+  
+    height: 1px;
+    width: 100%;
+    background-color: #ccc;
+}
+
+
+
+
+
+

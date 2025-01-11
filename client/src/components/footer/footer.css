@@ -1,0 +1,189 @@
+.newsletterSection {
+    width: 100%;
+    height: auto;
+    padding: 15px 0px
+}
+.newsletterSection .box{
+    background-color: rgb(105, 195, 175);
+    width: 100%;
+    height: auto;
+    background-repeat: no-repeat;
+    background-size: cover;
+    padding: 50px 80px;
+    border-radius: 10px;
+    overflow: hidden;;
+}
+.newsletterSection .box .info{
+    width: 55%;
+    color: #fff
+
+}
+.newsletterSection .box .info h3{
+    font-size: 36px;
+    font-weight: 600;
+    line-height: 40px;
+}
+.newsletterSection .box .info p{
+    font-size: 20px;
+    opacity: 0.8;
+}
+.newsletterSection .box .img{
+    width: 45%;
+}
+.newsletterSection .box .img img{
+    position: relative !important;
+    top: 40px;
+    left: 80px;
+    width: 50%
+}
+.newsletterSection .box .newsletterBanner{
+    position: relative !important;
+    left: 0px !important;
+    bottom: inherit !important;
+}
+
+
+.footerContainer{
+    width: 100%;
+}
+.footerContainer .footerBoxes .row{
+   display: flex;
+   gap: 10px
+}
+.footerContainer .footerBoxes .box{
+    background-color: #fff;
+    padding: 10px 12px;
+    border-radius: 7px;
+}
+.footerContainer .footerBoxes .box .info{
+    padding-left: 10px;
+}
+.footerContainer .footerBoxes .box img{
+    position: relative;
+    transition: all .2s ease-in-out;
+    width: 30%
+}
+.footerContainer .footerBoxes .box h5{
+    font-size: 14px;
+    font-weight: 600;
+}
+.footerContainer .footerBoxes .box p{
+    margin-bottom: 0px;
+    font-size: 10px;
+    opacity: 0.8;
+}
+.footerContainer .footerBoxes .box:hover img{
+    transform: translateY(-5px);
+}
+
+
+footer p, footer a{
+    font-size: 14px;
+    margin-bottom: 0px;
+
+}
+footer p.address{
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    margin-bottom: 5px
+}
+
+footer{
+    margin-top: 50px;
+    padding: 10px 0px;
+    background: #37475a;
+    color: white
+}
+footer .part1 svg{
+    color: #3bb77e !important;
+    font-size: 17px
+}
+footer h4{
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 15px;
+    /* opacity: 0.8; */
+}
+footer .footer-list{
+   margin-top: 10px
+}
+footer .part2 ul li{
+    list-style: none;
+    margin-bottom: 10px;
+}
+footer .part2 ul li a{
+    color: #000;
+    /* opacity: 0.8; */
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+    text-decoration: none;
+
+}
+footer .part2 ul li a:hover{
+    color: #3bb77e !important;
+    /* opacity: 1; */
+    padding-left: 5px;
+}
+
+
+.phone svg{
+    font-size: 30px !important;
+    /* opacity: 0.8 !important; */
+}
+.phone .info{
+    padding: 0px 10px
+}
+.phone h3{
+    font-size: 16px !important;
+    line-height: 15px !important;
+    color: #3bb77e;
+}
+.phone p{
+    font-size: 13px !important;
+    /* opacity: 0.8; */
+}
+
+footer .lastSection{
+   padding: 20px 0px !important
+}
+
+footer .lastSection .part3 h5{
+    margin-bottom: 0px;
+    font-size: 16px;
+    padding-right: 8px
+    /* opacity: 0.8; */
+}
+footer .lastSection .part3 ul{
+    display: flex;
+    padding-left: 10px;
+    margin-bottom: 0px;
+}
+footer .lastSection .part3 ul li a{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 25px;
+    height: 25px;
+    background-color: #3bb77e;
+    border-radius: 50%;
+    transition: all .03s ease-in-out !important;
+}
+footer .lastSection .part3 ul li a svg{
+    color: #fff;
+    font-size: 14px
+}
+
+footer .lastSection ul li a:hover{
+    background-color: rgb(51, 51, 51);
+}
+
+.installAppContainer a img{
+    height: 30px 
+}
+.installAppContainer a img:hover{
+    cursor: pointer;
+}
+.paymentMethodContainer a img{
+    height: 60px
+}

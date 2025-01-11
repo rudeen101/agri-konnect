@@ -1,0 +1,46 @@
+.categories {
+    margin-top: 50px
+}
+
+.categoryRow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-column-gap: 20px;
+    grid-row-gap: 20px; 
+}
+
+.category{
+    background-color: white;
+    padding: 20px 20px
+}
+
+.categoryRow .category .heading{
+    font-size: 17px;
+    font-weight: 700;
+    color: #313133
+}
+
+.category .categoryItems {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-column-gap: 15px;
+    grid-row-gap: 20px;
+
+
+}
+.category .categoryItems .catItem {
+    /* width: 50%; */
+    /* background: red; */
+    /* padding: 30px */
+}
+.category .categoryItems img {
+    width: 100%
+}
+.category .categoryItems p {
+    font-size: 14px;
+    text-align: center;
+}
+.categoryRow .category .categoryLink a{
+    color: green !important;
+    margin-top: 15px
+}

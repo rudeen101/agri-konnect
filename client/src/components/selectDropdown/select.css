@@ -1,0 +1,10 @@
+.selectDropdownWrapper .openSelect{
+    display: block; padding: 10px 0px;
+}
+
+.selectDropdownWrapper .openSelect .arrow{
+    position: absolute;
+    top: 9px;
+    /* right: px;  */
+    font-size: 25px;
+}

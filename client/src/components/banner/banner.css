@@ -1,0 +1,41 @@
+.bannerSection{
+    /* padding: 24px 0px; */
+    margin-bottom: 50px
+}
+
+.bannerSection .row{
+    display: flex;
+    gap: 20px;
+}
+
+.bannerSection .row .col{
+padding: 0px
+}
+
+.bannerSection .banner{
+    overflow: hidden;
+    border-radius: 15px;
+    cursor: pointer;
+    height: 200px;
+    /* background: #eee6d1;; */
+    padding: 30px 30px !important
+}
+
+.bannerSection .banner .textContainer{
+    margin-right: 10px
+}
+.bannerSection .banner .textContainer h5{
+    font-size: 18px !important;
+}
+
+.bannerSection .banner img{
+    width: 100%;
+    /* height: 100%; */
+    object-fit: cover;
+    padding-top: 20px
+    /* flex: 0 0 40% */
+
+}
+.bannerSection .banner:hover img{
+    transform: scale(1.1);
+}
