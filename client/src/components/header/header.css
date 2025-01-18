@@ -85,6 +85,11 @@ header .headerSearch .searchIcon{
     font-size: 25px !important;
     color: #fff
 }
+header .headerSearch .loading{
+    width: 25px !important;
+    height: 25px !important;
+    color: #fff;
+}
 
 .cursor{
     cursor: pointer;

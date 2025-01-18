@@ -12,13 +12,14 @@ import NotFound from './pages/notFound/notFound';
 import Footer from './components/footer/footer';
 import ProductDetails from './pages/productDetails/productDetails';
 import Cart from './pages/cart/cart';
+import WishList from './pages/wishList/wishList'
 import LoadingBar from 'react-top-loading-bar';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import SearchPage from './pages/search/search';
 
 
-
-import { fetchDataFromApi } from './utils/api';
+import { fetchDataFromApi, postData } from './utils/api';
 
 const MyContext = createContext();
 
@@ -29,34 +30,16 @@ const App = () => {
 	const [progress, setProgress] = useState(0);
 	const [cartItems, setCartItems] = useState([]);
 	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
-	const [isLogin, setIsLogin] = useState();
-	const [isOpenFilters, setIsOpenFilters] = useState(false)
+	const [isLogin, setIsLogin] = useState(false);
+	const [isOpenFilters, setIsOpenFilters] = useState()
 	const [cartTotalAmount, setCartTotalAmount] = useState();
 	const [selectedCounty, setSelectedCounty] = useState("");
 	const [cartData, setCartData] = useState("");
 	const [userData, setUserData] = useState("");
-
-	// const [userData, setUserData] = useState({
-	// 	name: "",
-	// 	email: "",
-	// 	userId: ""
-	// });
-
-	useEffect(() => {
-		const token = localStorage.getItem("token");
-
-		if (token !== "" && token !== undefined && token !== null) {
-			setIsLogin(true);
-
-			const userData = JSON.parse(localStorage.getItem("user"));
-
-			setUserData(userData);
-		}else {
-			setIsLogin(false);
-		}
-	}, [isLogin]);
-
-
+	const [headerFooterDisplay, setHeaderFooterDisplay] = useState(true);
+	const [addingToCart, setAddingToCart] = useState(false);
+	const [wishListData, setWishListData] = useState([]);
+	const [searchedItems, setSearchedItems] = useState([]);
 	const [alertBox, setAlertBox] = useState({
 		open: false,
 		error: false,
@@ -82,6 +65,30 @@ const App = () => {
 		"Sinoe"
 	])
 
+	// const [userData, setUserData] = useState({
+	// 	name: "",
+	// 	email: "",
+	// 	userId: ""
+	// });
+
+	useEffect(() => {
+		const token = localStorage.getItem("token");
+
+		if (token !== "" && token !== undefined && token !== null) {
+
+			setIsLogin(true);
+
+			const userData = JSON.parse(localStorage.getItem("user"));
+
+			setUserData(userData);
+		}else {
+			setIsLogin(false);
+		}
+	}, [isLogin]);
+
+
+
+
 	useEffect(() => {
 		const handleResize = () =>{
 			setWindowWidth(window.innerWidth);
@@ -104,32 +111,33 @@ const App = () => {
 	}, []);
 
 
-	useEffect(() => {
-		const user = JSON.parse(localStorage.getItem("user"));
+	// useEffect(() => {
+	// 	const user = JSON.parse(localStorage.getItem("user"));
 
-		if (
-			user?.userId !== "" &&
-			user?.userId !== undefined &&
-			user?.userId !== null
+	// 	if (
+	// 		user?.userId !== "" &&
+	// 		user?.userId !== undefined &&
+	// 		user?.userId !== null
 
-		) {
-			fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-				setCartData(res)			
-			})
-		}
-	}, [isLogin]);
+	// 	) {
+	// 		fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
+	// 			setCartData(res)			
+	// 		})
+	// 	}
+	// }, [isLogin]);
 
 
 	useEffect(() => {
 		window.scrollTo(0,0);
 
 		fetchCategory();
+		getCartData()
+		getWishListData()
 	}, []);
 
 	//fetch and set cateory and sub category
 	const fetchCategory = () => {
 		fetchDataFromApi('/api/category').then((res) => {
-			console.log("cat", res);
 			setProgress(30);
 			setCategoryData(res);
 
@@ -149,10 +157,68 @@ const App = () => {
 
 	//fetch and set cart data
 	const getCartData = () => {
-		const user = JSON.parse(localstorae.getItem(user));
+		const user = JSON.parse(localStorage.getItem("user"));
+	
 		fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
 			setCartData(res);
 		})
+	}
+
+	const getWishListData = () => {
+		fetchDataFromApi(`/api/wishList?userId=${userData.userId}`).then((res) => {
+			if (res?.length !== 0){
+				setWishListData(res);
+			}
+		})
+	}
+
+	const addToCart = (data) => {
+
+		if (isLogin !== false) {
+			setAddingToCart(true)
+			postData(`/api/cart/add`, data).then((res) => {
+				if (res.status !== false) {
+					setAlertBox({
+						open: true,
+						error: false,
+						msg: "Item added to cart"
+					});
+
+					setTimeout(() => {
+						setAddingToCart(false)
+					}, 1000);
+
+					getCartData()
+				}else {
+					setAlertBox({
+						open: true,
+						error: true,
+						msg: res.msg
+					});
+		
+					setAddingToCart(false)
+		
+				}
+			})
+		}else {
+			setAlertBox({
+				open: true,
+				error: true,
+				msg: "Please login to add to cart!"
+			});
+
+		}
+	
+	}
+	
+	const signIn = () => {
+		const userLogin = localStorage.getItem("isLogin");
+		setIsLogin(userLogin);
+	}
+
+	const signout = () => {
+		localStorage.removeItem("isLogin");
+		setIsLogin(false);
 	}
 
 	const handleClose = (event, reason) => {
@@ -179,7 +245,22 @@ const App = () => {
 		alertBox,
 		setAlertBox,
 		userData,
-		setUserData
+		setUserData,
+		headerFooterDisplay,
+		setHeaderFooterDisplay,
+		addToCart,
+		cartData,
+		setCartData,
+		addingToCart,
+		setAddingToCart,
+		getCartData,
+		wishListData,
+		setWishListData,
+		getWishListData,
+		searchedItems,
+		setSearchedItems
+		
+
 	}
 
 	return (
@@ -204,18 +285,28 @@ const App = () => {
 					</Alert>
 				</Snackbar>
 
-				<Header />
+				{
+					headerFooterDisplay && <Header />
+				}
 				<Routes>
 					<Route exact={true} path="/" element={<Home />} />
 					<Route exact={true} path="/product/category/:id" element={<ProductListing />} />
 					<Route exact={true} path="/product/subCat/:id" element={<ProductListing />} />
+					<Route exact={true} path="/product/:id" element={<ProductDetails />} />
 					<Route exact={true} path="*" element={<NotFound />} />
-					<Route exact={true} path="/product-details" element={<ProductDetails />} />
+					{/* <Route exact={true} path="/product-details" element={<ProductDetails />} /> */}
 					<Route exact={true} path="/cart" element={<Cart />} />
+					<Route exact={true} path="/wishList" element={<WishList />} />
 					<Route exact={true} path="/login" element={<Login />} />
 					<Route exact={true} path="/signup" element={<Signup />} />
+
+					<Route exact={true} path="/search" element={<SearchPage />} />
 				</Routes>
-				<Footer />
+
+				{
+					headerFooterDisplay && <Footer />
+				}
+				
 			</MyContext.Provider>
 		</BrowserRouter>
 	)

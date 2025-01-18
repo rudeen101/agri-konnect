@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useRef } from "react";
 import "./productDetails.css";
-import { Link } from "react-router-dom";
+import{ Link, useParams } from "react-router-dom";
 import { Button, Rating } from "@mui/material";
 import InnerImageZoom from 'react-inner-image-zoom';
 import 'react-inner-image-zoom/lib/InnerImageZoom/styles.css';
@@ -24,6 +24,11 @@ import LocalShippingOutlinedIcon from '@mui/icons-material/LocalShippingOutlined
 import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
 import CreditScoreOutlinedIcon from '@mui/icons-material/CreditScoreOutlined';
 import VerticallyCenteredModal from "../../components/models/verticallyCenteredModel";
+import { MyContext } from "../../App";
+import { fetchDataFromApi, postData } from "../../utils/api";
+
+import { MdFavorite } from "react-icons/md"; 
+import { MdFavoriteBorder } from "react-icons/md";
 
 const ProductDetails = () =>{
 
@@ -31,13 +36,34 @@ const ProductDetails = () =>{
     const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
     const [smallImageSize, setSmallImageSize] = useState([150, 150]);
     const [activeStatus, setActiveStatus] = useState(0);
-    const [addToCart, setAddToCart] = useState(0);
+    // const [addToCart, setAddToCart] = useState(0);
     const [minusFromCart, setMinusFromCart] = useState(0);
     const [activeTabs, setActiveTabs] = useState(2)
     const [modalShow, setModalShow] = React.useState(false);
+    const [currentProduct, setCurrentProduct] = React.useState([]);
+    const [selectedProductData, setSelectedProductData] = React.useState([]);
+    const [productQuantity, setProductQuantity] = React.useState();
+    const [cartFields, setCartFields] = React.useState({});
+    const [reviewsData, setReviewsData] = React.useState([]);
+    const [isLoading, setIsLoading] = React.useState(false);
+    const [addedToWishList, setAddedToWishList] = React.useState(false);
+    
+    const [reviews, setReviews] = useState({
+        review: "",
+        customerRating: 1,
+        customerId: "",
+        customerName: "",
+        productId: "",
+    })
+
+
 
     
+    const {id} = useParams();
+    const context = useContext(MyContext);
     const zoomSlider = useRef();
+    const user = JSON.parse(localStorage.getItem("user"));
+
 
     const settings ={
         dots: false,
@@ -67,6 +93,87 @@ const ProductDetails = () =>{
     const isActive = (status) => {
         setActiveStatus(status)
     }
+
+    const quantity = (value) => {
+        setProductQuantity(value)
+    }
+
+    const selectedItem = () => {}
+
+    const addToCart = () => {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        cartFields.userId = user?.userId;
+        cartFields.productId = currentProduct?._id;
+        cartFields.price = currentProduct?.price;
+        cartFields.productName = currentProduct?.name;
+        cartFields.rating = currentProduct?.rating;
+        cartFields.price = currentProduct?.price; 
+        cartFields.subTotal = parseInt(currentProduct?.price * productQuantity); 
+        cartFields.countInStock = currentProduct?.countInStock; 
+        cartFields.image = currentProduct?.images[0];
+        cartFields.quantity = productQuantity;
+
+        context.addToCart(cartFields);
+    }
+
+    useEffect(() => {
+        window.scrollTo(0,0);
+            fetchDataFromApi(`/api/product/${id}`).then((res) =>{
+            setCurrentProduct(res)
+
+            fetchDataFromApi(`/api/product?subCatId=${res?.subCatId}`).then((res) =>{
+                const filteredData = res?.products.filter(item => item.id !==  id);
+                setSelectedProductData(filteredData);
+            });   
+        });
+
+        getAllReviews(id);
+        checkWishList(id)
+
+    }, [id]);
+
+    const getAllReviews = (productId) => {
+        fetchDataFromApi(`/api/productReviews?productId=${productId}`).then((res) => {
+            setReviewsData(res.data);
+        })
+    }
+
+    const addReview = (e) => {
+        e.preventDefault();
+
+        setIsLoading(true)
+        if (context.isLogin === true) {
+            if (reviews?.review === "") {
+                context?.setAlertBox({
+                    open: true,
+                    error: true,
+                    msg: "You must enter review!"
+                });
+                return false;
+            } else{
+
+                reviews.customerId = user?.userId;
+                reviews.customerName = user?.username;
+                reviews.productId = id;
+
+                postData(`/api/productReviews/add`, reviews).then((res) => {
+                    if (res) {
+                        setIsLoading(false)
+                        getAllReviews(id);
+                    }
+                })
+            }
+        } else{
+            context?.setAlertBox({
+                open: true,
+                error: true,
+                msg: "You must login first!"
+            });
+        }
+    }
+
+
 
     // const plus = () => {
     //     setAddToCart(addToCart++);
@@ -98,59 +205,45 @@ const ProductDetails = () =>{
                                 </div>
 
                                 <Slider {...settings} className="zoomSlider" ref={zoomSlider}>
-                                    <div className="item">
-                                        <img src={food} alt="" className="w-100" onClick={()=>goto(food, 0)} />
-                                    </div>
-                                    <div className="item">
-                                        <img src={food2} alt="" className="w-100" onClick={()=>goto(food2, 1)} />
-                                    </div>
-                                    <div className="item">
-                                        <img src={food} alt="" className="w-100" onClick={()=>goto(food, 2)} />
-                                    </div>
-                                    <div className="item">
-                                        <img src={food2} alt="" className="w-100" onClick={()=>goto(food2, 3)} />
-                                    </div>
-                                    <div className="item">
-                                        <img src={food} alt="" className="w-100" onClick={()=>goto(food, 4)} />
-                                    </div>
-                                    <div className="item">
-                                        <img src={food2} alt="" className="w-100" onClick={()=>goto(food2, 4)} />
-                                    </div>
+                                    {
+                                        currentProduct?.images?.length > 0 &&
+                                        currentProduct?.images?.map((image, index) => {
+                                            <div className="item" key={index}>
+                                                <img src={image} alt="" className="w-100" onClick={()=>goto(index)} />
+                                            </div>
+                                        })
+                                       
+                                    }
                                 </Slider>
-
                             </div>
 
                             <div className="col-md-6 productInfo">
-                                <h1>Seeds of Change Organic Quinoa, White Fresh Cabbage</h1>
+                                <h1>{currentProduct?.name}</h1>
                                 <div className="d-flex align-items-center ratingContainer">
-                                    <Rating className="rating" name="half-rating-read" defaultValue={3.5} precission={0.5} readOnly />
-                                    <div className="reviewNumber">(32 reviews)</div>
+                                    <Rating className="rating" name="half-rating-read" value={parseInt(currentProduct?.rating)} precission={0.4} readOnly />
+                                    <div className="reviewNumber">({reviewsData?.length !== 0 && reviewsData.length} reviews)</div>
                                 </div>
 
                                 <div className="priceContainer d-flex align-items-center mb-3">
-                                    <span className="text-g priceLarge">$38.00</span>
+                                    <span className="text-g priceLarge mr-3">USD {currentProduct?.price}</span>
+
+                                    <div className="ml-3 d-flex flex-column">
+                                        <span className="discount">{currentProduct?.discount}% off</span>
+                                        <span className="text-light oldPrice">USD {currentProduct?.oldPrice}</span>
+                                    </div>
                                
                                 </div>
 
                                 <p>
-                                    Lorem ipsum dolocilis odit, unde sint consequatur officiis dolore molestiae soluta voluptatem assumenda quibusdam facere? Dolor, asperiores dicta. Omnis, nostrum nesciunt...  
+                                    {currentProduct?.description}
                                     <span className="readMore"><a href="#">Read more</a></span>
                                 </p>
 
                                 <div className="productSize d-flex align-items-center">
-                                    <span className="name">Size / Weight: </span><span className="size">50kg</span>
+                                    <span className="name">Size / Weight: </span><span className="size">{currentProduct?.productWeight}</span>
                                 </div>
 
-                                <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
-                                    <div>
-                                        <QuantityBox value={0} />
-                                    </div>
-
-                                    <Button className="btn-g btn-lg addToCartBtn"><ShoppingCartOutlinedIcon />Add to Cart</Button>
-                                    <Button className=" btn-lg addToCartBtn ml-3 btn-border move"><FavoriteBorderOutlinedIcon /></Button>
-                                    <Button className="btn-lg addToCart ml-3 btn-border move"><ShareOutlinedIcon /></Button>
-                                </div>
-
+                                
                                 <div className="additionalInfo">
                                     <div className="col1">
                                         <ul>
@@ -161,12 +254,40 @@ const ProductDetails = () =>{
                                     </div>
                                     <div className="col2">
                                         <ul>
-                                            <li>Category: <span className="value">Fruits</span></li>
+                                            <li>Category: <span className="value">{currentProduct?.catName}</span></li>
                                             <li>Tags: <span className="value">cabbage, white, food</span></li>
-                                            <li>In stock: <span className="value">50 pieces</span></li>
+                                            <li>In stock: <span className="value"><span>{currentProduct?.countInStock}</span> <span>{currentProduct?.packagingType}</span></span></li>
                                         </ul>
                                     </div>
                                 </div>
+
+                                <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
+                                    <div>
+                                          <QuantityBox 
+                                                value={1}
+                                                item={currentProduct} 
+                                                selectedItem={selectedItem}
+                                                quantity={quantity}
+                                            />
+                                    </div>
+                                 
+                                    <Button className=" btn-lg addToCartBtn ml-3 btn-border move" onClick={() => (addToCart())}>
+                                        <FavoriteBorderOutlinedIcon />
+                                        {
+                                            context.addingToCart === true ? "adding..." : "Add to Cart"
+                                        }
+                                    </Button>
+                                    <Button className="btn-lg addToCart ml-3 btn-border move"><ShareOutlinedIcon /></Button>
+                                    <Button className="btn-lg addToCart ml-3 btn-border move">
+                                        <a href="#" className="cursor" onClick={() => addToWishList(productData)}> 
+                                            {
+                                                addedToWishList === true ? <MdFavorite/> : <MdFavoriteBorder />
+
+                                            }
+                                        </a>
+                                    </Button>
+                                </div>
+
                             </div>
                         </div>
 
@@ -181,7 +302,7 @@ const ProductDetails = () =>{
                                             <Button className={`${activeTabs === 1 && 'active'}`} onClick={()=> setActiveTabs(1)}>Additional info</Button>
                                         </li>
                                         <li className="list-inline-item">
-                                            <Button className={`${activeTabs === 2 && 'active'}`} onClick={()=> setActiveTabs(2)}>Reviews</Button>
+                                            <Button className={`${activeTabs === 2 && 'active'}`} onClick={()=> setActiveTabs(2)}>Reviews ({reviewsData?.length !== 0 && reviewsData.length})</Button>
                                         </li>
                                         <li className="list-inline-item">
                                             <Button className={`${activeTabs === 3 && 'active'}`} onClick={()=> setActiveTabs(3)}>Business</Button>
@@ -269,38 +390,62 @@ const ProductDetails = () =>{
                                                 <h3>Customers questions & answers</h3>
                                                 <br />
 
-                                                <div className="card p-3 reviewsCard flex-row w-100">
-                                                    <div className="image text-center">
-                                                        <div className="rounded-circle">
-                                                            <img src={user} alt="" />
-                                                        </div>
-                                                        <span className="text-g d-block font-weight-bold">
-                                                            John Doe
-                                                        </span>
-                                                    </div>
-
-                                                    <div className="info pl-5">
-                                                        <div className="d-flex align-items-center justify-content-between mb-2">
-                                                            <h5 className="">December 4, 2024 at 1:30 pm</h5>
-
-                                                            <div className="ml-auto">
-                                                                <Rating name="half-rating-read" defaultValue={3.5} precission={0.5} readOnly />
-                                                            </div>
-                                                        </div>
-                                                        <p>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Perspiciatis deserunt fugiat, aliquid consectetur iste facere laboriosam tempore, aperiam itaque tenetur ducimus beatae totam atque amet! Minus tempora tempore sequi a?</p>
-                                                    </div>
+                                                <div className="reviewsScroll">
+                                                    {
+                                                        reviewsData?.length !== 0 && reviewsData?.map((review, index) => {
+                                                            return(
+                                                                <div className="card p-3 reviewsCard flex-row w-100">
+                                                                    <div className=" left-container text-center">
+                                                                        <div className="imageBox">
+                                                                            <div className="rounded-circle">
+                                                                                <span className="initial">RZ</span>
+                                                                            </div> 
+                                                                        </div>
+                                                                    
+                                                                        <span className="text-g d-block font-weight-bold">
+                                                                            {review?.customerName}
+                                                                        </span>
+                                                                    </div>
+                
+                                                                    <div className="info rightContainer">
+                                                                        <div className="d-flex align-items-center justify-content-between mb-2">
+                                                                            <h5 className="">{review.dateCreated?.split("T")[0]}</h5>
+                
+                                                                            <div className="ml-auto">
+                                                                                <Rating name="half-rating-read" value={review.customerRating} precission={0.5} readOnly />
+                                                                            </div>
+                                                                        </div>
+                                                                        <p>{review?.review}</p>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        })
+                                                    }
                                                 </div>
+                                              
+                                      
 
                                                 <br /> <br />
 
-                                                <form className="reviewForm">
+                                                <form className="reviewForm" onSubmit={addReview}>
                                                     <h4>Add a review</h4>
 
                                                     <div className="form-group">
-                                                        <textarea name="" className="form-control" placeholder="write a review"></textarea>
+                                                        <textarea 
+                                                            name="review" 
+                                                            className="form-control" 
+                                                            placeholder="write a review"
+                                                            onChange={(e) => {
+                                                                setReviews(() => ({
+                                                                    ...reviews,
+                                                                    [e.target.name]: e.target.value
+                                                    
+                                                                }));
+                                                            }}
+                                                        />
                                                     </div>
 
-                                                    <br />
+                                                    {/* <br />
 
                                                     <div className="row">
                                                         <div className="col-md-6">
@@ -320,12 +465,26 @@ const ProductDetails = () =>{
 
                                                     <div className="form-group">
                                                         <input type="text" className="form-control" placeholder="website"/>
-                                                    </div>
+                                                    </div> */}
 
+                                                    <Rating 
+                                                        name="customerRating" 
+                                                        className="mt-3 mb-2" 
+                                                        value={reviews?.customerRating} 
+                                                        precission={0.5}
+                                                        onChange={(e) => {
+                                                            setReviews(() => ({
+                                                                ...reviews,
+                                                                [e.target.name]: e.target.value
+                                                            }));
+                                                        }}
+                                                    />
                                                     <br />
+                                                    <br/>
 
                                                     <div className="form-group">
-                                                        <Button className="btn-g bgn-lg">Submit Review</Button>
+                                                       
+                                                        <Button type="submit" className="btn-g bgn-lg p-1">{isLoading === true ? "Adding Review" : "Submit Review"}</Button>
                                                     </div>
                                                 </form>
                                             </div>
@@ -448,36 +607,22 @@ const ProductDetails = () =>{
                 </div>
             </div>
 
-
-
             <div className="container-fluid relatedProducts pt-5 pb-4">
                 <h4>Related products</h4>
                 <br />
                 <Slider {...relatedProductSlider} className="productSlider" >
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
-                    <div className="item">
-                        <ProductCard tag="new" />
-                    </div>
+                    {
+                        selectedProductData?.length > 0 &&
+                        selectedProductData?.map((product, index) => {
+                            return (
+                                <div className="item" key={index}>
+                                    <div className="item">
+                                        <ProductCard data={product} />
+                                    </div>
+                                </div>
+                            )
+                        })
+                    }
                 </Slider>
             </div>
         </div>

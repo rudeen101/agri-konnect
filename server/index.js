@@ -21,12 +21,24 @@ const imageUploadRoutes = require("./routes/imageUpload");
 // const prouductSizeRoutes = require('./routes/productSize.js')
 const productRoutes = require('./routes/product.js');
 const userRoutes = require("./routes/users.js");
+const homeSliderBannerRoutes = require("./routes/homeSliderBanner.js");
+const cartRoutes = require("./routes/cart.js");
+const productReviewsRoutes = require("./routes/productReviews.js");
+const bannerRoutes = require("./routes/banner.js");
+const wishListRoutes = require("./routes/wishList.js");
+const searchRoutes = require("./routes/search.js");
 
 app.use("/upoads", express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
 app.use(`/api/imageUpload`, imageUploadRoutes);
 app.use(`/api/product`, productRoutes);
 app.use(`/api/user`, userRoutes);
+app.use(`/api/homeSliderBanner`, homeSliderBannerRoutes);
+app.use(`/api/cart`, cartRoutes);
+app.use(`/api/productReviews`, productReviewsRoutes);
+app.use(`/api/banner`, bannerRoutes);
+app.use(`/api/wishList`, wishListRoutes);
+app.use(`/api/search`, searchRoutes);
 // app.use(`/api/productWeight`, prouductWeightRoutes);
 // app.use(`/api/productSize`, prouductSizeRoutes);
 

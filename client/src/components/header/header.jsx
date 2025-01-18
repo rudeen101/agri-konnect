@@ -1,5 +1,5 @@
 import React from "react";
-import { useState, useContext } from "react";
+import { useState, useContext, useRef, useEffect } from "react";
 import "../header/header.css";
 import Logo from '../../assets/images/logo.png';
 // import Button from 'react-bootstrap/Button';
@@ -13,14 +13,14 @@ import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
 import { Button } from "@mui/material";
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import Navbar from "../header/nav/nav.jsx";
-import { useRef } from "react";
-import { useEffect } from "react";
 import food from "../../assets/images/food.jpg"
 import { fetchDataFromApi } from "../../utils/api.js";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { FaRegCircleUser } from "react-icons/fa6";
 import MenuDropdown from "../menuDropdown/menuDropdown.jsx";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 
 import MenuItem from "@mui/material/MenuItem";
@@ -68,9 +68,12 @@ const Header =  ()=>{
     const [isOpenCartDropdown, setIsOpenCartDropdown] = useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [anchorElHelp, setAnchorElHelp] = React.useState(null);
+    const [isLoading, setIsLoading] = useState(false);
+    const [searchFields, setSearchFields] = useState("");
 
     const context = useContext(MyContext);
     const history = useNavigate();
+    const searchInput = useRef();
 
     const handleClose = () => {
         setAnchorEl(null);
@@ -94,6 +97,24 @@ const Header =  ()=>{
         localStorage.removeItem("user");
         localStorage.removeItem("token");
         history("/");
+    }
+
+    const searchProducts = (e) => {
+        alert(searchInput.current.value)
+        setSearchFields(searchInput.current.value)
+
+        if (searchInput.current.value !== "") {
+            setIsLoading(true);
+            fetchDataFromApi(`/api/search?q=${searchInput.current.value}`).then((res) => {
+                context.setSearchedItems(res);
+                setTimeout(() => {
+                    history("/search");
+                    setIsLoading(false);
+                    searchInput.current.value = "";
+                }, 2000);
+                setIsLoading(false);
+            })
+        }
     }
 
     useEffect(()=>{
@@ -126,12 +147,21 @@ const Header =  ()=>{
                                 <div className="headerSearch d-flex align-items-center">
                                     {/* <Select data={categories} placeholder={"All Categories"} icon={false}/> */}
                                     <div className="search" >
-                                        <input type="text" placeholder="Search for product,  brand,  category" />
+                                        <input type="text"  placeholder="Search for product,  brand,  category" ref={searchInput} />
                                         
                                     </div>
-                                    <div className="searchIconContainer">
-                                            <SearchIcon className="searchIcon cursor"/>
+                                    {
+                                        isLoading === true ? 
+                                        <div className="searchIconContainer">
+                                            <CircularProgress className="loading"/> 
+                                        </div> 
+                                        :
+                                        <div className="searchIconContainer">
+                                            <SearchIcon className="searchIcon cursor" onClick={searchProducts} />
                                         </div>
+
+                                    }
+                                   
                                 </div>
                             </div>
 
@@ -179,14 +209,18 @@ const Header =  ()=>{
                                                 className=" mr-3 res-hide"
                                                 aria-controls="simple-menu"
                                                 aria-haspopup="true"
-                                              >   
-                                                <ShoppingCartOutlinedIcon className="actionsIcon" /> 
-                                                <span className="badge bg-success rounded-circle">5</span>
-                                                <div className="d-flex align-items-end">
-                                                <span className="iconText" onClick={() => setIsOpenCartDropdown(!isOpenCartDropdown)}>Cart</span>
+                                                >   
+                                                <Link to={'/cart'}>
+                                                    <ShoppingCartOutlinedIcon className="actionsIcon" /> 
+                                                    <span className="badge bg-success rounded-circle">{context.cartData?.data?.length}</span>
+                                                    
+                                                    <div className="d-flex align-items-end">
+                                                        <span className="iconText" onClick={() => setIsOpenCartDropdown(!isOpenCartDropdown)}>Cart</span>
+                                                    </div>
+                                                </Link>
+                                            </Button> 
 
-                                                </div>
-                                                </Button>
+                                              
                                         </li>
 
                                         <li className="list-inline-item">
@@ -210,6 +244,9 @@ const Header =  ()=>{
                                                 open={Boolean(anchorEl)}>
                                                 <MenuItem onClick={handleClose}>
                                                     My Account
+                                                </MenuItem>
+                                                <MenuItem onClick={handleClose}>
+                                                    <Link to={"/wishList"}>WishList</Link>
                                                 </MenuItem>
                                                 <MenuItem onClick={handleClose}>
                                                     Settings

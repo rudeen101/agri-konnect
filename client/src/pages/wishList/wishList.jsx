@@ -1,9 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
-import "./cart.css";
+import "./wishList.css";
 import { Link, useNavigate } from "react-router-dom";
 import { Button, Rating } from "@mui/material";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import emptyCart from "../../assets/images/cart-icon.png";
+import wishListImg from "../../assets/images/wishlist2.png";
 import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import QuantityBox from "../../components/quantityBox/quantityBox";
@@ -11,7 +11,7 @@ import { MyContext } from "../../App";
 import { deleteData, fetchDataFromApi, editData } from "../../utils/api";
 import { FaHome } from "react-icons/fa";
 
-const Cart = () => {
+const WishList = () => {
     const [cartData, setCartData] = useState([]);
     const [productQuantity, setProductQuantity] = useState();
     const [changeQuantity, setChangeQuantity] = useState(0);
@@ -19,6 +19,7 @@ const Cart = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [isLogin, setIsLogin] = useState();
     const [user, setUser] = useState();
+    const [wishListData, setWishListData] = useState([]);
 
     const context = useContext(MyContext);
     const history = useNavigate();
@@ -29,11 +30,10 @@ const Cart = () => {
 
 		if (token !== "" && token !== undefined && token !== null) {
             setIsLogin(true);
+            setWishListData(context.wishListData);
         } else{
             history("/login");
         }
-
-        getCartData();
 
     },[]);
 
@@ -41,69 +41,23 @@ const Cart = () => {
 
     })
 
-    const getCartData = () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-    
-        fetchDataFromApi(`/api/cart?userId=${user.userId}`).then((res) => {
-            setCartData(res);
-            setUser(user)
-        });
-    }
-
-    const quantity = (value) => {
-        setProductQuantity(value)
-        setChangeQuantity(value)
-    }
-
-    const selectedItem = (item, productQuantity) => {
-     
-        if(changeQuantity !== 0){
-            setIsLoading(true);
-
-            let user_id = user?.userId;
-
-            console.log("item", );
-
-            cartFields.userId = user_id;
-            cartFields.productId = item?._id;
-            cartFields.price = item?.price;
-            cartFields.productName = item?.name;
-            cartFields.rating = item?.rating;
-            cartFields.price = item?.price; 
-            cartFields.subTotal = parseInt(item?.price * productQuantity); 
-            cartFields.countInStock = item?.countInStock; 
-            cartFields.image = item?.image;
-            cartFields.quantity = productQuantity;
-
-            // return;
-
-            editData(`/api/cart/${item._id}`, cartFields).then((res) => {
-                setTimeout(() => {
-                    setIsLoading(false);
-    
-                    const user = JSON.parse(localStorage.getItem("user"));
-
-                    fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-                        setCartData(res);
-                    })
-                }, 1000);
-            });
-        }
-    }
-
     const removeItem = (id) => {
         setIsLoading(true);
 
-        deleteData(`/api/cart/${id}`).then((res) => {
+        deleteData(`/api/wishList/${id}`).then((res) => {
             context.setAlertBox({
                 open: true,
                 error: false,
                 msg: "Item deleted successfully!"
             })
+
+            setIsLoading(false);
+            fetchDataFromApi(`/api/wishList?userId=${context?.userData.userId}`).then((res) => {
+                    context?.setWishListData(res);
+            });
         })
 
-        setIsLoading(false);
-        getCartData()
+     
 
     }
 
@@ -129,17 +83,17 @@ const Cart = () => {
             <section className="cartSection mb-5">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-md-8">
+                        <div className="listWrapper">
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <div className="left">
-                                    <h4 className="hd mb-0">Your Cart</h4>
-                                    <p><span className="text-g"><b>{cartData?.data?.length}</b></span> product(s) in your cart</p>
+                                <p>You have<span className="text-g"><b>{context.wishListData?.data?.length}</b></span> item(s) in your wishlist</p>
+                                    <h4 className="hd mb-0">Your Wishlist</h4>
                                 </div>
 
                                 {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
                             </div>
                             {
-                                cartData?.data?.length !== 0 ? (
+                                context.wishListData?.data?.length !== 0 ? (
                                     <div className="cartWrapper">
                                         <div className="table-responsive">
                                             <table className="table">
@@ -147,19 +101,17 @@ const Cart = () => {
                                                     
                                                     <tr>
                                                         <th>Product</th>
-                                                        <th>Unit Price</th>
-                                                        <th>Quantity</th>
-                                                        <th>Subtotal</th>
+                                                        <th>Price</th>
                                                         <th>Remove</th>
                                                     </tr>
                                                 </thead>
         
                                                 <tbody>
                                                     {
-                                                        cartData?.data?.length !== 0 && cartData?.data?.map((item, index) => {
+                                                        wishListData?.data?.length !== 0 && wishListData?.data?.map((item, index) => {
                                                             return(
                                                                 <tr key={index}>
-                                                                    <td>
+                                                                    <td width="70%">
                                                                         <div className="d-flex align-items-center">
                                                                             <div className="img">
                                                                                 <Link to={`/product/${item.productId}`}>
@@ -169,7 +121,7 @@ const Cart = () => {
                     
                                                                             <div className="info pl-4">
                                                                                 <Link to={`/product/${item.productId}`}>
-                                                                                    <h6>{item?.productName?.substr(0,50) + "..."}</h6>
+                                                                                    <h6>{item?.productName?.substr(0,100) + "..."}</h6>
                                                                                 </Link>
                                                                                 <div className="d-flex justify-items-center">
                                                                                     <Rating name="half-rating-read" value={parseFloat(item?.rating)} precission={0.5} readOnly />
@@ -180,23 +132,11 @@ const Cart = () => {
                                                                         </div>
                                                                     </td>
                     
-                                                                    <td>  
+                                                                    <td width="20%">  
                                                                         <span className="">{item.price}</span>
                                                                     </td>
-                                                                    <td>
-                                                                        <QuantityBox 
-                                                                            value={item?.quantity}
-                                                                            item={item} 
-                                                                            selectedItem={selectedItem}
-                                                                            quantity={quantity}
-                                                                        />
-                                                                    </td>
-                    
-                                                                    <td>
-                                                                        <span className="text-g">{item?.subTotal}</span>
-                                                                    </td>
-                    
-                                                                    <td><span className="cursor" onClick={() => removeItem(item?._id)}><DeleteOutlineOutlinedIcon /></span></td>
+                                                                                      
+                                                                    <td width="10%"><span className="cursor" onClick={() => removeItem(item?._id)}><DeleteOutlineOutlinedIcon /></span></td>
                                                                 </tr>
                                                             )
                                                         })
@@ -207,15 +147,15 @@ const Cart = () => {
                                     </div>
                                 )
                                 :(
+                                    
                                     <div className="emptyCart mt-5 d-flex align-items-center justify-content-center flex-column">
                                         <img
-                                            src={emptyCart}
+                                            src={wishListImg}
                                             alt="cart image"
                                             width="150"
                                             hight="150px"
                                         />
-
-                                        <h3>Your Cart is currently empty</h3>
+                                        <h3>Your List is currently empty</h3>
                                         <br />
 
                                         <Link to={"/"}>
@@ -229,31 +169,6 @@ const Cart = () => {
                             }
                          
                         </div>
-                        
-                        
-                        <div className="col-md-4 pl-9 checkoutBox">
-                            <div className="card p-4">
-                                <div className="d-flex align-items-center justify-content-between mb-3">
-                                    <span className="mb-0 ">Subtotal</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold text-g">$12.13</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Shipping</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold">Free</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Estimate for</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold">Monrovia</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Total</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold text-g">$12.13</h6>
-                                </div>
-
-                                <br />  
-                                <Button className="btn-g btn-lg">Preceed To Checkkout</Button>
-                            </div>
-                        </div>
                     </div>
                     
                 </div>
@@ -263,4 +178,4 @@ const Cart = () => {
     )
 }
 
-export default Cart;
+export default WishList;

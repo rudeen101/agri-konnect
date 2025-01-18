@@ -106,51 +106,47 @@ const Sidebar = () => {
                         </Button>
                     </Link>
                 </li>
+
                 <li>
-                    <Link to={"/"}>
-                        <Button className={`w-100 ${activeTab === 5 ? 'active' : ''}`}
-                            onClick={()=> isOpenSubmenu(5)}> 
-                            <span className="icon"><IoIosSettings /></span>
-                            Settings
-                            <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                        </Button>
-                    </Link>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><FaBell /></span>
-                        Notification
+                    <Button className={`w-100 ${activeTab === 7 && isToggleSubmenu ? 'active' : ''}`}
+                        onClick={()=> isOpenSubmenu(7)}>                        
+                        <span className="icon"><FaProductHunt /></span>
+                        Home Banner Slide
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
+                    <div className={`submenuContainer ${activeTab === 7 && isToggleSubmenu === true ?
+                        'openMenu' : 'closeMenu'
+                     }`}>
+                        <ul className="submenu">
+                            <li>
+                                <Link to={"/homeBannerSlide/list"}>Slide listing</Link>
+                                <Link to={"/homeBannerSlide/add"}>Add Slide</Link>
+                                <Link to={"/homeBannerSlide/edit/:id"}>Edit Slide</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
+
                 <li>
-                    <Button className="w-100">
-                        <span className="icon"><IoIosSettings /></span>
-                        Settings
+                    <Button className={`w-100 ${activeTab === 8 && isToggleSubmenu ? 'active' : ''}`}
+                        onClick={()=> isOpenSubmenu(8)}>                        
+                        <span className="icon"><FaProductHunt /></span>
+                        Banner
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
+                    <div className={`submenuContainer ${activeTab === 8 && isToggleSubmenu === true ?
+                        'openMenu' : 'closeMenu'
+                     }`}>
+                        <ul className="submenu">
+                            <li>
+                                <Link to={"/banner/list"}>Banner listing</Link>
+                                <Link to={"/banner/add"}>Add Banner</Link>
+                                <Link to={"/banner/edit/:id"}>Edit Banner</Link>
+                            </li>
+                        </ul>
+                    </div>
                 </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><FaBell /></span>
-                        Notification
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><IoIosSettings /></span>
-                        Settings
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><FaBell /></span>
-                        Notification
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
+               
                 <li>
                     <Button className="w-100">
                         <span className="icon"><IoIosSettings /></span>
@@ -158,34 +154,7 @@ const Sidebar = () => {
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
                 </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><FaBell /></span>
-                        Notification
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><IoIosSettings /></span>
-                        Settings
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><FaBell /></span>
-                        Notification
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
-                <li>
-                    <Button className="w-100">
-                        <span className="icon"><IoIosSettings /></span>
-                        Settings
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                </li>
+                
             </ul>
 
             <br />

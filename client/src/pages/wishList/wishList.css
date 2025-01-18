@@ -65,3 +65,8 @@
     font-weight: bold !important;  
 }
 
+.listWrapper{
+    width: 80%;
+    margin: auto
+}
+

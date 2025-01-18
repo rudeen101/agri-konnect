@@ -16,8 +16,8 @@ import "slick-carousel/slick/slick-theme.css";
 import ArrowRightAltIcon from '@mui/icons-material/ArrowRightAlt';
 
 
-const HomeSlider = () =>{
-    
+const HomeSlider = (props) =>{
+    console.log("props", props);
     const settings ={
         dots: true,
         infinite: true,
@@ -35,24 +35,33 @@ const HomeSlider = () =>{
         <section className="homeSlider">
             <div className="position-relative">
                 <Slider {...settings} className="home_slider_main" >
-                    <div className="item">
-                        <div className="sliderInfo">
-                            <h6>FROM FARM TO TABLE</h6>
-                            <h2 className="mb-3">
-                                Don't miss our amazing <br/>
-                                grocery deals
-                            </h2>
-                            <p>
-                                Money back guarantee after 2 days
-                            </p>
-                            <Button className="mt-3 sliderButton">Shop Now <ArrowRightAltIcon /></Button>
-                        </div>
-                        <div className="sliderImage">
-                            <img src={fruit1}  className=""/>
-                        </div>
-
-                    </div>
-                    <div className="item">
+                    {
+                        props?.data?.data?.length > 0 &&
+                        props?.data?.data?.map((item, index) => {
+                            return (
+                                <div className="item" key={index}>
+                                    {/* <img src={item?.images[0]} className="w-100" alt="banner image"></img> */}
+                                    {/* <div className="sliderInfo">
+                                        <h6>FROM FARM TO TABLE</h6>
+                                        <h2 className="mb-3">
+                                            Don't miss our amazing <br/>
+                                            grocery deals
+                                        </h2>
+                                        <p>
+                                            Money back guarantee after 2 days
+                                        </p>
+                                        <Button className="mt-3 sliderButton">Shop Now <ArrowRightAltIcon /></Button>
+                                    </div> */}
+                                    <div className="sliderImage">
+                                        <img src={item.images[0]}  />
+                                    </div>
+            
+                                </div>
+                            )
+                        })
+                    }
+                  
+                    {/* <div className="item">
                         <div className="sliderInfo">
                             <h6>FROM FARM TO TABLE</h6>
                             <h2 className="mb-3">
@@ -85,7 +94,7 @@ const HomeSlider = () =>{
                             <img src={fruit3}  className=""/>
                         </div>
 
-                    </div>
+                    </div> */}
                
                 </Slider>
                 {/* <div className="newsLetterBanner">

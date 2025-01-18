@@ -29,6 +29,12 @@ import EditProductSize from './pages/Products/editProductSize';
 import ProductWeight from './pages/Products/productWeight';
 import AddProductWeight from './pages/Products/addProductWeight';
 import EditProductWeight from './pages/Products/editProductWeight';
+import HomeBannerSlideList from './pages/HomeBannerSlider/homeBannerSlideList';
+import EditHomeBannerSlide from './pages/HomeBannerSlider/editHomeBannerSlide';
+import AddHomeBannerSlide from './pages/HomeBannerSlider/addHomeBannerSlide';
+import BannerList from './pages/Banner/bannerList';
+import EditBanner from './pages/Banner/editBanner';
+import AddBanner from './pages/Banner/addBanner';
 
 const MyContext = createContext();
 
@@ -43,6 +49,7 @@ const App = () => {
 	const [themeMode, setThemeMode] = useState(true);
 	const [windowwidth, setWindowwidth] = useState(window.innerWidth);
 	const [categoryData, setCategoryData] = useState([]);
+	const [bannerData, setBannerData] = useState([]);
 	const [progress, setProgress] = useState(0);
 
 	const [alertBox, setAlertBox] = useState({
@@ -87,6 +94,7 @@ const App = () => {
 		window.addEventListener('resize', handleResize);
 
 		fetchCategory();
+		fetchBanner()
 
 		return () => {
 			window.removeEventListener('resize', handleResize)
@@ -97,6 +105,14 @@ const App = () => {
 		fetchDataFromApi('/api/category').then((res) => {
 			setProgress(30);
 			setCategoryData(res);
+			setProgress(100);
+		})
+	}
+
+	const fetchBanner = () => {
+		fetchDataFromApi('/api/banner').then((res) => {
+			setProgress(30);
+			setBannerData(res);
 			setProgress(100);
 		})
 	}
@@ -133,7 +149,8 @@ const App = () => {
 		categoryData,
 		setCategoryData,
 		userData,
-		setUserData
+		setUserData,
+		fetchBanner
 		
 	}
 	console.log(userData);
@@ -206,6 +223,14 @@ const App = () => {
 							<Route exact={true} path="/subCategory" element={<SubCategory />} />
 							<Route exact={true} path="/subCategory/add" element={<AddSubCategory />} />
 							<Route exact={true} path="/subCategory/edit/:id" element={<EditSubCategory />} />
+
+							<Route exact={true} path="/homeBannerSlide/add" element={<AddHomeBannerSlide />} />
+							<Route exact={true} path="/homeBannerSlide/list" element={<HomeBannerSlideList />} />
+							<Route exact={true} path="/homeBannerSlide/edit/:id" element={<EditHomeBannerSlide />} />
+							
+							<Route exact={true} path="/banner/add" element={<AddBanner />} />
+							<Route exact={true} path="/banner/list" element={<BannerList />} />
+							<Route exact={true} path="/banner/edit/:id" element={<EditBanner />} />
 						</Routes>
 					</div>
 				</div>

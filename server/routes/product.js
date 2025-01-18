@@ -8,7 +8,7 @@ const fs = require("fs");
 const mongoose = require("mongoose");
 const { error } = require('console');
 
-var imagesArr = [];
+var imagesArray = [];
 
 const cloudinary = require("cloudinary").v2;
 
@@ -76,7 +76,7 @@ router.post('/create', async (req, res) => {
         return res.status(404).send("Invalid Category")
     }
 
-    let imagesArray = [];
+    imagesArray = [];
     const uploadedImages = await ImageUpload.find();
 
     const images = uploadedImages?.map((item) => {

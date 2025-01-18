@@ -34,4 +34,11 @@ router.delete('/deleteAllImages', async (req, res) => {
     res.json(deleteImage);
 });
 
+router.delete('/:id', async (req, res) => {
+
+    deleteImage = await ImageUpload.findByIdAndDelete(req.params.id)
+
+    res.json(deleteImage);
+});
+
 module.exports = router;

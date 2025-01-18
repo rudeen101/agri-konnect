@@ -1,5 +1,5 @@
 import React, {useState, useContext, useEffect, useRef} from "react";
-import HomeSlider from "./slider/index";
+import HomeSlider from "./slider/homeSlider";
 import CartSlider from "../../components/cartSlider/cartSlider";
 import Banner from "../../components/banner/banner";
 import "./style.css";
@@ -33,7 +33,7 @@ const Home = () => {
     const [filterData, setFilterData] = useState([]);
     const [isLoadingProducts, setIsLoadingProducts] = useState(false);
     const [productData, setProductData] = useState([]);
-    const [homeSlider, setHomeSlider] = useState([]);
+    const [homeSliderBanner, setHomeSliderBanner] = useState([]);
     const [featuredProducts, setFeaturedProducts] = useState([]);
 
     const productRow = useRef();
@@ -102,22 +102,17 @@ const Home = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
 
-        const location = localStorage.getItem("location");
+        fetchDataFromApi(`/api/product/featured`)
+        .then((res) => {
+            setFeaturedProducts(res);
+        });
 
-        // fetchDataFromApi(`/api/product/featured?location=${location}`)
-        // .then((res) => {
-        //     setFeaturedProducts(res);
-        // });
-
-        // fetchDataFromApi(`/api/product?page=1&perPage=8`)
-        // .then((res) => {
-        //     setProductData(res);
-        // });
-
-        // fetchDataFromApi("/api/homeBanner")
-        // .then((res) => {
-        //     setHomeSlider(res);
-        // });
+      
+        fetchDataFromApi("/api/homeSliderBanner/")
+        .then((res) => {
+            console.log(res)
+            setHomeSliderBanner(res);
+        });
         
     }, []);
 
@@ -138,7 +133,10 @@ const Home = () => {
 
     return(
         <>
-            <HomeSlider />
+            {
+                homeSliderBanner?.data?.length > 0 &&  <HomeSlider data={homeSliderBanner} />
+            }
+           
             {/* <CartSlider /> */}
 
             <div className="categories">

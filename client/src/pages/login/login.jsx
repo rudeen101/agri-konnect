@@ -38,7 +38,6 @@ const Login = () =>{
     
         const signIn = (e) => {
             e.preventDefault()
-            console.log(formFields)
     
             try {
                 if (formFields.email === "") {
@@ -77,7 +76,8 @@ const Login = () =>{
                             isAdmin: res.user?.isAdmin,
                             userId: res?.user?._id
                         }
-                        localStorage.setItem("user", JSON.stringify(user));
+                        localStorage.setItem("user--", JSON.stringify(user));
+                        localStorage.setItem("isLogin", true);
                         
                         if (res.error !== true) {
                             context.setAlertBox({
@@ -93,7 +93,6 @@ const Login = () =>{
                             }, 2000);
                         }
                     }else {   
-                        console.log(res)
                         context.setAlertBox({
                             open: true,
                             error: true,
