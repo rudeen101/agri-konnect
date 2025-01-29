@@ -1,5 +1,7 @@
 const  Category = require('../models/category');
+const  User = require('../models/users');
 const  Product = require('../models/product');
+const  Tag = require('../models/tag');
 const {ImageUpload} = require("../models/imageUpload");
 const express = require("express");
 const router = express.Router();
@@ -105,6 +107,8 @@ router.post('/create', async (req, res) => {
         // size: req.body.size,
         productWeight: req.body.productWeight,
         packagingType: req.body.packagingType,
+        tags: req.body.tags,
+        seller: req.body.sellerId,
         location: req.body.location !== "" ? req.body.location : "All",
     }); 
 
@@ -146,11 +150,16 @@ router.get('/', async (req, res) => {
                 productList = await Product.find({
                     subCatId: req.query.subCatId,
                     location: req.query.location,
-                }).populate({path: 'category', model: Category});
+                }).
+                    populate({path: 'category', model: Category}).
+                    populate({path: 'tags', model: Tag});
+                    
             } else{
                 productList = await Product.find({
                     subCatId: req.query.subCatId,
-                }).populate({path: 'category', model: Category});
+                }).
+                    populate({path: 'category', model: Category}).
+                    populate({path: 'tags', model: Tag});
             }
         }
 
@@ -161,11 +170,15 @@ router.get('/', async (req, res) => {
                 productList = await Product.find({
                     catId: req.query.catId,
                     location: req.query.location,
-                }).populate({path: 'category', model: Category});
+                }).
+                    populate({path: 'category', model: Category}).
+                    populate({path: 'tags', model: Tag});
             } else{
                 productList = await Product.find({
                     catId: req.query.catId,
-                }).populate({path: 'category', model: Category});
+                }).
+                    populate({path: 'category', model: Category}).
+                    populate({path: 'tags', model: Tag});
             }
         }
 
@@ -216,28 +229,42 @@ router.get('/', async (req, res) => {
     }
     else {
         if (req.query.location !== undefined && req.query.location !== null && req.query.location !== "All"){
-            productList = await Product.find(req.query).populate({path: 'category', model: Category});
+            productList = await Product.find(req.query).
+                populate({path: 'category', model: Category}).
+                populate({path: 'tags', model: Tag});
         }
         else if (req.query.category !== "" && req.query.cateogry !== null && req.query.category !== undefined){
-            productList = await Product.find({catId: req.query.category}).populate({path: 'category', model: Category});
+            productList = await Product.find({catId: req.query.category}).
+                populate({path: 'category', model: Category}).
+                populate({path: 'tags', model: Tag});
         }
         else if (req.query.catName !== "" && req.query.catName !== null && req.query.catName !== undefined){
-            productList = await Product.find({catName: req.query.catName}).populate({path: 'category', model: Category});
+            productList = await Product.find({catName: req.query.catName}).
+                populate({path: 'category', model: Category}).
+                populate({path: 'tags', model: Tag});
         }
         else if (req.query.catId !== "" && req.query.catId !== null && req.query.catId !== undefined){
-            productList = await Product.find({catId: req.query.catId}).populate({path: 'category', model: Category});
+            productList = await Product.find({catId: req.query.catId}). 
+                populate({path: 'category', model: Category}).
+                populate({path: 'tags', model: Tag});
         }
         else if (req.query.subCatId !== "" && req.query.subCatId !== null && req.query.subCatId !== undefined){
-            productList = await Product.find({subCatId: req.query.subCatId}).populate({path: 'category', model: Category});
-        }
+            productList = await Product.find({subCatId: req.query.subCatId}). 
+                populate({path: 'category', model: Category}).
+                populate({path: 'tags', model: Tag});
+            }
 
         if (req.query.rating !== "" && req.query.rating !== null && req.query.rating !== undefined){
             if (req.query.category !== "" && req.query.cateogry !== null && req.query.category !== undefined){
                 if (req.query.location !== undefined && req.query.location !== null && req.query.location !== "All"){
-                    productList = await Product.find({rating: req.query.rating, catId: req.query.category, location: req.query.location}).populate({path: 'category', model: Category});
+                    productList = await Product.find({rating: req.query.rating, catId: req.query.category, location: req.query.location}).
+                        populate({path: 'category', model: Category}).
+                        populate({path: 'tags', model: Tag});
                 }
                 else {
-                    productList = await Product.find({rating: req.query.rating, catId: req.query.category}).populate({path: 'category', model: Category});
+                    productList = await Product.find({rating: req.query.rating, catId: req.query.category}). 
+                        populate({path: 'category', model: Category}).
+                        populate({path: 'tags', model: Tag});
                 }
             }
         }
@@ -245,10 +272,14 @@ router.get('/', async (req, res) => {
         if (req.query.rating !== "" && req.query.rating !== null && req.query.rating !== undefined){
             if (req.query.subCatId !== "" && req.query.subCatId !== null && req.query.subCatId !== undefined){
                 if (req.query.location !== undefined && req.query.location !== null && req.query.location !== "All"){
-                    productList = await Product.find({rating: req.query.rating, subCatId: req.query.subCatId, location: req.query.location}).populate({path: 'category', model: Category});
+                    productList = await Product.find({rating: req.query.rating, subCatId: req.query.subCatId, location: req.query.location}).
+                        populate({path: 'category', model: Category}).
+                        populate({path: 'tags', model: Tag});
                 }
                 else {
-                    productList = await Product.find({rating: req.query.rating, subCatId: req.query.subCatId}).populate({path: 'category', model: Category});
+                    productList = await Product.find({rating: req.query.rating, subCatId: req.query.subCatId}).
+                        populate({path: 'category', model: Category}).
+                        populate({path: 'tags', model: Tag});
                 }
             }
         }
@@ -270,51 +301,243 @@ router.get('/', async (req, res) => {
 
 })
 
-router.get('/get/count', async (req, res) => {
-    const productCount = await Product.countDocuments();
+router.get('/homepage', async (req, res) => {
+    try {
+        const { userId, limit = 20, page = 1, sort, minPrice, maxPrice } = req.query;
 
-    if (!productCount) {
-        res.status(500).json({
-            success: false
-        });
-    }
-    else{
-        res.send({
-            productCount: productCount,
-        });
-    }
+        // Define thresholds for each category
+        const thresholds = {
+            topSellers: 0, // Minimum sales count to qualify as a top seller
+            mostPopular: 0, // Minimum popularity score to qualify as most popular
+            newlyReleasedDays: 30 // Products released within the last 30 days are considered newly released
+        };
 
+        const now = new Date();
+
+        let recommendedProducts = [];
+
+        // Fetch products for each category
+        // const topSellers = await Product.find({ 
+        //     // is_top_seller: true, 
+        //     salesCount: { $gte: thresholds.topSellers }, // Apply sales count threshold
+        //     price: { $gte: minPrice || 0, $lte: maxPrice || Number.MAX_VALUE } 
+        // })
+        //     .sort({ salesCount: -1 }) // Sort top sellers by sales count
+        //     .lean()
+        //     .limit(limit);
+
+        const mostPopular = await Product.find({ 
+            // is_popular: true, 
+            popularityScore: { $gte: thresholds.mostPopular }, // Apply popularity score threshold
+            price: { $gte: minPrice || 0, $lte: maxPrice || Number.MAX_VALUE } 
+        })
+            .sort({ popularityScore: -1 }) // Sort most popular by popularity score
+            .lean()
+            .limit(limit);
+
+
+        const newlyReleased = await Product.find({
+            dateCreated: { $gte: new Date(now.setDate(now.getDate() - thresholds.newlyReleasedDays)) } // Filter products released within the threshold
+        })
+            .sort({ dateCreated: -1 }) // Sort by newest release date
+            .lean()
+            .limit(limit);
+
+            const user = await User.findById(userId).populate('recentlyViewed').lean();
+            const recentlyViewed = user?.recentlyViewed || [];
+
+            
+            // Fetch user-specific data if a userId is provided
+            if (userId) {
+                const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
+    
+                if (user) {
+                    // Get products from purchase history and recently viewed
+                    const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
+                    const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
+    
+                    // Find related products based on purchase and viewing history
+                    const relatedProducts = await Product.find({
+                        _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
+                        tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
+                    }).lean();
+    
+                    recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
+                }
+            }
+    
+            // Fetch global recommended products if no specific user data
+            const globallyRecommended = await Product.find({ is_recommended: true })
+                .sort({ popularity_score: -1 })
+                .limit(limit)
+                .lean();
+    
+            // Combine both sources
+            recommendedProducts = [
+                ...recommendedProducts,
+                ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
+            ];
+
+        // Combine products from all categories
+        const combinedProducts = [
+            {products: recentlyViewed, category: 'recentlyViewed'},
+            {products: newlyReleased, category: 'newlyReleased'},
+            {products: mostPopular, category: 'mostPopular'},
+            // ...topSellers.map((p) => ({ ...p, category: 'topSeller'})),
+        ];
+
+        if (sort) {
+            switch (sort) {
+                case 'priceAsc':
+                    sortedProducts = combinedProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'priceDesc':
+                    sortedProducts = combinedProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'popularity':
+                    sortedProducts = combinedProducts.sort((a, b) => b.popularityScore - a.popularityScore);
+                    break;
+                case 'sales':
+                    sortedProducts = combinedProducts.sort((a, b) => b.salesCount - a.salesCount);
+                    break;
+                default:
+                    return res.status(400).json({ error: 'Invalid sort parameter' });
+            }
+        }
+
+       
+
+        res.json({
+            total: combinedProducts.length,
+            page: parseInt(page),
+            limit: parseInt(limit),
+            combinedProducts: combinedProducts
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch homepage products' });
+    }
 });
 
-router.get('/featured', async (req, res) => {
-    let productList = "";
+router.get('/recommended', async (req, res) => {
+    try {
+        const { userId, limit = 10, sort = 'popularity' } = req.query;
 
-    if (req.query.location !== undefined && req.query.location !== null && req.query.location !== "All"){
-        productList = await Product.find({isFeatured: true, location: req.query.location})
-    }
-    else{
-        productList = await Product.find({"isFeatured": true});
-    }
+        let recommendedProducts = [];
 
-    if (!productList){
-        res.status(500).json({success: false})
-    }
+        // Fetch user-specific data if a userId is provided
+        if (userId) {
+            const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
 
-    return res.setMaxListeners(200).json(productList)
+            if (user) {
+                // Get products from purchase history and recently viewed
+                const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
+                const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
+
+                // Find related products based on purchase and viewing history
+                const relatedProducts = await Product.find({
+                    _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
+                    tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
+                }).lean();
+
+                recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
+            }
+        }
+
+        // Fetch global recommended products if no specific user data
+        const globallyRecommended = await Product.find({ is_recommended: true })
+            .sort({ popularity_score: -1 })
+            .limit(limit)
+            .lean();
+
+        // Combine both sources
+        recommendedProducts = [
+            ...recommendedProducts,
+            ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
+        ];
+
+        // Deduplicate products by ID
+        const uniqueProducts = Array.from(
+            new Map(recommendedProducts.map(p => [p._id.toString(), p])).values()
+        );
+
+        // Sort products if requested
+        if (sort) {
+            switch (sort) {
+                case 'price_asc':
+                    uniqueProducts.sort((a, b) => a.price - b.price);
+                    break;
+                case 'price_desc':
+                    uniqueProducts.sort((a, b) => b.price - a.price);
+                    break;
+                case 'popularity':
+                    uniqueProducts.sort((a, b) => b.popularityScore - a.popularityScore);
+                    break;
+                case 'sales':
+                    uniqueProducts.sort((a, b) => b.sales_count - a.salesCount);
+                    break;
+                default:
+                    return res.status(400).json({ error: 'Invalid sort parameter' });
+            }
+        }
+
+        // Limit results
+        const finalProducts = uniqueProducts.slice(0, limit);
+
+        res.json({
+            total: uniqueProducts.length,
+            limit: parseInt(limit),
+            recommendedProducts: finalProducts,
+        });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch recommended products' });
+    }
 });
+
+
+
 
 router.get('/:id', async (req, res) => {
+    try {
 
-    const product = await Product.findById(req.params.id).populate({path: 'category', model: Category});
+        const product = await Product.findById(req.params.id).
+        populate({path: 'category', model: Category}).
+        populate({path: 'tags', model: Tag});
 
-    if (!product) {
-        res.status(500).json({
-            message: "The product with the given id was not found."
-        });
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+
+        product.views += 1;
+        product.lastInteraction = Date.now();
+        await product.save();
+
+        product.popularityScore = calculatePopularityScore(product);
+
+
+        return res.status(200).send(product);
+        
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to get product.' });
     }
-    
-    return res.status(200).send(product);
 
+});
+
+router.post('/sale/:id/', async (req, res) => {
+    try {
+        const product = await Product.findById(req.params.id);
+        if (!product) return res.status(404).json({ error: 'Product not found' });
+
+        product.salesCount += req.body.quantity || 1;
+        product.lastInteraction = Date.now();
+        await product.save();
+
+        product.popularityScore = calculatePopularityScore(product);
+
+
+        res.json({ message: 'Sale count updated', product });
+    } catch (err) {
+        res.status(500).json({ error: 'Failed to update sales count' });
+    }
 });
 
 
@@ -337,7 +560,6 @@ router.delete('/deleteImage', async (req, res) => {
     }
 
 });
-
 
 router.delete('/:id', async (req, res) => {
 
@@ -427,6 +649,21 @@ router.get('/category/:id', async (req, res) => {
     return res.status(200).send(product);
 
 });
+
+function calculatePopularityScore(product) {
+    const w1 = 0.5; // Weight for sales count
+    const w2 = 2;   // Weight for average rating
+    const w3 = 0.3; // Weight for review count
+    const w4 = 0.1; // Weight for view count
+
+    return (
+        w1 * product.salesCount +
+        w2 * product.averageRating +
+        w3 * product.reviewCount +
+        w4 * product.view_count
+    );
+}
+
 
 
 

@@ -1,5 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams} from "react-router-dom";
+import "./tag.css";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
@@ -10,10 +11,7 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
-
-import Select from '@mui/material/Select';
-import MenuItem from '@mui/material/MenuItem';
+import { fetchDataFromApi, editData } from "../../utils/api";
 
 
 import { IoMdClose } from "react-icons/io";
@@ -25,92 +23,66 @@ import { deleteData, postData } from "../../utils/api";
 
 
 
-const AddBanner = () =>{
+const EditTag = () =>{
 
+    const [category, setCategory] = useState([  ]);
     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [formFields, setFormFields] = useState({
+        name: "",
         images: [],
-        catId: "",
-        catName: "",
-        subCatId: "",
-        subCatName: "",
+        color: "",
+        slug: "",
+        parentId: ""
     });
 
-    const [previews, setPreviews] = useState([]);
-    const [bannerValue, setBannerValue] = useState();
-    const [subCategoryData, setSubCategoryData] = useState([]);
-    const [categoryValue, setCategoryValue] = useState("");
-    const [subCategoryValue, setSubCategoryValue] = useState("");
+    const [previews, setPreviews] = useState([])
 
     const context = useContext(MyContext);
+
+    const { id } = useParams();
+    // const id = "672dc6170993f8d550111cd2";
+    console.log("cat-id",id)
 
     const formData = new FormData();
 
     const history = useNavigate();
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-
-    //     fetchDataFromApi("/api/category").then((res) => {
-    //         context.setProgress(20);
-    //         setCatData(res);
-    //         context.setProgress(100);
-    //     });
-
-    // }, []);
-
-    useEffect(() => {
-        const subCatArray = [];
-
-        context.categoryData?.categoryList?.length !== 0 && context.categoryData?.categoryList?.map((cat, index) => {
-            if (cat?.children.length !== 0){
-                cat?.children?.map((subCat) => {
-                    subCatArray.push(subCat);
-                })
-            }
-        })
-
-        setSubCategoryData(subCatArray);
-
-    }, [context.categoryData]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+
         fetchDataFromApi("/api/imageUpload").then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/banner/deleteImage?img=${img}`).then((res) => {
+                    deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
                         deleteData('/api/imageUpload/deleteAllImages');
                     });
                 });
             });
         });
+
+
+        fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
+            console.log("*******",res)
+            context.setProgress(20);  
+            setCategory(res);
+            setPreviews(res.images);
+            setFormFields({
+                name: res.name,
+                slug: res.name,
+                color: res.color
+            });
+            context.setProgress(100);
+        });
+
     }, []);
 
-    // const changeInput = (e) => {
-    //     setFormFields({
-    //         ...formFields,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
-
-    const handleChangeCategory = (event) => {
-        setCategoryValue(event.target.value);
-    }
-
-    const handleChangeSubCategory = (event) => {
-        setSubCategoryValue(event.target.value);
-    }
-
-    const selectCategory = (catName, catId) => {
-        formFields.catName = catName;
-        formFields.catId = catId;
-    }
-
-    const selectSubCategory = (subCatName, subCatId) => {
-        formFields.subCatName = subCatName;
-        formFields.subCatId = subCatId;
+    const changeInput = (e) => {
+        setFormFields({
+            ...formFields,
+            [e.target.name]: e.target.value
+        })
     }
 
     let img_arr = [];
@@ -178,7 +150,10 @@ const AddBanner = () =>{
         })
     }
 
+
+
     const removeImage = async (index, imgUrl) => {
+        console.log(imgUrl);
         const imgIndex = previews.indexOf(imgUrl);
         deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({
@@ -193,8 +168,9 @@ const AddBanner = () =>{
         }
     }
 
-    const addBanner = (e) => {
+    const editCate = (e) => {
         e.preventDefault();
+           
         const appendedArray = [...previews, ...uniqueArray];
 
         img_arr = [];
@@ -202,34 +178,35 @@ const AddBanner = () =>{
         formFields.slug = formFields.name;
         formFields.images = appendedArray;
 
-
-        if (formFields.catName !== "" && formFields.subCatName !== "" && previews.length !== 0){
+        if (formFields.name !== "" && formFields.color !== "" && previews.length !== 0){
             setIsLoading(true);
-            postData(`/api/banner/create`, formFields).then((res) => {
+
+            editData(`/api/category/${id}`, formFields).then((res) => {
                 setIsLoading(false)
-                context.fetchBanner();
+                context.fetchCategory();
 
                 deleteData('/api/imageUpload/deleteAllImages');
 
-                history('/banner/list')
+                history('/category');
             });
         } 
         else {
             context.setAlertBox({
                 open: true,
                 error: true,
-                msg: "Please provide all details."
+                msg: 'Please provide all the details'
             });
             return false;
         }
     }
 
 
+
     return (
         <>
             <div className="rightContent w-100">
                 <div className="card shadow border-0 w-100 d-flex justify-content-between flex-row p-4">
-                    <h5 className="mb-0">Add Banner</h5>
+                    <h5 className="mb-0">Edit Sub Category</h5>
 
                     <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">
                         <StyledBreadcrumb
@@ -242,99 +219,32 @@ const AddBanner = () =>{
                         <StyledBreadcrumb
                         component="a"
                         href="#"
-                        label="Banner"
+                        label="Category"
                         />
 
                         <StyledBreadcrumb
                         component="a"
                         href="#"
-                        label="Add Banner"
+                        label="Edit Sub Category"
                         />
                     </Breadcrumbs>
                 </div>
                 
-                <form className="form w-100" onSubmit={addBanner}>
+                <form className="form w-100" onSubmit={editCate}>
                     <div className="row">
                         <div className="col-sm-9">
                             <div className="">
                                 <div className="card p-4 mt-0">
 
-                                    {/* <div className="form-group">
+                                    <div className="form-group">
                                         <h6>Category Name</h6>
-                                        <input type="text" name="name" onChange={changeInput}   />
-                                    </div> */}
-
-                                    <div className="row">
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <h6>Category</h6>
-                                                <Select
-                                                    value={bannerValue}
-                                                    onChange={handleChangeCategory}
-                                                    displayEmpty
-                                                    inputProps={{ 'aria-label': 'Without label' }}
-                                                    className="w-100"
-                                                    >
-                                                    <MenuItem value="">
-                                                        <em value={null}>None</em>
-                                                    </MenuItem>
-
-                                                    {
-                                                        context?.categoryData?.categoryList?.length !== 0 &&
-                                                        context?.categoryData?.categoryList?.map((category, index) => {
-                                                            return (
-                                                                <MenuItem 
-                                                                    key={index}
-                                                                    value={category._id}
-                                                                    className="text-capitalize"
-                                                                    onClick={() => selectCategory(category.name, category._id)}
-                                                                >
-                                                                    {category.name}
-                                                                </MenuItem>
-                                                            )
-                                                        })
-                                                                                                
-                                                    }
-                                                </Select>
-                                            </div>
-                                        </div>
-
-                                        <div className="col-md-6">
-                                            <div className="form-group">
-                                                <h6>Sub Category</h6>
-                                                <Select
-                                                    value={bannerValue}
-                                                    onChange={handleChangeSubCategory}
-                                                    displayEmpty
-                                                    inputProps={{ 'aria-label': 'Without label' }}
-                                                    className="w-100"
-                                                    >
-                                                    <MenuItem value="">
-                                                        <em value={null}>None</em>
-                                                    </MenuItem>
-
-                                                    {
-                                                        subCategoryData?.length !== 0 &&
-                                                        subCategoryData?.map((subCat, index) => {
-                                                            return (
-                                                                <MenuItem 
-                                                                    value={subCat.name}
-                                                                    className="text-capitalize"
-                                                                    key={index}
-                                                                    onClick={() => {selectSubCategory(subCat.name, subCat._id)}}
-                                                                >
-                                                                    {subCat.name}
-                                                                </MenuItem>
-                                                            )
-                                                        })
-                                                                                                
-                                                    }
-                                                </Select>
-                                            </div>
-                                        </div>
+                                        <input type="text" name="name" onChange={changeInput}  value={formFields.name}  />
                                     </div>
 
-                                
+                                    <div className="form-group">
+                                        <h6>Color</h6>
+                                        <input type="text" name="color" onChange={changeInput} value={formFields.color} />
+                                    </div>
 
                                     <div className="imgUploadBox d-flex align-items-center">
                                         {
@@ -369,23 +279,17 @@ const AddBanner = () =>{
                                                 </div>
                                                 :
                                                 <>
-                                                  
-                                            
-                                                    <label for="fileInput">
-                                                        <div className="info">
-                                                            <FaRegImages className="icon" />
-                                                            <h6 className="mt-3">Upload Image</h6>
-                                                        </div>
-                                                    </label>  
-
                                                     <input 
                                                         type="file"
                                                         multiple  
                                                         onChange={(e) => onChangeFile(e, '/api/category/upload')}
                                                         name="images"
-                                                        id="fileInput"
-                                                    />                                    
-
+                                                    />
+                                            
+                                                    <div className="info">
+                                                        <FaRegImages />
+                                                        <h5>Image upload</h5>
+                                                    </div>
                                                 </>
                                             }
                                          
@@ -394,7 +298,7 @@ const AddBanner = () =>{
                                     </div>
 
                                     {/* <MultipleFileUpload></MultipleFileUpload> */}
-                                    <Button type="submit" className="btn-blue btn-large w-100 btn-big   "> <FaCloudUploadAlt /> &nbsp; {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : "PUBLISH AND VIEW"} </Button>
+                                    <Button type="submit" className="btn-blue btn-large w-100 btn-big"> <FaCloudUploadAlt /> &nbsp; {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : "PUBLISH AND VIEW"} </Button>
                                 </div>
 
                                 
@@ -412,4 +316,4 @@ const AddBanner = () =>{
     );
 }
 
-export default AddBanner;
+export default EditTag;

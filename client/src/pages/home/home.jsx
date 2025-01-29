@@ -35,8 +35,12 @@ const Home = () => {
     const [productData, setProductData] = useState([]);
     const [homeSliderBanner, setHomeSliderBanner] = useState([]);
     const [featuredProducts, setFeaturedProducts] = useState([]);
+    const [topSeller, setTopSeller] = useState([]);
+    const [recentlyViewed, setRecentlyViewed] = useState([]);
+    const [mostPopular, setMostPopulat] = useState([]);
 
     const productRow = useRef();
+
 
     const handleChange = (event, newValue) => {
         setValue(newValue);
@@ -49,7 +53,7 @@ const Home = () => {
         infinite: true,
         // infinite: context.windowWidth < 992 ? false : true,
         speed: 500,
-        slidesToShow: 6,
+        slidesToShow: 5,
         slidesToScroll: 1,
         fade: false,
         arrows: true
@@ -67,21 +71,22 @@ const Home = () => {
 
     useEffect(() => {
         if (context.categoryData?.categoryList?.length > 0){
-
             setCategories(context.categoryData?.categoryList);
-
-            fetchDataFromApi(`/api/product?catId=${context.categoryData?.categoryList?.[0]?._id}`)
-            .then((res) => {
-                setFilterData(res.products);
-                setIsLoading(false);
-            });
-
-            // setSelectedCat(categories?.[0]?._id);
-            // console.log("Data2", selectedCat);
-
-
         }
     }, [context.categoryData]);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        fetchDataFromApi(`/api/product/homepage`)
+        .then((res) => {
+            console.log("setTopSeller", res)
+            setTopSeller(res.products);
+            setFilterData([]);
+
+            setIsLoading(false);
+        });
+    }, []);
 
     // useEffect(() => {
 
@@ -93,7 +98,7 @@ const Home = () => {
     //         fetchDataFromApi(`/api/product?catId=${context.categoryData?.categoryList?.[0]?._id}`)
     //         .then((res) => {
     //             console.log("--*",res)
-    //             setFilterData(res.products);
+                // setFilterData(res.products);
     //             setIsLoading(false);
     //         });
     //     // }
@@ -102,10 +107,10 @@ const Home = () => {
     useEffect(() => {
         window.scrollTo(0, 0);
 
-        fetchDataFromApi(`/api/product/featured`)
-        .then((res) => {
-            setFeaturedProducts(res);
-        });
+        // fetchDataFromApi(`/api/product/filter?isFearured=${true}`)
+        // .then((res) => {
+        //     setFeaturedProducts(res);
+        // });
 
       
         fetchDataFromApi("/api/homeSliderBanner/")
@@ -124,7 +129,7 @@ const Home = () => {
         // fetchDataFromApi(`/api.products?catId=${catId}?page=1&perPage=100`)
         fetchDataFromApi(`/api/product?catId=${catId}`)
         .then((res) => {
-            setFilterData(res.products);
+            // setFilterData(res.products);
             setIsLoading(false);
         });
     }
@@ -141,7 +146,8 @@ const Home = () => {
 
             <div className="categories">
                 <div className="container-fluid">
-                    <div className="categoryRow">
+                    <br></br>
+                    <div className="categoryRow mt-4">
                         { 
                             context.categoryData?.categoryList?.map((category, index) => {
 
@@ -161,7 +167,7 @@ const Home = () => {
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Featured Produce</h3>
+                            <h3 className="hd mb-0 mt-0">Top Selling Items</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">

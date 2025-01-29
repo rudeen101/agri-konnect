@@ -27,6 +27,7 @@ const productReviewsRoutes = require("./routes/productReviews.js");
 const bannerRoutes = require("./routes/banner.js");
 const wishListRoutes = require("./routes/wishList.js");
 const searchRoutes = require("./routes/search.js");
+const tagRoutes = require("./routes/tag.js");
 
 app.use("/upoads", express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
@@ -39,6 +40,7 @@ app.use(`/api/productReviews`, productReviewsRoutes);
 app.use(`/api/banner`, bannerRoutes);
 app.use(`/api/wishList`, wishListRoutes);
 app.use(`/api/search`, searchRoutes);
+app.use(`/api/tag`, tagRoutes);
 // app.use(`/api/productWeight`, prouductWeightRoutes);
 // app.use(`/api/productSize`, prouductSizeRoutes);
 

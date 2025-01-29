@@ -99,6 +99,11 @@ const Header =  ()=>{
         history("/");
     }
 
+    const handleLogin = () => {
+        setAnchorEl(null);
+        // context.setIsLogin(true);
+    }
+
     const searchProducts = (e) => {
         alert(searchInput.current.value)
         setSearchFields(searchInput.current.value)
@@ -166,7 +171,7 @@ const Header =  ()=>{
                             </div>
 
                             <div className="col-sm-4 d-flex align-items-center">
-                                <div className="m-0 d-flex align-items-center">
+                                <div className="m-0 d-flex align-items-center w-100">
                                     {/* <div className="countyWrapper">
                                         <Select data={counties} placeholder={"County"} icon={<LocationOnOutlinedIcon className="icon" style={{opacity: "0.5"}} />} />
                                     </div> */}
@@ -210,17 +215,15 @@ const Header =  ()=>{
                                                 aria-controls="simple-menu"
                                                 aria-haspopup="true"
                                                 >   
-                                                <Link to={'/cart'}>
+                                                {/* <Link to={'/cart'}> */}
                                                     <ShoppingCartOutlinedIcon className="actionsIcon" /> 
                                                     <span className="badge bg-success rounded-circle">{context.cartData?.data?.length}</span>
                                                     
-                                                    <div className="d-flex align-items-end">
+                                                    {/* <div className="d-flex align-items-end"> */}
                                                         <span className="iconText" onClick={() => setIsOpenCartDropdown(!isOpenCartDropdown)}>Cart</span>
-                                                    </div>
-                                                </Link>
+                                                    {/* </div> */}
+                                                {/* </Link> */}
                                             </Button> 
-
-                                              
                                         </li>
 
                                         <li className="list-inline-item">
@@ -254,10 +257,10 @@ const Header =  ()=>{
                                                 <MenuItem onClick={handleClose}>
                                                     Profile
                                                 </MenuItem>
-                                                <MenuItem onClick={handleLogout}>
+                                                <MenuItem >
                                                     {
-                                                        context.isLogin ? <Button className="btn-g signup">Logout</Button>
-                                                        :<Button className="btn-g signup"><Link to={"/login"}>Login</Link></Button>
+                                                        context.isLogin ? <Button className="btn-g signup" onClick={handleLogout}>Logout</Button>
+                                                        :<Button className="btn-g signup" onClick={handleLogin}><Link to={'/login'}>Login</Link></Button>
                                                     }
                                                 </MenuItem>
                                             </Menu>

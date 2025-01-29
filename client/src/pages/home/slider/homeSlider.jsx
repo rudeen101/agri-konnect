@@ -40,22 +40,9 @@ const HomeSlider = (props) =>{
                         props?.data?.data?.map((item, index) => {
                             return (
                                 <div className="item" key={index}>
-                                    {/* <img src={item?.images[0]} className="w-100" alt="banner image"></img> */}
-                                    {/* <div className="sliderInfo">
-                                        <h6>FROM FARM TO TABLE</h6>
-                                        <h2 className="mb-3">
-                                            Don't miss our amazing <br/>
-                                            grocery deals
-                                        </h2>
-                                        <p>
-                                            Money back guarantee after 2 days
-                                        </p>
-                                        <Button className="mt-3 sliderButton">Shop Now <ArrowRightAltIcon /></Button>
-                                    </div> */}
                                     <div className="sliderImage">
-                                        <img src={item.images[0]}  />
+                                        <img src={item?.images[0]} className="w-100" alt="banner image"></img>
                                     </div>
-            
                                 </div>
                             )
                         })

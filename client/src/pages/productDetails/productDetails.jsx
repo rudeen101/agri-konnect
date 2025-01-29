@@ -129,7 +129,7 @@ const ProductDetails = () =>{
         });
 
         getAllReviews(id);
-        checkWishList(id)
+        // checkWishList(id)
 
     }, [id]);
 
@@ -157,7 +157,7 @@ const ProductDetails = () =>{
                 reviews.customerName = user?.username;
                 reviews.productId = id;
 
-                postData(`/api/productReviews/add`, reviews).then((res) => {
+                postData(`/api/productReviews/add?id=${id}`, reviews).then((res) => {
                     if (res) {
                         setIsLoading(false)
                         getAllReviews(id);

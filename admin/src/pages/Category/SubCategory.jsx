@@ -17,6 +17,8 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { IoMdCloseCircle } from "react-icons/io";
+
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -128,12 +130,22 @@ const SubCategory = () =>{
                                                     <td>
                                                         {category?.name}
                                                     </td>
-                                                    <td>
+                                                    <td className="d-flex flex-gap-20">
                                                         {
                                                             category?.children?.length !== 0 && category?.children?.map((subCate, index) => {
                                                                 return(
-                                                                    <div className="subCategory badge badge-primary mx-1" key={index}>
-                                                                        {subCate.name}<IoIosClose color="error" onClick={() => deleteCategory(subCate._id)} className="cursor" />
+                                                                    <div className="subCatContainer">
+                                                                        <div className="subCategory card" key={index}>
+                                                                            <LazyLoadImage
+                                                                                alt={"image"}
+                                                                                effect="blur"
+                                                                                className="img"
+                                                                                src={subCate?.images[0]}
+                                                                            />
+                                                                            <span>{subCate.name}</span>
+                                                                            <IoMdCloseCircle className="deleteIcon cursor" color="error" onClick={() => deleteCategory(subCate._id)}/>
+
+                                                                        </div>
                                                                     </div>
                                                                 )
                                                             }) 

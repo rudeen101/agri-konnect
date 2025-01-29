@@ -77,6 +77,24 @@ const Sidebar = () => {
                     </div>
                 </li>
                 <li>
+                    <Button className={`w-100 ${activeTab === 9 && isToggleSubmenu ? 'active' : ''}`}
+                        onClick={()=> isOpenSubmenu(9)}>                        
+                        <span className="icon"><FaProductHunt /></span>
+                        Tag
+                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
+                    </Button>
+                    <div className={`submenuContainer ${activeTab === 9 && isToggleSubmenu === true ?
+                        'openMenu' : 'closeMenu'
+                     }`}>
+                        <ul className="submenu">
+                            <li>
+                                <Link to={"/tag/list"}>Tag List</Link>
+                                <Link to={"/tag/add"}>Add Category</Link>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
                     <Link to={"/"}>
                     <Button className={`w-100 ${activeTab === 2 ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(2)}> 

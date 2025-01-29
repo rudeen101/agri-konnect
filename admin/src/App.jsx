@@ -19,22 +19,30 @@ import LoadingBar from 'react-top-loading-bar';
 import AddCategory from './pages/Category/addCategory';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+
 import EditCategory from './pages/Category/editCategory';
 import SubCategory from './pages/Category/SubCategory';
 import EditSubCategory from './pages/Category/editSubCategory';
 import AddSubCategory from './pages/Category/addSubCategory';
+
 import ProductSize from './pages/Products/productSize';
 import AddProductSize from './pages/Products/addProductSize';
 import EditProductSize from './pages/Products/editProductSize';
 import ProductWeight from './pages/Products/productWeight';
 import AddProductWeight from './pages/Products/addProductWeight';
 import EditProductWeight from './pages/Products/editProductWeight';
+
 import HomeBannerSlideList from './pages/HomeBannerSlider/homeBannerSlideList';
 import EditHomeBannerSlide from './pages/HomeBannerSlider/editHomeBannerSlide';
 import AddHomeBannerSlide from './pages/HomeBannerSlider/addHomeBannerSlide';
+
 import BannerList from './pages/Banner/bannerList';
 import EditBanner from './pages/Banner/editBanner';
 import AddBanner from './pages/Banner/addBanner';
+
+import TagList from './pages/Tag/tag';
+import EditTag from './pages/Tag/editTag';
+import AddTag from './pages/Tag/addTag';
 
 const MyContext = createContext();
 
@@ -109,6 +117,14 @@ const App = () => {
 		})
 	}
 
+	const fetchTag = () => {
+		fetchDataFromApi('/api/tag').then((res) => {
+			setProgress(30);
+			setCategoryData(res);
+			setProgress(100);
+		})
+	}
+
 	const fetchBanner = () => {
 		fetchDataFromApi('/api/banner').then((res) => {
 			setProgress(30);
@@ -146,6 +162,7 @@ const App = () => {
 		alertBox,
 		setAlertBox,
 		fetchCategory,
+		fetchTag,
 		categoryData,
 		setCategoryData,
 		userData,
@@ -231,6 +248,10 @@ const App = () => {
 							<Route exact={true} path="/banner/add" element={<AddBanner />} />
 							<Route exact={true} path="/banner/list" element={<BannerList />} />
 							<Route exact={true} path="/banner/edit/:id" element={<EditBanner />} />
+
+							<Route exact={true} path="/tag/add" element={<AddTag />} />
+							<Route exact={true} path="/tag/list" element={<TagList />} />
+							<Route exact={true} path="/tag/edit/:id" element={<EditTag />} />
 						</Routes>
 					</div>
 				</div>

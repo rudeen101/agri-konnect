@@ -236,35 +236,38 @@ router.delete('/deleteImage', async (req, res) => {
 router.delete('/:id', async (req, res) => {
 
     const category = await Category.findById(req.params.id);
-    // const images = category.images;
+    const images = category.images;
 
-    // for (img of images) {
-    //     const imageUrl = img;
-    //     const urlArr = imageUrl.split("/");
-    //     const image = urlArr[urlArr.length - 1];
+    for (img of images) {
+        const imgUrl = img;
+        const urlArr = imgUrl.split('/');
+        const image = urlArr[urlArr.length - 1];
 
-    //     const imageName = imae.split(".")[0];
+        const imageName = image.split('.')[0];
 
-    //     cloudinary.uploader.destroy(
-    //         imageName,
-    //         (error, result) => {
-    //             // console.log(result);
-    //         }
-    //     );
-
-        const deleteCategory = await Category.findByIdAndDelete(req.params.id);
-
-        if (!deleteCategory) {
-            res.status(404).json({
-                message: "Category not found!",
-                success: false
-            })
+        if (imageName) {
+            cloudinary.uploader.destroy(
+                imageName,
+                (error, result) => {
+                    // console.log(result);
+                }
+            )
         }
+    }
 
-        res.status(200).json({
-            success: true,
-            message: "Category Deleteed!"
+    const deleteCategory = await Category.findByIdAndDelete(req.params.id);
+
+    if (!deleteCategory) {
+        res.status(404).json({
+            message: "Category not found!",
+            success: false
         })
+    }
+
+    res.status(200).json({
+        success: true,
+        message: "Category Deleteed!"
+    })
     // }
 });
 

@@ -1,7 +1,9 @@
 const {
     Schema,
-    model
+    model,
+    mongoose
   } = require("mongoose");
+
 
 const userSchema = new Schema({
     name: {
@@ -28,7 +30,21 @@ const userSchema = new Schema({
     isAdmin: {
         type: Boolean,
         default: false
-    }
+    },
+
+    recentlyViewed: [
+        { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product' 
+        }
+    ],
+    purchaseHistory: [
+        { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product' 
+        }
+    ],
+
 
 }, {timestamp:true});
 

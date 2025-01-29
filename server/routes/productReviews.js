@@ -1,4 +1,5 @@
 const  ProductReviews = require('../models/productReviews');
+const  Product = require('../models/product');
 const express = require("express");
 const router = express.Router();
 const mongoose = require("mongoose");
@@ -52,29 +53,40 @@ router.get('/:id', async (req, res) => {
     res.status(200).send(productReviews);
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add/:id', async (req, res) => {
+    try {
+        const {customerId, customerName , review, customerRating, productId} = req.body;
 
-    const {customerId, customerName , review, customerRating, productId} = req.body;
+        if (customerRating < 1 || customerRating > 5) return res.status(400).json({ error: 'Rating must be between 1 and 5.' });
 
-    let productReviewObj = new ProductReviews({
-        customerId: customerId,
-        customerName: customerName,
-        review: review, 
-        productName: review, 
-        customerRating: customerRating, 
-        productId: productId, 
-    });
+        let productReviewObj = new ProductReviews({
+            customerId: customerId,
+            customerName: customerName,
+            review: review, 
+            productName: review, 
+            customerRating: customerRating, 
+            productId: productId, 
+        });
 
-    if (!productReviewObj) {
-        res.status(500).json({
-            error: error,
-            success: false
-        })
-    }
+        const product = await Product.findById(req.params.id);
 
-    productReviewObj = await productReviewObj.save();
+        // Update average rating
+        const totalRating = product.averageRating * product.reviewCount + customerRating;
+        product.reviewCount += 1;
+        product.averageRating = totalRating / product.reviewCount;
+        product.lastInteraction = Date.now();
+        product.ratings.push(customerRating);
     
-    res.status(201).json(productReviewObj);
+        if (!productReviewObj) return res.status(404).json({ error: 'Error adding review' });
+
+        productReviewObj = await productReviewObj.save();
+        await product.save();
+
+        res.status(201).json(productReviewObj);
+        
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add review' });
+    }
 
 });   
 

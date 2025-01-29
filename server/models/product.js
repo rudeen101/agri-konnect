@@ -56,16 +56,29 @@ const productSchema = new Schema({
         type: String,
         required: true
     },
-    rating: {
-        type: Number,
-        required: true
-    },
+    ratings: [Number], 
     isFeatured: {
         type:  Boolean,
         default: false
     },
+    isTopSeller: {
+        type:  Boolean,
+        default: false
+    },
+    isPopular: {
+        type:  Boolean,
+        default: false
+    },
+    salesCount: 
+    {   type: Number,
+        default: 0 
+    },
+    popularityScore: { 
+        type: Number, 
+        default: 0 
+    },
     discount: {
-        type: Number,
+        type: String,
         required: true
     },
     // size: [
@@ -94,8 +107,44 @@ const productSchema = new Schema({
     },
     dateCreated: {
         type: Date,
-        default: Date.noe
+        default: Date.now
     },
+    views: { 
+        type: Number,
+        default: 0 
+    },
+    isRecommended: { 
+        type: Boolean,
+        default: false 
+    },
+
+    averageRating: { 
+        type: Number, 
+        default: 0 
+    }, // Avg rating (e.g., 4.5)
+    reviewCount: { 
+        type: Number, 
+        default: 0 
+    }, // Number of reviews
+    
+    lastInteraction: { 
+        type: Date, 
+        default: Date.now 
+    }, // Last update time
+
+    tags: [
+        { 
+            type: mongoose.Schema.Types.ObjectId, ref: "Tag" 
+        }
+    ], // Reference to Tag model
+    
+    seller: { 
+        type: mongoose.Schema.Types.ObjectId, 
+        ref: 'User',
+        required: true,
+    }
+
+
 }, {timestamp:true});
 
 productSchema.virtual('id').get(function () {

@@ -422,7 +422,7 @@ const ProductUpload = () =>{
 
             deleteData('/api/imageUpload/deleteAllImages');
 
-            history('/product/listing')
+            // history('/product/listing')
         }).catch((error)=>{
             console.log("-------",error)
         });
@@ -780,17 +780,20 @@ const ProductUpload = () =>{
                                                 </div>
                                                 :
                                                 <>
+                                                    <label for="fileInput">
+                                                        <div className="info">
+                                                            <FaRegImages className="icon" />
+                                                            <h6 className="mt-3">Upload Image</h6>
+                                                        </div>
+                                                    </label>
+
                                                     <input 
                                                         type="file"
                                                         multiple  
                                                         onChange={(e) => onChangeFile(e, '/api/category/upload')}
                                                         name="images"
+                                                        id="fileInput"
                                                     />
-                                            
-                                                    <div className="info">
-                                                        <FaRegImages />
-                                                        <h5>Image upload</h5>
-                                                    </div>
                                                 </>
                                             }
                                          

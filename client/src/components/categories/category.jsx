@@ -22,7 +22,7 @@ const Category = (props)=> {
 
                         return (
                             <div className="catItem">
-                            <img src={food}/>
+                            <img src={childCat?.images[0]}/>
                             <p>{childCat.name}</p>
                         </div>
                         );

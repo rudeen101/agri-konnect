@@ -17,13 +17,12 @@ import { fetchDataFromApi } from "../../utils/api";
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+import {  } from "../../utils/api";
+import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
 
 
 
-const AddSubCategory = () =>{
+const AddCategory = () =>{
 
     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
@@ -74,6 +73,7 @@ const AddSubCategory = () =>{
 
             setUploading(true);
 
+
             for (let i = 0; i < files.length; i++) {
 
                 if (files[i] && files[i].type === 'image/jpeg' || files[i].type === 'image/jpg' || files[i].type === 'image/png' || files[i].type === 'image/webp'){
@@ -97,6 +97,7 @@ const AddSubCategory = () =>{
         } catch (error) {
             console.log(error)
         }
+     
 
         uploadImage(apiEndPoint, formData).then((res) => {
             fetchDataFromApi('/api/imageUpload').then((response) =>  {
@@ -225,13 +226,13 @@ const AddSubCategory = () =>{
                                                 return (
                                                     <div className="uploadBox" key={index}>
                                                         <span className="remove" onClick={() => removeImage(index, img)}>
-                                                            <IoMdClose />
+                                                            <IoMdClose className="icon"/>
                                                         </span>
                                                         <div className="box">
                                                             <LazyLoadImage
                                                                 alt={"image"}
                                                                 efect="blur"
-                                                                className="w-100"
+                                                                className="w-100 img"
                                                                 src={img}
                                                             />
                                                         </div>
@@ -252,17 +253,22 @@ const AddSubCategory = () =>{
                                                 </div>
                                                 :
                                                 <>
+                                               
+                                                    <label for="fileInput">
+                                                        <div className="info">
+                                                            <FaRegImages className="icon" />
+                                                            <h6 className="mt-3">Upload Image</h6>
+                                                        </div>
+                                                    </label>
+
                                                     <input 
                                                         type="file"
                                                         multiple  
                                                         onChange={(e) => onChangeFile(e, '/api/category/upload')}
                                                         name="images"
+                                                        id="fileInput"
                                                     />
-                                            
-                                                    <div className="info">
-                                                        <FaRegImages />
-                                                        <h5>Image upload</h5>
-                                                    </div>
+
                                                 </>
                                             }
                                          
@@ -289,4 +295,4 @@ const AddSubCategory = () =>{
     );
 }
 
-export default AddSubCategory;
+export default AddCategory;

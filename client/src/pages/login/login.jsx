@@ -76,7 +76,7 @@ const Login = () =>{
                             isAdmin: res.user?.isAdmin,
                             userId: res?.user?._id
                         }
-                        localStorage.setItem("user--", JSON.stringify(user));
+                        localStorage.setItem("user", JSON.stringify(user));
                         localStorage.setItem("isLogin", true);
                         
                         if (res.error !== true) {

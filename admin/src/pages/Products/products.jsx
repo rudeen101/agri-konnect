@@ -88,7 +88,7 @@ const ProductListing = () =>{
     const deleteProduct = (productId) => {
         context.setProgress(40);
 
-        deleteData(`/api/products/${productId}`).then((res) => {
+        deleteData(`/api/product/${productId}`).then((res) => {
             context.setProgress(100);
             context.setAlertBox({
                 open: true,
