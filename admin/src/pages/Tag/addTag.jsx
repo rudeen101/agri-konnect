@@ -37,7 +37,7 @@ const AddTag = () =>{
     const [formFields, setFormFields] = useState({
         name: "",
         description: "",
-        catId: ""
+        category: ""
     });
 
 
@@ -68,10 +68,10 @@ const AddTag = () =>{
         const formatedTag = formatTag(formFields.name);
 
         formFields.name = formatedTag;
-        formFields.catId = formFields.catId;
+        formFields.category = formFields.category;
         formFields.description = formFields.description;
 
-        if (formFields.name !== "" && formFields.catId){
+        if (formFields.name !== "" && formFields.category){
             setIsLoading(true);
 
             postData(`/api/tag/add`, formFields).then((res) => {
@@ -115,7 +115,7 @@ const AddTag = () =>{
     }
 
     const selectCategory = (categoryId) => {
-        formFields.catId = categoryId
+        formFields.category = categoryId
     }
 
     

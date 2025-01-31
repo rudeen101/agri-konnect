@@ -16,7 +16,7 @@ import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { Link } from "react-router-dom";
 
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
@@ -24,22 +24,6 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { deleteData, fetchDataFromApi } from "../../utils/api";
-
-
-const data = [
-    ["Year", "Sales", "Expenses"],
-    ["2013", 1000, 400],
-    ["2014", 1170, 460],
-    ["2015", 660, 1120],
-    ["2016", 1030, 540],
-  ];
-  
-  const options = {
-    'backgroundColor': 'transparent',
-    'chartArea': { 'width': "100%", 'height': "100%" },
-  };
-
-
 
 
 
@@ -116,8 +100,6 @@ const ProductListing = () =>{
                 behavior: "smooth"
             })
         });
-
-
     }
 
     const showPerPage = (e) => {
@@ -317,8 +299,11 @@ const ProductListing = () =>{
                                                 <td>438K</td>
                                                 <td>
                                                     <div className="actions d-flex align-items-center">
-                                                        <Button className="secondary    " color="secondary"><FaEye /></Button>
-                                                        <Button className="success" color="sucess"><FaPencilAlt /></Button>
+                                                        <Button className="secondary" color="secondary"><FaEye /></Button>
+                                                        <Link to={`/product/edit/${product._id}`}>
+                                                            <Button className="success" color="sucess"><FaPencilAlt /></Button>
+                                                        </Link>
+                                                        
                                                         <Button className="error" color="error" onClick={() => deleteProduct(product?._id)}><MdDelete /></Button>
                                                     </div>
                                                 </td>

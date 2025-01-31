@@ -89,7 +89,7 @@ const Sidebar = () => {
                         <ul className="submenu">
                             <li>
                                 <Link to={"/tag/list"}>Tag List</Link>
-                                <Link to={"/tag/add"}>Add Category</Link>
+                                <Link to={"/tag/add"}>Add Tag</Link>
                             </li>
                         </ul>
                     </div>

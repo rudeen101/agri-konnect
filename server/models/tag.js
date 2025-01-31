@@ -14,12 +14,13 @@ const tagSchema = new Schema({
     description: {
         type: String,
     },
-    catId: [
-        { 
-            type: mongoose.Schema.Types.ObjectId, ref: "Category",
-            required: true 
-        }
-    ], // Reference to Tag model
+
+    category: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Category',
+        required: true 
+    },
+
     createdAt: {
         type: Date,
         default: Date.now 

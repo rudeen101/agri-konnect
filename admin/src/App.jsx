@@ -31,6 +31,7 @@ import EditProductSize from './pages/Products/editProductSize';
 import ProductWeight from './pages/Products/productWeight';
 import AddProductWeight from './pages/Products/addProductWeight';
 import EditProductWeight from './pages/Products/editProductWeight';
+import EditProduct from './pages/Products/editProduct';
 
 import HomeBannerSlideList from './pages/HomeBannerSlider/homeBannerSlideList';
 import EditHomeBannerSlide from './pages/HomeBannerSlider/editHomeBannerSlide';
@@ -231,7 +232,7 @@ const App = () => {
 
 							<Route exact={true} path="/productWeight" element={<ProductWeight />} />
 							<Route exact={true} path="/productWeight/add" element={<AddProductWeight />} />
-							<Route exact={true} path="/productWeight/edit/:id" element={<EditProductWeight />} />
+							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} />
 
 							<Route exact={true} path="/category" element={<Category />} />
 							<Route exact={true} path="/category/add" element={<AddCategory />} />

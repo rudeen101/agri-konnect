@@ -13,6 +13,7 @@ import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Button, Rating, CircularProgress } from "@mui/material/";
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
+import MultiSelectTags from "../../components/multiSelect/MultiSelect";
 
 
 
@@ -32,7 +33,6 @@ import { deleteImages } from "../../utils/api";
 import { deleteData, postData } from "../../utils/api";
 
 
-
 const ProductUpload = () =>{
     const [categoryVal, setCategoryVal] = useState('');
     const [subCategoryVal, setSubCategoryVal] = useState('');
@@ -42,6 +42,9 @@ const ProductUpload = () =>{
     const [productWeight, setProductWeight] = useState([]);
     const [productSize, setProductSize] = useState([]);
 
+    const [tagName, setTagName] = useState([]);
+    const [tagData, setTagData] = useState([]);
+  
     const [productWeightData, setProductWeightData] = useState([]);
     const [productSizeData, setProductSizeData] = useState([]);
 
@@ -74,7 +77,8 @@ const ProductUpload = () =>{
         // size: [],
         productWeight: [],
         packagingType: [],
-        location: ""
+        location: "",
+        tags: []
     });
 
     const inputChange = (e)=> {
@@ -131,6 +135,15 @@ const ProductUpload = () =>{
         formFields.catName = catName;
         formFields.category = catId;
         formFields.catId = catId;
+
+        setTagName([])
+
+        fetchDataFromApi(`/api/tag/category/${catId}`).then((res) => {
+            console.log("catTag",res.tags)
+            context.setProgress(30)
+            setTagData(res.tags);
+            context.setProgress(100)
+        });
     }
 
     const selectSubCategory = (subCatName, subCatId)=> {
@@ -186,6 +199,16 @@ const ProductUpload = () =>{
             isFeatured: event.target.value
         }))
     }
+
+    const handleChangeTag = (event) => {
+        const {
+          target: { value },
+        } = event;
+        setTagName(
+          // On autofill we get a stringified value.
+          typeof value === 'string' ? value.split(',') : value,
+        );
+    };
 
 
     let img_arr = [];
@@ -429,6 +452,11 @@ const ProductUpload = () =>{
     }
 
 
+    const handleTagsSelected = (selectedTagIds) => {
+        formFields.tags = selectedTagIds;
+    };
+
+
     return (
         <>
             <div className="rightContent w-100">
@@ -562,6 +590,47 @@ const ProductUpload = () =>{
                                             </Select>
                                         </div> 
                                     </div>
+                                    <div className="col">
+                                        {/* <FormControl sx={{ m: 1, width: 300, mt: 3 }}>
+                                            <Select
+                                                multiple
+                                                displayEmpty
+                                                value={tagName}
+                                                onChange={handleChangeTag}
+                                                input={<OutlinedInput />}
+                                                renderValue={(selected) => {
+                                                    if (selected.length === 0) {
+                                                    return <em>Placeholder</em>;
+                                                    }
+
+                                                    return selected.join(', ');
+                                                }}
+                                                MenuProps={MenuProps}
+                                                inputProps={{ 'aria-label': 'Without label' }}
+                                            >
+                                            <MenuItem disabled value="">
+                                                <em>Placeholder</em>
+                                            </MenuItem>
+                                            {tagData?.length !== 0 && tagData?.map((tag, index) => (
+                                                <MenuItem
+                                                key={index}
+                                                value={tag.name}
+                                                style={getStyles(tag.name, tagName, theme)}
+                                                >
+                                                {tag.name}
+                                                </MenuItem>
+                                            ))}
+                                            </Select>
+                                        </FormControl> */}
+
+                                        <div className="col">
+                                            <div className="form-group">
+                                                <h6>SELECT TAGS</h6>
+                                                <MultiSelectTags tags={tagData} onTagsSelected={handleTagsSelected} />
+                                            </div>
+                                        </div>
+                                    </div>
+                                 
                                     <div className="col">
                                         <div className="form-group">
                                             <h6>PRICE</h6>

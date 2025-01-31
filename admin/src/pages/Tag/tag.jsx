@@ -42,7 +42,7 @@ const TagList = () =>{
     
     const fetchTags = () => {
 		fetchDataFromApi('/api/tag').then((res) => {
-            console.log(res)
+            console.log("Tags",res)
 			context.setProgress(30)
 			setTagData(res);
 			context.setProgress(100)
@@ -81,11 +81,9 @@ const TagList = () =>{
 
                             </Breadcrumbs>
 
-                            <Link to={'/category/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Tag</Button></Link>
+                            <Link to={'/tag/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Tag</Button></Link>
 
                         </div>
-                     
-
                 </div>
 
                 <div className="card shadow border-0 p-3 mt-4">
@@ -111,7 +109,7 @@ const TagList = () =>{
                                                     {tag?.name}
                                                 </td>
                                                 <td>
-                                                    {tag?.catId[0].name}
+                                                    {tag?.category.name}
                                                 </td>
                                                 <td>
                                                     {tag?.description}
