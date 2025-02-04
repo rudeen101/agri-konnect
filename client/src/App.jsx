@@ -17,6 +17,7 @@ import LoadingBar from 'react-top-loading-bar';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import SearchPage from './pages/search/search';
+import Header2 from './components/header2/Header';
 
 
 import { fetchDataFromApi, postData } from './utils/api';
@@ -145,11 +146,13 @@ const App = () => {
 
 			res.categoryList?.length !== 0 && res.categoryList?.map((category) => {
 				if(category?.children.length !== 0){
-					category?.childredn?.map((subCat) => {
+					category?.children?.map((subCat) => {
 						subCatArray.push(subCat);
 					});
 				}
 			});
+
+			console.log("&&&", subCatArray)
 			setSubCategoryData(subCatArray);
 			setProgress(100);
 		})
@@ -286,7 +289,8 @@ const App = () => {
 				</Snackbar>
 
 				{
-					headerFooterDisplay && <Header />
+					// headerFooterDisplay && <Header />
+					headerFooterDisplay && <Header2 />
 				}
 				<Routes>
 					<Route exact={true} path="/" element={<Home />} />

@@ -951,7 +951,7 @@ body.dark .css-1wuw8dw-MuiBreadcrumbs-separator{
 Slider Style
 *************************/
 .productDetailsSection .row .wrapper, .productDetailsSection .row .detailsWrapper{
-    margin: 0px 25px!important 
+    margin: 0px 20px!important 
 }
 .smallSlider{
     display: flex !important;
@@ -962,18 +962,36 @@ Slider Style
     margin: 0px !important
 }
 
-.heroSlider .item{
-    overflow: hidden;
+.heroSlider {
     border-radius: 7px;
+    width: 100%;
+    height: 300px !important;
+    /* border: 2px dashed #ccc !important;
+    overflow: hidden !important;
+    cursor: pointer; */
+
 }
-body.light .heroSlider .item{
-    border: 2px dashed #ccc !important;
+
+.heroSlider img{
+    /* /* width: 100% !important;  */
+    /* height: 100% !important;  */
+    /* object-fit: cover;   */
 }
+
+/* body.light .heroSlider .item{
+} */
 .smallSlider .slick-slide .item{
     border-radius: 7px !important;
     overflow: hidden !important;
-    cursor: pointer
+    cursor: pointer;
+    height: 50px
 }
+.smallSlider .slick-slide .item img{
+    width: 100%; /* Ensures the image stretches to fit the slider width */
+    height: auto; /* Maintains aspect ratio */
+    object-fit: cover; /* Ensures the image fills the container */
+}
+
 .smallSlider .slick-current .item{
     border: 1px solid rgb(128, 128, 128) !important
 }
@@ -987,6 +1005,33 @@ body.light .smallSlider .slick-slide .item{
     border-radius: 2px dashed #ccc !important;
     
 } */
+
+.slick-prev:before {
+    position: absolute;
+    left: 5px;
+    top: 0px;
+    font-family: 'slick';
+    font-size: 20px;
+    line-height: 1;
+    opacity: .75;
+    z-index: 1000 !important;
+    color: rgb(36, 33, 33) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+.slick-next:before {
+    position: absolute;
+    right: 15px;
+    top: 0px;
+    font-family: 'slick';
+    font-size: 20px;
+    line-height: 1;
+    opacity: 8;
+    z-index: 1000 !important;
+    color: rgb(36, 33, 33) !important;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
 
 
@@ -1020,7 +1065,7 @@ body.light .productDetailsSection .productInfo .name{
     margin-bottom: 10px !important;
 }
 
-.productDetailsSection .productInfo .row .col-sm-9 span{
+.productDetailsSection .productInfo .row .subCat span{
     opacity: 0.8;
     font-size: 15px;
     padding-left: 20px;
@@ -1065,6 +1110,25 @@ body.light .ratingSection .ratingRow .progress{
 .ratingSection .ratingRow .progress .progress-bar{
     background-color: #edb213 !important;
 }
+.ratingSection .ratingRow.stastitics{
+    line-height: 10px;
+}
+.ratingSection .ratingRow.ratingDistribution{
+    line-height: 10px;
+}
+.ratingSection .ratingRow.stastitics .name{
+    color: #5e5d72;
+    font-weight: bold;
+    font-size: 15px;
+}
+.ratingSection .ratingRow.stastitics .value{
+    /* color: #5e5d72; */
+    opacity: 0.8;
+    font-size: 15px;
+    margin-left: 10px;
+
+}
+
 .ratingSection .ratingRow .col1{
     width: 15%; 
     flex: 0 0 15%;
@@ -1086,6 +1150,28 @@ body.light .ratingSection .ratingRow .progress{
     display: flex;
     flex-direction: column;
 }
+
+.adminReviewsCard .imageBox{
+    display: flex !important;
+    margin-right: 10px;
+}
+.adminReviewsCard .rounded-circle{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 60px;
+    height: 60px;
+    background-color: #3bb77e;
+}
+.adminReviewsCard .rounded-circle .initial{
+    font-size: 20px;
+    font-weight: 700;
+    color: white;
+    display: block;
+    text-align: center;
+}
+
 .reviewSection .reviewRow{
     width: 100%;
     height: auto;

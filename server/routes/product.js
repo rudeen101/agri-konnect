@@ -1,5 +1,6 @@
 const  Category = require('../models/category');
 const  User = require('../models/users');
+const  ProductReviews = require('../models/productReviews');
 const  Product = require('../models/product');
 const  Tag = require('../models/tag');
 const {ImageUpload} = require("../models/imageUpload");
@@ -309,7 +310,7 @@ router.get('/homepage', async (req, res) => {
         const thresholds = {
             topSellers: 0, // Minimum sales count to qualify as a top seller
             mostPopular: 0, // Minimum popularity score to qualify as most popular
-            newlyReleasedDays: 30 // Products released within the last 30 days are considered newly released
+            newlyReleasedDays: 5 // Products released within the last 30 days are considered newly released
         };
 
         const now = new Date();
@@ -347,44 +348,44 @@ router.get('/homepage', async (req, res) => {
             const recentlyViewed = user?.recentlyViewed || [];
 
             
-            // Fetch user-specific data if a userId is provided
-            if (userId) {
-                const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
-    
-                if (user) {
-                    // Get products from purchase history and recently viewed
-                    const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
-                    const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
-    
-                    // Find related products based on purchase and viewing history
-                    const relatedProducts = await Product.find({
-                        _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
-                        tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
-                    }).lean();
-    
-                    recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
-                }
-            }
-    
-            // Fetch global recommended products if no specific user data
-            const globallyRecommended = await Product.find({ is_recommended: true })
-                .sort({ popularity_score: -1 })
-                .limit(limit)
-                .lean();
-    
-            // Combine both sources
-            recommendedProducts = [
-                ...recommendedProducts,
-                ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
-            ];
+        // Fetch user-specific data if a userId is provided
+        if (userId) {
+            const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
 
-        // Combine products from all categories
-        const combinedProducts = [
-            {products: recentlyViewed, category: 'recentlyViewed'},
-            {products: newlyReleased, category: 'newlyReleased'},
-            {products: mostPopular, category: 'mostPopular'},
-            // ...topSellers.map((p) => ({ ...p, category: 'topSeller'})),
+            if (user) {
+                // Get products from purchase history and recently viewed
+                const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
+                const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
+
+                // Find related products based on purchase and viewing history
+                const relatedProducts = await Product.find({
+                    _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
+                    tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
+                }).lean();
+
+                recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
+            }
+        }
+    
+        // Fetch global recommended products if no specific user data
+        const globallyRecommended = await Product.find({ is_recommended: true })
+            .sort({ popularity_score: -1 })
+            .limit(limit)
+            .lean();
+
+        // Combine both sources
+        recommendedProducts = [
+            ...recommendedProducts,
+            ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
         ];
+
+    // Combine products from all categories
+    const combinedProducts = [
+        {products: recentlyViewed, category: 'recentlyViewed'},
+        {products: newlyReleased, category: 'newlyReleased'},
+        {products: mostPopular, category: 'mostPopular'},
+        // ...topSellers.map((p) => ({ ...p, category: 'topSeller'})),
+    ];
 
         if (sort) {
             switch (sort) {
@@ -598,43 +599,75 @@ router.delete('/:id', async (req, res) => {
     })
 });
 
-router.put("/:id", async(req, res) => {
+// router.put("/:id", async(req, res) => {
     
-    const product = await Product.findByIdAndUpdate(
-        req.params.id,
-        {
-            name: req.body.name,
-            description: req.body.description,
-            images: imagesArray,
-            brand: req.body.brand,
-            price: req.body.price,
-            oldPrice: req.body.oldPrice,
-            subCatId: req.body.subCatId,
-            catId: req.body.catId,
-            catName: req.body.catName,
-            subCat: req.body.subCat,
-            category: req.body.name,
-            countInStock: req.body.countInStock,
-            rating: req.body.reting,
-            isFeatured: req.body.isFeatired,
-            discount: req.body.discount,
-            size: req.body.size,
-            productWeight: req.body.productWeight,
-            location: req.body.location !== "" ? req.body.location : "All",
-        },
-        {new: true}
-    );
+//     const product = await Product.findByIdAndUpdate(
+//         req.params.id,
+//         {
+//             name: req.body.name,
+//             description: req.body.description,
+//             images: imagesArray,
+//             brand: req.body.brand,
+//             price: req.body.price,
+//             oldPrice: req.body.oldPrice,
+//             subCatId: req.body.subCatId,
+//             catId: req.body.catId,
+//             catName: req.body.catName,
+//             subCat: req.body.subCat,
+//             category: req.body.name,
+//             countInStock: req.body.countInStock,
+//             rating: req.body.rating,
+//             isFeatured: req.body.isFeatired,
+//             discount: req.body.discount,
+//             size: req.body.size,
+//             productWeight: req.body.productWeight,
+//             location: req.body.location !== "" ? req.body.location : "All",
+//         },
+//         {new: true}
+//     );
 
-    if (!product) {
-        return res.status(500).json({
-            message: "Product cannot not be updated!",
-            success: false
+//     if (!product) {
+//         return res.status(500).json({
+//             message: "Product cannot not be updated!",
+//             success: false
+//         });
+//     }
+
+//     imagesArr = [];
+//     res.send(product); 
+// });
+
+// Edit Product Endpoint
+router.put('/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const updatedData = req.body;
+
+        // Ensure the product exists
+        const product = await Product.findById(id);
+        if (!product) {
+            return res.status(404).json({ error: 'Product not found' });
+        }
+
+        // Update product fields
+        const updatedProduct = await Product.findByIdAndUpdate(
+            id,
+            { $set: updatedData }, // Update only fields provided in the request
+            { new: true, runValidators: true } // Return updated product and validate fields
+        );
+
+        console.log(updatedProduct);
+
+        res.status(200).json({
+            message: 'Product updated successfully',
+            product: updatedProduct,
         });
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to update product' });
     }
-
-    imagesArr = [];
-    res.send(product); 
 });
+
 
 router.get('/category/:id', async (req, res) => {
 
@@ -648,6 +681,66 @@ router.get('/category/:id', async (req, res) => {
     
     return res.status(200).send(product);
 
+});
+
+// GET rating analytics for a specific product
+router.get('/:productId/ratings', async (req, res) => {
+    try {
+        const { productId } = req.params;
+
+        // Check if the product exists
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({ error: "Product not found" });
+        }
+
+        // Fetch all reviews for the product
+        const reviews = await ProductReviews.find({ productId: productId });
+
+        if (reviews.length === 0) {
+            return res.json({
+                product: productId,
+                averageRating: 0,
+                totalReviews: 0,
+                ratingDistribution: {
+                    "5": 0,
+                    "4": 0,
+                    "3": 0,
+                    "2": 0,
+                    "1": 0
+                }
+            });
+        }
+
+        // Calculate average rating
+        const totalReviews = reviews.length;
+        const sumOfRatings = reviews.reduce((sum, review) => sum + review.customerRating, 0);
+        const averageRating = (sumOfRatings / totalReviews).toFixed(1);
+
+        // Count ratings for each star (1 to 5)
+        const ratingDistribution = {
+            "5": 0,
+            "4": 0,
+            "3": 0,
+            "2": 0,
+            "1": 0
+        };
+
+        reviews.forEach(review => {
+            ratingDistribution[review.customerRating]++;
+        });
+
+        res.json({
+            product: productId,
+            averageRating,
+            totalReviews,
+            ratingDistribution
+        });
+
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Failed to fetch rating analytics" });
+    }
 });
 
 function calculatePopularityScore(product) {

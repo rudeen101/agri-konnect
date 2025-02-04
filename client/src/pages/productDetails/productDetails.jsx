@@ -212,7 +212,6 @@ const ProductDetails = () =>{
                                                 <img src={image} alt="" className="w-100" onClick={()=>goto(index)} />
                                             </div>
                                         })
-                                       
                                     }
                                 </Slider>
                             </div>
@@ -282,7 +281,6 @@ const ProductDetails = () =>{
                                         <a href="#" className="cursor" onClick={() => addToWishList(productData)}> 
                                             {
                                                 addedToWishList === true ? <MdFavorite/> : <MdFavoriteBorder />
-
                                             }
                                         </a>
                                     </Button>

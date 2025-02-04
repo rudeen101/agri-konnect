@@ -21,6 +21,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import { fetchDataFromApi } from "../../utils/api";
 import Category from "../../components/categories/category";
+import HomeProductCard from "../../components/product/homeProductCard";
 
 
 const Home = () => {
@@ -37,7 +38,8 @@ const Home = () => {
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [topSeller, setTopSeller] = useState([]);
     const [recentlyViewed, setRecentlyViewed] = useState([]);
-    const [mostPopular, setMostPopulat] = useState([]);
+    const [mostPopular, setMostPopular] = useState([]);
+    const [newArrival, setNewArrival] = useState([]);
 
     const productRow = useRef();
 
@@ -59,7 +61,7 @@ const Home = () => {
         arrows: true
     }; 
 
-    const topSellerSlier ={
+    const bannerSlider ={
         dots: false,
         infinite: true,
         speed: 500,
@@ -80,9 +82,11 @@ const Home = () => {
 
         fetchDataFromApi(`/api/product/homepage`)
         .then((res) => {
-            console.log("setTopSeller", res)
-            setTopSeller(res.products);
-            setFilterData([]);
+            console.log("home data",res.combinedProducts)
+
+            setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
+            setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
+            setRecentlyViewed(res.combinedProducts.find(p => p.category === "recentlyViewed"));
 
             setIsLoading(false);
         });
@@ -115,7 +119,6 @@ const Home = () => {
       
         fetchDataFromApi("/api/homeSliderBanner/")
         .then((res) => {
-            console.log(res)
             setHomeSliderBanner(res);
         });
         
@@ -167,75 +170,8 @@ const Home = () => {
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Top Selling Items</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                   
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-            
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Top Sellers</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                   
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-            
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
                             <h3 className="hd mb-0 mt-0">Most Popular Items</h3>
+                            {console.log("popular", mostPopular)}
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
@@ -248,11 +184,11 @@ const Home = () => {
                             <div className="col-md-12">
                                 <Slider {...settings} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        mostPopular?.products?.length !== 0 && mostPopular.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -263,12 +199,14 @@ const Home = () => {
                     </div>
                 </div>    
             </section>
+
+            {/* Newly Released Product */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Vegetables Market</h3>
+                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
@@ -281,11 +219,11 @@ const Home = () => {
                             <div className="col-md-12">
                                 <Slider {...settings} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -297,12 +235,30 @@ const Home = () => {
                 </div>    
             </section>
 
+            {/* Category section */}                       
+            <div className="categories">
+                <div className="container-fluid">
+                    
+                    <div className="categoryRow ">
+                        { 
+                            context.categoryData?.categoryList?.map((category, index) => {
+
+                                return (
+                                    <Category catData={category} />
+                                );
+                            })
+                        }
+                    </div>
+                </div>
+            </div>
+
+            {/* User recently viewed products */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Fruits Market</h3>
+                            <h3 className="hd mb-0 mt-0">Recently viewed Items</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
@@ -310,16 +266,51 @@ const Home = () => {
                                 </li>
                             </ul>
                         </div>
-                   
+                
                         <div className="row">
-                               <div className="col-md-12">
+                            <div className="col-md-12">
                                 <Slider {...settings} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
+                                                </div>
+                                            )
+                                        })
+                                    }
+                                </Slider>
+                            </div>
+                        </div>    
+                    </div>
+                </div>    
+            </section>
+
+            {/* Top Fresh Produce Items */}                       
+            <section className="homeProducts homeProductsSection2 pt-0">
+                <div className="container-fluid">
+
+                    <div className="wrapper card">
+                        <div className="productCardHeader">
+                            <h3 className="hd mb-0 mt-0">Recommended Items for you</h3>
+
+                            <ul className="list list-inline mb-0 ml-auto filterTab">
+                                <li className="list-inline-item">
+                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
+                                </li>
+                            </ul>
+                        </div>
+                
+                        <div className="row">
+                            <div className="col-md-12">
+                                <Slider {...settings} className="productSlider">
+                                    {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
+
+                                            return (
+                                                <div className="item"  key={index}>
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -331,30 +322,35 @@ const Home = () => {
                 </div>    
             </section>
             
-
+             {/* Slider with banner top fresh produce  */}   
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Tubers Market</h3>
+                        {/* <div className="productCardHeader">
+                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
                                     <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
                    
                         <div className="row">
-                               <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
+                            <div className="col-md-3 bannerCol">
+                                <div className="item card">
+                                <img src={image} alt="" />
+                                </div>
+                            </div>
+                            <div className="col-md-9">
+                                <Slider {...bannerSlider} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -366,29 +362,35 @@ const Home = () => {
                 </div>    
             </section>
 
+             {/* Slider with banner for farm inputs  */}   
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Grains Market</h3>
+                        {/* <div className="productCardHeader">
+                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
                                     <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> */}
                    
                         <div className="row">
-                               <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
+                            <div className="col-md-3 bannerCol">
+                                <div className="item card">
+                                <img src={image} alt="" />
+                                </div>
+                            </div>
+                            <div className="col-md-9">
+                                <Slider {...bannerSlider} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -400,12 +402,13 @@ const Home = () => {
                 </div>    
             </section>
 
+            {/* Lifestock */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Processed Food Market</h3>
+                            <h3 className="hd mb-0 mt-0">Lifestock</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
@@ -413,16 +416,16 @@ const Home = () => {
                                 </li>
                             </ul>
                         </div>
-                   
+                
                         <div className="row">
-                               <div className="col-md-12">
+                            <div className="col-md-12">
                                 <Slider {...settings} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -434,12 +437,13 @@ const Home = () => {
                 </div>    
             </section>
 
+            {/* Aquatic */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
                 <div className="container-fluid">
 
                     <div className="wrapper card">
                         <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Farm Inputs Market</h3>
+                            <h3 className="hd mb-0 mt-0">Aquatic</h3>
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">
@@ -447,16 +451,16 @@ const Home = () => {
                                 </li>
                             </ul>
                         </div>
-                   
+                
                         <div className="row">
-                               <div className="col-md-12">
+                            <div className="col-md-12">
                                 <Slider {...settings} className="productSlider">
                                     {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
                                             return (
                                                 <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
+                                                    <HomeProductCard productData={product}></HomeProductCard>
                                                 </div>
                                             )
                                         })
@@ -468,72 +472,50 @@ const Home = () => {
                 </div>    
             </section>
 
+            {/* Slider with banner for industrial Items  */}   
             <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
+            <div className="container-fluid">
 
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Lifestocks Market</h3>
+                <div className="wrapper card">
+                    {/* <div className="productCardHeader">
+                        <h3 className="hd mb-0 mt-0">New Arrivals</h3>
 
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                   
-                        <div className="row">
-                               <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
+                        <ul className="list list-inline mb-0 ml-auto filterTab">
+                            <li className="list-inline-item">
+                                <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
+                            </li>
+                        </ul>
+                    </div> */}
+            
+                    <div className="row">
+                        <div className="col-md-3 bannerCol">
+                            <div className="item card">
+                            <img src={image} alt="" />
                             </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Farm Machinery & Equipments Market</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
                         </div>
-                   
-                        <div className="row">
-                               <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        filterData?.length !== 0 && filterData?.map((item, index) => {
+                        <div className="col-md-9">
+                            <Slider {...bannerSlider} className="productSlider">
+                                {
+                                    newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
 
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <ProductCard data={item} />
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
+                                        return (
+                                            <div className="item"  key={index}>
+                                                <HomeProductCard productData={product}></HomeProductCard>
+                                            </div>
+                                        )
+                                    })
+                                }
+                            </Slider>
+                        </div>
+                    </div>    
+                </div>
+            </div>    
             </section>
+            
+
+            
+           
+
         </>
       
     )

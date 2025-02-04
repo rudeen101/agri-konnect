@@ -1,3 +1,14 @@
+:root {
+    --primary-teal: #00a99d;
+    --dark-teal: #00776e;
+    --light-teal: #66e2d6;
+    --golden-yellow: #f2a900;
+    --soft-coral: #ff6f61;
+    --charcoal: #2f2f2f;
+    --light-gray: #f4f4f4;
+    --white: #ffffff;
+}
+
 header{
     /* width: 100%; */
     height: auto;
@@ -77,7 +88,7 @@ header .headerSearch .searchIconContainer{
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #279a65;
+    background: var(--primary-teal);
     height: 100%;
     width: 100px;
 }
@@ -127,7 +138,7 @@ header .countyWrapper .selectDropdownWrapper .selectDrop{
 }
 
 header .countyWrapper .openSelect{
-    color: #279a65 !important;
+    color: var(--primary-teal) !important;
     font-size: 15px !important;
 }
 
@@ -180,7 +191,9 @@ header .headerTabs li button .badge{
     font-weight: 400px;
     position: absolute;
     top: -0px;
-    left: 25px
+    left: 25px;
+    background-color:  var(--primary-teal);
+    
 }
 
 header .headerTabs li button{
@@ -240,7 +253,7 @@ header .headerTabs li button .iconText{
 }
 
 .dropdownMenu li button:hover{
-    background-color: #f1f1f1 !important;
+    background-color: var(--dark-teal) !important;
 
 }
 
@@ -270,7 +283,7 @@ header .headerTabs li button .iconText{
 }
 .dropdownListItem .infoDiv h5{
     font-size: 15px;
-    color:#279a65;
+    color: var(--primary-teal);
     margin: 0px
 }
 
@@ -290,7 +303,7 @@ header .headerTabs li button .iconText{
 } */
 
 .dropdownListItem .cartListActionsWrapper .viewCartBtn{
-    border: 1px solid #279a65 !important;
+    border: 1px solid var(--primary-teal) !important;
     padding: 3px 5px !important;
     display: flex !important;
     justify-content: center !important;
@@ -298,7 +311,7 @@ header .headerTabs li button .iconText{
     margin-right: 20px
 }
 .dropdownListItem .cartListActionsWrapper .checkoutBtn{
-    background-color: #279a65;
+    background-color: var(--primary-teal);
     color: white !important;
     padding: 3px 5px !important;
     display: flex !important;

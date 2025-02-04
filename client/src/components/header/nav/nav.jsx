@@ -6,6 +6,7 @@ import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import HeadphonesOutlinedIcon from '@mui/icons-material/HeadphonesOutlined';
 import { MyContext } from "../../../App";
+import { FaPhone } from "react-icons/fa";
 
 const Navbar = (props)=> {
     const [navData, setNavData] = useState([]);
@@ -29,7 +30,7 @@ const Navbar = (props)=> {
                         <nav>
                             <li className="list-inline-item">
                                 <div className="d-flex align-items-center">
-                                    <Button className="bg-success text-white categoryTab">
+                                    <Button className="text-white categoryTab">
                                         <GridViewOutlinedIcon /> &nbsp;
                                         Browser All Categories
                                         <KeyboardArrowDownIcon />
@@ -238,10 +239,10 @@ const Navbar = (props)=> {
 
                     <div className="col-sm-2 part3 d-flex align-items-center">
                         <div className="phone d-flex align-items-center ml-auto"> 
-                            <span><HeadphonesOutlinedIcon className="phoneIcon"/></span>
+                            <span><FaPhone className="phoneIcon"/></span>
                             <div className="info ml-3">
-                                <h3 className="text-success mb-0">+231 888 999</h3>
-                                <p className="mt-0 mb-0">24/7 Support Center</p>
+                                <h3 className="mb-0">+231 888 999</h3>
+                                <p className="mt-0 mb-0">CALL TO ORDER NOW</p>
                             </div>
                         </div>
                     </div>

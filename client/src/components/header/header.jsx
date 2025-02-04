@@ -20,6 +20,7 @@ import { FaRegCircleUser } from "react-icons/fa6";
 import MenuDropdown from "../menuDropdown/menuDropdown.jsx";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import CircularProgress from '@mui/material/CircularProgress';
+import SearchBar from "../searchBar/SerarchBar.jsx";
 
 
 
@@ -123,15 +124,6 @@ const Header =  ()=>{
     }
 
     useEffect(()=>{
-        // window.addEventListener("scroll", ()=>{
-        //     let position = window.pageYOffset;
-        //     if (position > 50){
-        //         headerRef.current.classList.add('fixed')
-        //     }else{
-        //         headerRef.current.className.add('fixed')
-        //     }    
-        // }); 
-
         fetchDataFromApi('/api/category/').then((res)=> {
             setCategories(res);
         })
@@ -149,8 +141,8 @@ const Header =  ()=>{
                             </div>
 
                             <div className="col-sm-6 headerSearchContainer">
-                                <div className="headerSearch d-flex align-items-center">
-                                    {/* <Select data={categories} placeholder={"All Categories"} icon={false}/> */}
+                                {/* <div className="headerSearch d-flex align-items-center">
+                                    <Select data={categories} placeholder={"All Categories"} icon={false}/>
                                     <div className="search" >
                                         <input type="text"  placeholder="Search for product,  brand,  category" ref={searchInput} />
                                         
@@ -167,7 +159,12 @@ const Header =  ()=>{
 
                                     }
                                    
+                                </div> */}
+                                <div className="headerSearch d-flex align-items-center">
+                                <SearchBar></SearchBar>
+
                                 </div>
+
                             </div>
 
                             <div className="col-sm-4 d-flex align-items-center">
@@ -217,7 +214,7 @@ const Header =  ()=>{
                                                 >   
                                                 {/* <Link to={'/cart'}> */}
                                                     <ShoppingCartOutlinedIcon className="actionsIcon" /> 
-                                                    <span className="badge bg-success rounded-circle">{context.cartData?.data?.length}</span>
+                                                    <span className="badge rounded-circle">{context.cartData?.data?.length}</span>
                                                     
                                                     {/* <div className="d-flex align-items-end"> */}
                                                         <span className="iconText" onClick={() => setIsOpenCartDropdown(!isOpenCartDropdown)}>Cart</span>
@@ -259,7 +256,7 @@ const Header =  ()=>{
                                                 </MenuItem>
                                                 <MenuItem >
                                                     {
-                                                        context.isLogin ? <Button className="btn-g signup" onClick={handleLogout}>Logout</Button>
+                                                        context.isLogin ? <Button className="btn-g signup btn-l" onClick={handleLogout}>Logout</Button>
                                                         :<Button className="btn-g signup" onClick={handleLogin}><Link to={'/login'}>Login</Link></Button>
                                                     }
                                                 </MenuItem>
@@ -271,7 +268,6 @@ const Header =  ()=>{
                                             {
                                                 !context.isLogin &&
                                                 <Button className="btn-g signup"><Link to={'/signup'}>signup</Link></Button>
-
                                             }
                                         </li>
                                     </ul>

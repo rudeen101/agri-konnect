@@ -14,24 +14,29 @@ const Category = (props)=> {
     }, [])
 
     return(
-        <div className="category">
+        <div className="category card">
             <h5 className="mb-4 heading">{props.catData.name}</h5>
             <div className="categoryItems">
                 { 
                     props.catData?.children?.map((childCat, index) => {
 
                         return (
-                            <div className="catItem">
-                            <img src={childCat?.images[0]}/>
-                            <p>{childCat.name}</p>
-                        </div>
+
+                            <Link to={`/product/subCat/${childCat?._id}`} key={index}>
+                                <div className="catItem">
+                                    <img src={childCat?.images[0]}/>
+                                    <p>{childCat.name}</p>
+                                </div>
+                            </Link>
                         );
                     })
                 }
+
+                <div className="categoryLink">
+                    <a href="">See more..</a>
+                </div>
             </div>
-            <div className="categoryLink">
-                <a href="">See more..</a>
-            </div>
+         
         </div>
     )
 }

@@ -222,7 +222,7 @@ const App = () => {
 							<Route exact={true} path="/login" element={<Login />} />
 							<Route exact={true} path="/signup" element={<Signup />} />
 
-							<Route exact={true} path="/product/details" element={<ProductDetails />} />
+							<Route exact={true} path="/product/details/:id" element={<ProductDetails />} />
 							<Route exact={true} path="/product/upload" element={<ProductUpload />} />
 							<Route exact={true} path="/product/listing" element={<ProductListing />} />
 

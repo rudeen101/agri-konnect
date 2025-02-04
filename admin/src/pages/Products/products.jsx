@@ -299,7 +299,10 @@ const ProductListing = () =>{
                                                 <td>438K</td>
                                                 <td>
                                                     <div className="actions d-flex align-items-center">
-                                                        <Button className="secondary" color="secondary"><FaEye /></Button>
+                                                        <Link to={`/product/details/${product._id}`}>
+                                                            <Button className="secondary" color="secondary"><FaEye /></Button>
+                                                        </Link>         
+
                                                         <Link to={`/product/edit/${product._id}`}>
                                                             <Button className="success" color="sucess"><FaPencilAlt /></Button>
                                                         </Link>

@@ -28,8 +28,8 @@ import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { uploadImage } from "../../utils/api";
 import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
-import { useParams } from "react-router-dom";
+import { deleteData, editData } from "../../utils/api";
+import { useParams, useNavigate } from "react-router-dom";
 
 
 const EditProduct = () =>{
@@ -58,6 +58,8 @@ const EditProduct = () =>{
 
     const context = useContext(MyContext);
     const {id} = useParams();
+    const history = useNavigate();
+    
 
     let img_arr = [];
     let uniqueArray = [];
@@ -340,9 +342,7 @@ const EditProduct = () =>{
         formFields.slug = formFields.name;
         formFields.description = formFields.description;
         formFields.images = appendedArray;
-        console.log("Edit Data: ", formFields);
-        return;
-
+   
         if (formFields.name ===  "") {
             context.setAlertBox({
                 open: true,
@@ -473,19 +473,19 @@ const EditProduct = () =>{
 
         setIsLoading(true);
 
-        postData(`/api/product/create`, formFields).then((res) => {
+        editData(`/api/product/${id}`, formFields).then((res) => {
             context.setAlertBox({
                 open: true,
-                msg: "Product created successfully!",
+                msg: "Product updated successfully!",
                 error: false
             });
             setIsLoading(false)
 
-            context.fetchCategory();
+            // context.fetchCategory();
 
             deleteData('/api/imageUpload/deleteAllImages');
 
-            // history('/product/listing')
+            history('/product/listing')
         }).catch((error)=>{
             console.log("-------",error)
         });
