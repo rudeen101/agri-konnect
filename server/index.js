@@ -1,17 +1,48 @@
+require('dotenv').config();
 const express = require('express');
-const app = express();
-const bodyParser = require('body-parser');
-const mongoose = require('mongoose');
+const helmet = require('helmet');
+const morgan = require('morgan');
+const connectDB = require('./config/db');
+const rateLimiter = require('./config/rateLimit');
+const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
-require('dotenv/config');
 
+const app = express();
+PORT = process.env.PORT || 3000;
+
+// Connect to MongoDB
+connectDB();
+
+// Use Helmet for security headers
+app.use(helmet());
+
+// Configure CORS for production
+// app.use(cors({
+//     origin: process.env.NODE_ENV === 'production' ? 'https://your-production-domain.com' : '*',
+//     credentials: true,
+// }));
 
 app.use(cors());
 app.options('*', cors());
 
-//middleware
-app.use(bodyParser.json())
+// Logging middleware
+// app.use(morgan('combined'));
+
+// Rate limiting
+// app.use(rateLimiter);
+
+// Body parsers
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+//middleware
+// app.use(bodyParser.json())
+// app.use(express.json());
+
+
+// const bodyParser = require('body-parser');
+// const mongoose = require('mongoose');
+// require('dotenv/config');
 
 //Routes
 const categoryRoutes = require("./routes/category");
@@ -28,6 +59,8 @@ const bannerRoutes = require("./routes/banner.js");
 const wishListRoutes = require("./routes/wishList.js");
 const searchRoutes = require("./routes/search.js");
 const tagRoutes = require("./routes/tag.js");
+const authRoutes = require("./routes/auth.js");
+const adminRoutes = require("./routes/admin.js");
 
 app.use("/upoads", express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
@@ -41,19 +74,15 @@ app.use(`/api/banner`, bannerRoutes);
 app.use(`/api/wishList`, wishListRoutes);
 app.use(`/api/search`, searchRoutes);
 app.use(`/api/tag`, tagRoutes);
+app.use(`/api/auth`, authRoutes);
+app.use(`/api/admin`, adminRoutes);
 // app.use(`/api/productWeight`, prouductWeightRoutes);
 // app.use(`/api/productSize`, prouductSizeRoutes);
 
-//Database
-mongoose.connect(process.env.CONNECTION_STRING)
-    .then(() => {
-        console.log('Database connected successfylly');
+// Global Error Handler
+app.use(errorHandler);
 
-        //server
-        app.listen(process.env.PORT, () => {
-            console.log(`server is running http://localhost:${process.env.PORT}`);
-        });
-    })
-    .catch((error) => {
-        console.log(error);
-    });
+// Start the Server
+app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+});

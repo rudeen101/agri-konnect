@@ -32,7 +32,6 @@ const Header = () => {
 
     
     const handleLogout = () => {
-        setAnchorEl(null);
         context.setIsLogin(false);
         localStorage.removeItem("user");
         localStorage.removeItem("token");

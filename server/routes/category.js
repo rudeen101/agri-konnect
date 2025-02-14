@@ -67,7 +67,8 @@ router.post('/upload', upload.array("images"), async (req, res) => {
         console.log(error);
     }
 
-});    
+});   
+ 
 router.post('/create', async (req, res) => {
     let catObj = {};
     imagesArr = req.body.images;

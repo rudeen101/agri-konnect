@@ -15,6 +15,7 @@ import Newsletter from "../../components/newsletter/newsletter";
 import Footer from "../../components/footer/footer";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MyContext } from "../../App";
+import HomeBannerSlider from "../../components/homeBannerSlder/homeBannerSlider";
 
 
 import Tabs from '@mui/material/Tabs';
@@ -40,6 +41,7 @@ const Home = () => {
     const [recentlyViewed, setRecentlyViewed] = useState([]);
     const [mostPopular, setMostPopular] = useState([]);
     const [newArrival, setNewArrival] = useState([]);
+
 
     const productRow = useRef();
 
@@ -141,8 +143,11 @@ const Home = () => {
 
     return(
         <>
-            {
+            {/* {
                 homeSliderBanner?.data?.length > 0 &&  <HomeSlider data={homeSliderBanner} />
+            } */}
+            {
+                homeSliderBanner?.data?.length > 0 &&  <HomeBannerSlider data={homeSliderBanner} />
             }
            
             {/* <CartSlider /> */}

@@ -23,8 +23,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Link } from "react-router-dom";
-import { fetchDataFromApi } from "../../utils/api";
-import { deleteData } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+// import { deleteData } from "../../utils/api";
 
 
 const BannerList = () =>{
@@ -45,7 +45,7 @@ const BannerList = () =>{
 
 
     const deleteBanner = (id) => {
-        deleteData(`/api/banner/${id}`).then((res) => {
+        deleteDataFromApi(`/api/banner/${id}`).then((res) => {
             context.setProgress(100);
             fetchDataFromApi('/api/banner').then((res) => {
                 setBannerData(res);

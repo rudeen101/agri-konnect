@@ -11,7 +11,9 @@ import { Link, useNavigate } from "react-router-dom";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import backgroundPattern from "../../assets/images/background-pattern.jpg"
-import {postData} from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { MdContactPhone } from "react-icons/md";
+
 
 const Signup = () =>{
 
@@ -21,11 +23,9 @@ const Signup = () =>{
     const [isLoading, setIsLoading] = useState(false);
     const [formFields, setFormFields] = useState({
 		name: '',
-		email: '',
-		phone: '',
+		contact: '',
 		password: '',
 		confirmPassword: '',
-		isAdmin: true,
 	});
 
     const context = useContext(MyContext);	
@@ -56,26 +56,16 @@ const Signup = () =>{
                 return false;
             }
     
-            if (formFields.email === "") {
+            if (formFields.contact === "") {
                 context.setAlertBox({
                     open: true,
                     error: true,
-                    msg: "Enter email"
+                    msg: "Enter email or phone number"
                 });
     
                 return false;
             }
-    
-            if (formFields.phone === "") {
-                context.setAlertBox({
-                    open: true,
-                    error: true,
-                    msg: "Enter phone number"
-                });
-    
-                return false;
-            }
-    
+       
             if (formFields.password === "") {
                 context.setAlertBox({
                     open: true,
@@ -169,22 +159,17 @@ const Signup = () =>{
                                 <form action="" onSubmit={submitForm}>
                                     <div className={`form-group mb-3 position-relative ${inputIndex === 0 && 'focus'}`}>
                                             <span className="icon"><FaUserCircle /></span>
-                                            <input type="text" className="form-control" placeholder="enter your name" name="name" onChange={changeInput} onFocus={() => focusInput(0)} onBlur={() => setInputIndex(null)} />
+                                            <input type="text" className="form-control" placeholder="Enter your full name" name="name" onChange={changeInput} onFocus={() => focusInput(0)} onBlur={() => setInputIndex(null)} />
                                     </div>
 
                                     <div className={`form-group mb-3 position-relative ${inputIndex === 1 && 'focus'}`}>
-                                            <span className="icon"><MailOutlinedIcon /></span>
-                                            <input type="text" className="form-control" placeholder="enter your email" name="email" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
-                                    </div>
-
-                                    <div className={`form-group mb-3 position-relative ${inputIndex === 1 && 'focus'}`}>
-                                            <span className="icon"><FaPhone /></span>
-                                            <input type="text" className="form-control" placeholder="enter your phone number" name="phone" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
+                                            <span className="icon"><MdContactPhone /></span>
+                                            <input type="text" className="form-control" placeholder="Enter email or phone number" name="contact" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
                                     </div>
 
                                     <div className={`form-group mb-4 position-relative ${inputIndex === 2 && 'focus'}`}>
                                         <span className="icon"><FaLock /></span>
-                                        <input type={`${isShowPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="enter your password" name="password" onChange={changeInput} onFocus={() => focusInput(2)} onBlur={() => setInputIndex(null)} />
+                                        <input type={`${isShowPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="Enter your password" name="password" onChange={changeInput} onFocus={() => focusInput(2)} onBlur={() => setInputIndex(null)} />
 
                                         <span className="toggleShowPassword" onClick={() => setIsShowPassword(!isShowPassword)}>
                                             {
@@ -194,7 +179,7 @@ const Signup = () =>{
                                     </div>
                                     <div className={`form-group mb-4 position-relative ${inputIndex === 2 && 'focus'}`}>
                                         <span className="icon"><FaLock /></span>
-                                        <input type={`${isShowConfirmPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="confirm your password" name="confirmPassword" onChange={changeInput} onFocus={() => focusInput(3)} onBlur={() => setInputIndex(null)} />
+                                        <input type={`${isShowConfirmPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="Confirm your password" name="confirmPassword" onChange={changeInput} onFocus={() => focusInput(3)} onBlur={() => setInputIndex(null)} />
 
                                         <span className="toggleShowPassword" onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}>
                                             {

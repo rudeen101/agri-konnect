@@ -22,13 +22,13 @@ import image from "../../assets/images/quality.png"
 import Avatar from "../../assets/images/rudeen.jpg";
 import UserAvatarImg from "../../components/userAvatarImg/userAvatarImg";
 import { FaReply } from "react-icons/fa";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, editData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+// import { deleteImages } from "../../utils/api";
+// import { deleteData, editData } from "../../utils/api";
 import { useParams, useNavigate } from "react-router-dom";
 
 
@@ -114,7 +114,7 @@ const EditProduct = () =>{
             formFields.tags = res.tags
 
 
-            setCurrentProduct(res);
+            // setCurrentProduct(res);
 
         // fetchDataFromApi(`/api/product?subCatId=${res?.subCatId}`).then((res) =>{
         //     const filteredData = res?.products.filter(item => item.id !==  id);
@@ -157,14 +157,14 @@ const EditProduct = () =>{
             })
         });
 
-        fetchDataFromApi('/api/productWeight').then((res) => {
-            console.log("res", res)
-            setProductWeight(res)
-        });
+        // fetchDataFromApi('/api/productWeight').then((res) => {
+        //     console.log("res", res)
+        //     setProductWeight(res)
+        // });
 
-        fetchDataFromApi('/api/productSize').then((res) => {
-            setProductSize(res)
-        });
+        // fetchDataFromApi('/api/productSize').then((res) => {
+        //     setProductSize(res)
+        // });
    
     }, []);
 
@@ -319,7 +319,7 @@ const EditProduct = () =>{
 
     const removeImage = async (index, imgUrl) => {
         const imgIndex = previews.indexOf(imgUrl);
-        deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
+        deleteImages(`/api/imageUpload/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({
                 open: true,
                 error: false,
@@ -473,7 +473,7 @@ const EditProduct = () =>{
 
         setIsLoading(true);
 
-        editData(`/api/product/${id}`, formFields).then((res) => {
+        updateDataToApi(`/api/product/${id}`, formFields).then((res) => {
             context.setAlertBox({
                 open: true,
                 msg: "Product updated successfully!",

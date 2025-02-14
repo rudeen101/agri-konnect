@@ -23,7 +23,7 @@ import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { deleteData, fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 
 
 
@@ -72,7 +72,8 @@ const ProductListing = () =>{
     const deleteProduct = (productId) => {
         context.setProgress(40);
 
-        deleteData(`/api/product/${productId}`).then((res) => {
+        deleteDataFromApi(`/api/product/${productId}`).then((res) => {
+            console.log(productId)
             context.setProgress(100);
             context.setAlertBox({
                 open: true,
@@ -80,7 +81,7 @@ const ProductListing = () =>{
                 msg: "Product deleted!"
             });
 
-            fetchDataFromApi(`/api/product?page=${page}&perPage=2`).then((res) => {
+            fetchDataFromApi(`/api/product?page=${page}&perPage=10`).then((res) => {
                 setProductList(res);
             });
 

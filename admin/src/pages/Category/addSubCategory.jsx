@@ -16,13 +16,14 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
+// import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
+
 
 
 
@@ -48,7 +49,7 @@ const AddSubCategory = () =>{
 
     const formData = new FormData();
 
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -84,12 +85,12 @@ const AddSubCategory = () =>{
         if (formFields.name !== "" && formFields.parentId !== "" && previews.length !== 0){
             setIsLoading(true);
 
-            postData(`/api/category/create`, formFields).then((res) => {
+            postDataToApi(`/api/category/create`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchCategory();
 
-                deleteData('/api/imageUpload/deleteAllImages');
-                history('/subCategory')
+                deleteDataFromApi('/api/imageUpload/deleteAllImages');
+                navigate('/subCategory')
             });
         } 
         else {
@@ -310,7 +311,7 @@ const AddSubCategory = () =>{
                                                     <input 
                                                         type="file"
                                                         multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
                                                         name="images"
                                                         id="fileInput"
                                                     />

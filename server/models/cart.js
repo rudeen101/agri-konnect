@@ -1,58 +1,16 @@
-const {
-    Schema,
-    model
-  } = require("mongoose");
+const mongoose = require('mongoose');
 
-const cartSchema = new Schema({
-    productName: {
-        type: String,
-        required: true
-    },
-    image: {
-        type: String,
-        required: true
-    },
-    rating: {
-        type: Number,
-        required: true
-    },
-    price: {
-        type: Number,
-        required: true
-    },
-    subTotal: {
-        type: Number,
-        required: true
-    },
-    productId: {
-        type: String,
-        required: true
-    },
-    countInStock: {
-        type: Number,
-        required: true
-    },
-    userId: {
-        type: String,
-        required: true
-    },
+const cartSchema = new mongoose.Schema({
 
-    quantity: {
-        type: Number,
-        required: true
-    },
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    items: [
+      {
+        product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
+        quantity: { type: Number, default: 1 },
+      },
+    ],
+});
 
-}, {timestamp:true});
+module.exports = mongoose.model('Cart', cartSchema);
 
-cartSchema.virtual('id').get(function () {
-    return this._id.toHexString();
-}); 
-
-cartSchema.set('toJOSN', {
-    virtual: true,
-})
-
-
-const Cart = model('cart', cartSchema);
-module.exports = Cart;
 

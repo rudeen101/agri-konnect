@@ -30,6 +30,7 @@ import Avatar from '@mui/material/Avatar';
 import { IoShieldHalfSharp } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
+import { postData } from "../../../../client/src/utils/api";
 
 
 
@@ -55,6 +56,9 @@ const Header = () => {
     const [isOpenNotificationDrop, setIsOpenNotificationDrop] = useState(false)
     const openNotifications = Boolean(isOpenNotificationDrop);
     const [anchorEl, setAnchorEl] = React.useState(null);
+
+    const context = useContext(MyContext);
+    const navigate = useNavigate();
     
     const handleClose = () => {
         setAnchorEl(null);
@@ -71,13 +75,31 @@ const Header = () => {
 
     const logout = () => {
         setAnchorEl(null);
-        context.setIsLogin(false);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        history("/");
+        // context.setIsLogin(false);
+        // localStorage.removeItem("user");
+        // localStorage.removeItem("token");
+        // history("/");
+
+
+        try {
+
+            const userId = context?.userData?.userID
+
+            postData("/api/auth/logout", {userId}).then((res) => {
+            
+                // Clear stored tokens
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                localStorage.removeItem("user");
+
+                // Redirect to login page
+                navigate("/login");
+            });
+        } catch (error) {
+            console.error("Logout failed:", error);
+        }
     }
-    const context = useContext(MyContext);
-    const history = useNavigate();
+
     
 
  
@@ -130,16 +152,16 @@ const Header = () => {
                                         <div className="userImage">
                                             <span className="rounded-circle">
                                                 { 
-                                                    context?.userData?.image !== "" ? 
+                                                    !context?.userData?.image ? 
                                                     <img src={userAvatar} className="w-100" alt="user profile picture" />
-                                                    : context?.userData?.username.charAt(0)
+                                                    : context?.userData?.name.charAt(0)
                                                 }
                                             </span>
                                         </div>   
 
                                         <div className="userInfo res-hide">
                                             <h4>{context?.userData?.username}</h4>
-                                            <p className="mb-0">{context?.userData?.email}</p>
+                                            <p className="mb-0">{context?.userData?.contact}</p>
                                         </div>
                                     </Button>
                                     <Menu

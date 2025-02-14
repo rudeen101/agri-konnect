@@ -10,7 +10,7 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,9 +19,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+// import { deleteImages } from "../../utils/api";
+// import { deleteData, postData } from "../../utils/api";
 
 
 
@@ -47,7 +47,7 @@ const AddBanner = () =>{
 
     const formData = new FormData();
 
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     // useEffect(() => {
     //     window.scrollTo(0, 0);
@@ -81,7 +81,7 @@ const AddBanner = () =>{
             res?.map((item) => {
                 item?.images?.map((img) => {
                     deleteImages(`/api/banner/deleteImage?img=${img}`).then((res) => {
-                        deleteData('/api/imageUpload/deleteAllImages');
+                        deleteDataFromApi('/api/imageUpload/deleteAllImages');
                     });
                 });
             });
@@ -205,13 +205,13 @@ const AddBanner = () =>{
 
         if (formFields.catName !== "" && formFields.subCatName !== "" && previews.length !== 0){
             setIsLoading(true);
-            postData(`/api/banner/create`, formFields).then((res) => {
+            postDataToApi(`/api/banner/create`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchBanner();
 
-                deleteData('/api/imageUpload/deleteAllImages');
+                deleteDataFromApi('/api/imageUpload/deleteAllImages');
 
-                history('/banner/list')
+                navigate('/banner/list')
             });
         } 
         else {
@@ -381,7 +381,7 @@ const AddBanner = () =>{
                                                     <input 
                                                         type="file"
                                                         multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
                                                         name="images"
                                                         id="fileInput"
                                                     />                                    

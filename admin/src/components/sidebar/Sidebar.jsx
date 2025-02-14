@@ -49,9 +49,8 @@ const Sidebar = () => {
                      }`}>
                         <ul className="submenu">
                             <li>
-                                <Link to={"/product/listing"}>Product List</Link>
-                                <Link to={"/product/details"}>Product view</Link>
-                                <Link to={"/product/upload"}>Product Upload</Link>
+                                <Link to={"/product/listing"}>Product Listing</Link>
+                                <Link to={"/product/upload"}>Add Product</Link>
                             </li>
                         </ul>
                     </div>
@@ -160,6 +159,26 @@ const Sidebar = () => {
                                 <Link to={"/banner/list"}>Banner listing</Link>
                                 <Link to={"/banner/add"}>Add Banner</Link>
                                 <Link to={"/banner/edit/:id"}>Edit Banner</Link>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <Button className={`w-100 ${activeTab === 10 && isToggleSubmenu ? 'active' : ''}`}
+                        onClick={()=> isOpenSubmenu(10)}>                        
+                        <span className="icon"><FaProductHunt /></span>
+                        Admin Account
+                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
+                    </Button>
+                    <div className={`submenuContainer ${activeTab === 10 && isToggleSubmenu === true ?
+                        'openMenu' : 'closeMenu'
+                     }`}>
+                        <ul className="submenu">
+                            <li>
+                                <Link to={"/admin/list"}>All Users</Link>
+                                <Link to={"/admin/add"}>Update Admin Role</Link>
+                                <Link to={"/admin/deletedUsers"}>Deleted Users</Link>
                             </li>
                         </ul>
                     </div>

@@ -420,8 +420,6 @@ const ProductDetails = () =>{
                                                         })
                                                     }
                                                 </div>
-                                              
-                                      
 
                                                 <br /> <br />
 

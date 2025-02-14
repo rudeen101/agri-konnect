@@ -13,7 +13,7 @@ import ProductUpload from './pages/Products/addProducts';
 import { createContext, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar/sidebar';
 import { FaSignHanging } from 'react-icons/fa6';
-import { fetchDataFromApi } from './utils/api';
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "./utils/apiCalls";
 import Category from './pages/Category/category';
 import LoadingBar from 'react-top-loading-bar';
 import AddCategory from './pages/Category/addCategory';
@@ -44,6 +44,11 @@ import AddBanner from './pages/Banner/addBanner';
 import TagList from './pages/Tag/tag';
 import EditTag from './pages/Tag/editTag';
 import AddTag from './pages/Tag/addTag';
+
+import AdminList from './pages/AdminAccount/adminList';
+import DeletedUsers from './pages/AdminAccount/deletedUsers';
+import EditAdmin from './pages/AdminAccount/editAdmin';
+import AddAdmin from './pages/AdminAccount/addAdmin';
 
 const MyContext = createContext();
 
@@ -81,9 +86,9 @@ const App = () => {
 	}, [themeMode]);
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
+		const accessToken = localStorage.getItem("accessToken");
 
-		if (token !== "" && token !== undefined && token !== null) {
+		if (accessToken !== "" && accessToken !== undefined && accessToken !== null) {
 			setIsLogin(true);
 
 			const userData = JSON.parse(localStorage.getItem("user"));
@@ -127,8 +132,8 @@ const App = () => {
 	}
 
 	const fetchBanner = () => {
+		setProgress(30);
 		fetchDataFromApi('/api/banner').then((res) => {
-			setProgress(30);
 			setBannerData(res);
 			setProgress(100);
 		})
@@ -171,7 +176,6 @@ const App = () => {
 		fetchBanner
 		
 	}
-	console.log(userData);
 
 	useEffect(() => {
 		// alert(isToggleSidebar)
@@ -253,6 +257,11 @@ const App = () => {
 							<Route exact={true} path="/tag/add" element={<AddTag />} />
 							<Route exact={true} path="/tag/list" element={<TagList />} />
 							<Route exact={true} path="/tag/edit/:id" element={<EditTag />} />
+
+							<Route exact={true} path="/admin/add" element={<AddAdmin />} />
+							<Route exact={true} path="/admin/list" element={<AdminList />} />
+							<Route exact={true} path="/admin/deletedUsers" element={<DeletedUsers />} />
+							<Route exact={true} path="/admin/edit/:id" element={<EditAdmin />} />
 						</Routes>
 					</div>
 				</div>

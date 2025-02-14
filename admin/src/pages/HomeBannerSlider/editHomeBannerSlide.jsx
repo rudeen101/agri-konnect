@@ -10,15 +10,15 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, editData } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+// import { deleteImages } from "../../utils/api";
+// import { deleteData, postData } from "../../utils/api";
 
 
 

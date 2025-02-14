@@ -26,8 +26,8 @@ import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import { Link } from "react-router-dom";
-import { fetchDataFromApi } from "../../utils/api";
-import { deleteData } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+
 
 
 const SubCategory = () =>{
@@ -51,7 +51,7 @@ const SubCategory = () =>{
 	}
 
     const deleteCategory = (id) => {
-        deleteData(`/api/category/${id}`).then((res) => {
+        deleteDataFromApi(`/api/category/${id}`).then((res) => {
             context.setProgress(100);
             fetchDataFromApi('/api/category').then((res) => {
                 setCategoryData(res);

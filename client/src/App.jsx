@@ -12,12 +12,16 @@ import NotFound from './pages/notFound/notFound';
 import Footer from './components/footer/footer';
 import ProductDetails from './pages/productDetails/productDetails';
 import Cart from './pages/cart/cart';
-import WishList from './pages/wishList/wishList'
 import LoadingBar from 'react-top-loading-bar';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import SearchPage from './pages/search/search';
 import Header2 from './components/header2/Header';
+import PrivateRoute from './components/privateRoute/privateRoute';
+import WishList from './pages/wishList/wishList';
+import Profile from './pages/profile/profile';
+import Orders from './pages/orders/orders';
+import Transactions from './pages/transsactions/transactions';
 
 
 import { fetchDataFromApi, postData } from './utils/api';
@@ -46,6 +50,7 @@ const App = () => {
 		error: false,
 		msg: ''
 	});
+
 
 	const [county, setCounty] = useState(
 		[
@@ -86,47 +91,6 @@ const App = () => {
 			setIsLogin(false);
 		}
 	}, [isLogin]);
-
-
-
-
-	useEffect(() => {
-		const handleResize = () =>{
-			setWindowWidth(window.innerWidth);
-		}
-
-		const location = localStorage.getItem("location");
-		if (location !== null && location !== "" && location !== undefined) {
-			setSelectedCounty(location);
-		}
-		else{
-			setSelectedCounty("All");
-			localStorage.setItem("location", "All")
-		}
-
-		window.addEventListener('resize', handleResize);
-
-		return () => {
-			window.removeEventListener('resize', handleResize);
-		}
-	}, []);
-
-
-	// useEffect(() => {
-	// 	const user = JSON.parse(localStorage.getItem("user"));
-
-	// 	if (
-	// 		user?.userId !== "" &&
-	// 		user?.userId !== undefined &&
-	// 		user?.userId !== null
-
-	// 	) {
-	// 		fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-	// 			setCartData(res)			
-	// 		})
-	// 	}
-	// }, [isLogin]);
-
 
 	useEffect(() => {
 		window.scrollTo(0,0);
@@ -266,6 +230,9 @@ const App = () => {
 
 	}
 
+	
+	const userId = userData?.userId
+
 	return (
 		<BrowserRouter>
 			<MyContext.Provider value={values}>
@@ -299,12 +266,43 @@ const App = () => {
 					<Route exact={true} path="/product/:id" element={<ProductDetails />} />
 					<Route exact={true} path="*" element={<NotFound />} />
 					{/* <Route exact={true} path="/product-details" element={<ProductDetails />} /> */}
-					<Route exact={true} path="/cart" element={<Cart />} />
 					<Route exact={true} path="/wishList" element={<WishList />} />
 					<Route exact={true} path="/login" element={<Login />} />
 					<Route exact={true} path="/signup" element={<Signup />} />
-
 					<Route exact={true} path="/search" element={<SearchPage />} />
+
+
+					 {/* Protected Routes */}
+					<Route path="/profile" element={
+						<PrivateRoute>
+							<Profile />
+						</PrivateRoute>
+					} />
+
+					<Route path="/cart" element={
+						<PrivateRoute>
+							<Cart userId={userId} />
+						</PrivateRoute>
+					} />
+
+					<Route path="/orders" element={
+						<PrivateRoute>
+							<Orders userId={userId} />
+						</PrivateRoute>
+					} />
+
+					<Route path="/wishlist" element={
+						<PrivateRoute>
+							<WishList userId={userId} />
+						</PrivateRoute>
+					} />
+
+					
+					<Route path="/transactions" element={
+						<PrivateRoute>
+							<Transactions userId={userId} />
+						</PrivateRoute>
+					} />
 				</Routes>
 
 				{

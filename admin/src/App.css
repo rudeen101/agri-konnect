@@ -662,7 +662,7 @@ body.dark .table tbody td, body.dark .table tbody tr{
     background-color: rgba(203, 60, 231, 0.2) !important;
 }
 .table tbody .actions button.success{
-    background-color: rgba(203, 60, 231, 0.2) !important;
+    background-color: rgb(63, 117, 63) !important;
 }
 .table tbody .actions button.error{
     background-color: rgba(203, 60, 231, 0.2) !important;
@@ -671,6 +671,12 @@ body.dark .table tbody td, body.dark .table tbody tr{
 .table tbody .actions button svg{
     font-size: 32px !important;
 }
+
+.table tbody .actions button.restore svg{
+    font-size: 100px !important;
+    color: #fff;
+}
+
 table td{
     vertical-align: middle !important;
 }
@@ -729,6 +735,14 @@ table td .productBox .info{
 .table td .subCatContainer{
     display: flex !important;
     margin-right: 5px
+}
+.table td .subCatContainer .card{
+    margin: 0px !important
+}
+
+.table td .subCatContainer .card.role{
+    padding: 10px 15px !important;
+    text-transform:uppercase;
 }
 .table td .subCatContainer .subCategory{
    /* background-color: blue !important; */

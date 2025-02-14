@@ -16,13 +16,13 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
+// import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
 
 
 
@@ -42,7 +42,7 @@ const AddTag = () =>{
 
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -74,11 +74,11 @@ const AddTag = () =>{
         if (formFields.name !== "" && formFields.category){
             setIsLoading(true);
 
-            postData(`/api/tag/add`, formFields).then((res) => {
+            postDataToApi(`/api/tag/add`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchTag();
 
-                history('/tag/list')
+                navigate('/tag/list')
             });
         } 
         else {

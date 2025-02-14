@@ -18,7 +18,7 @@ import Avatar from "../../assets/images/rudeen.jpg";
 import { Button, Rating } from "@mui/material/";
 import { FaReply } from "react-icons/fa";
 import { useParams,} from "react-router-dom";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 import InnerImageZoom from 'react-inner-image-zoom';
 import '../../innerImageZoom/style.css';
 

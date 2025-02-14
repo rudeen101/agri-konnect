@@ -6,7 +6,7 @@ import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import { FaEye, FaGoogle, FaLock } from "react-icons/fa";
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 import { Button, CircularProgress } from "@mui/material";
-import {postData} from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 import { Link, useNavigate } from "react-router-dom";
 
 
@@ -20,12 +20,12 @@ const Login = () =>{
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [formFields, setFormFields] = useState({
-        email: '',
+        contact: '',
         password: '',
     });
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
 
 
        const changeInput = (e) => {
@@ -41,11 +41,11 @@ const Login = () =>{
             console.log(formFields)
     
             try {
-                if (formFields.email === "") {
+                if (formFields.contact === "") {
                     context.setAlertBox({
                         open: true,
                         error: true,
-                        msg: "Enter email"
+                        msg: "Enter email or phone number"
                     });
         
                     return false;
@@ -62,47 +62,41 @@ const Login = () =>{
                 }
     
                 setIsLoading(true);
-                postData("/api/user/signin", formFields).then((res) => {
+                postDataToApi("/api/admin/signin", formFields).then((res) => {
+                    console.log("data--",res)
                     
-                    if (res.user?.isAdmin === true) {
-                        localStorage.removeItem('user');
+                    localStorage.removeItem('user');
 
-                        localStorage.setItem("token", res?.token);
-                        context.setIsLogin(true);
+                    localStorage.setItem("accessToken", res?.accessToken);
+                    localStorage.setItem("refreshToken", res?.refreshToken);
+                    context.setIsLogin(true);
 
-                        const user = {
-                            username: res?.user?.name,
-                            email: res?.user?.email,
-                            image: res?.user?.length > 0 ? res?.user?.image[0] : "",
-                            isAdmin: res.user?.isAdmin,
-                            userId: res?.user?._id
-                        }
-                        localStorage.setItem("user", JSON.stringify(user));
-                        
-                        if (res.error !== true) {
-                            context.setAlertBox({
-                                open: true,
-                                error: false,
-                                msg: "Login successful"
-                            });
-        
-                            setTimeout(() => {
-                                setInputIndex(true);
-                                setIsLoading(false)
-                                history("/");
-                            }, 2000);
-                        }
-                    }else {   
+                    const user = {
+                        username: res?.user?.username,
+                        contact: res?.user?.contact,
+                        // image: res?.user?.length > 0 ? res?.user?.image[0] : "",
+                        userId: res?.user?.userId
+                    }
+
+                    localStorage.setItem("user", JSON.stringify(user));
+                    
+                    if (!res.error) {
                         context.setAlertBox({
                             open: true,
-                            error: true,
-                            msg: "you are not an admin"
+                            error: false,
+                            msg: "Login successful"
                         });
-                        setIsLoading(false);
+    
+                        setTimeout(() => {
+                            setInputIndex(true);
+                            setIsLoading(false)
+                            navigate("/");
+                        }, 2000);
                     }
+                
                 })
             } catch (error) {
-                console.log(error);
+                console.error("Login failed:", error.response.data);
             }
         }
 
@@ -126,12 +120,12 @@ const Login = () =>{
                         <form action="" onSubmit={signIn}>
                             <div className={`form-group mb-3 position-relative ${inputIndex === 0 && 'focus'}`}>
                                     <span className="icon"><MailOutlinedIcon /></span>
-                                    <input type="text" className="form-control" placeholder="enter your email" name="email" onChange={changeInput} onFocus={() => focusInput(0)} onBlur={() => setInputIndex(null)} />
+                                    <input type="text" className="form-control" placeholder="Enter your email or phone number" name="contact" onChange={changeInput} onFocus={() => focusInput(0)} onBlur={() => setInputIndex(null)} />
                             </div>
 
                            <div className={`form-group mb-4 position-relative ${inputIndex === 1 && 'focus'}`}>
                                 <span className="icon"><FaLock /></span>
-                                <input type={`${isShowPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="enter your password" name="password" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
+                                <input type={`${isShowPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="Enter your password" name="password" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
 
                                 <span className="toggleShowPassword" onClick={() => setIsShowPassword(!isShowPassword)}>
                                     {

@@ -11,7 +11,7 @@ import { MyContext } from "../../App";
 import { deleteData, fetchDataFromApi, editData } from "../../utils/api";
 import { FaHome } from "react-icons/fa";
 
-const Cart = () => {
+const Cart = ({userId}) => {
     const [cartData, setCartData] = useState([]);
     const [productQuantity, setProductQuantity] = useState();
     const [changeQuantity, setChangeQuantity] = useState(0);

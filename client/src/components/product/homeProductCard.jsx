@@ -1,39 +1,36 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import { Card, CardMedia, CardContent, IconButton, Tooltip } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import ShareIcon from '@mui/icons-material/Share';
 import "./product.css";
 import img from "../../assets/images/cabbage.jpg"
 import { Link } from 'react-router-dom';
+import { postData, fetchDataFromApi } from "../../utils/api";
 
-
-    // const useStyles = makeStyles({
-    //     card: {
-    //         position: 'relative',
-    //         '&:hover $icons': {
-    //             opacity: 1,
-    //         },
-    //     },
-    //     media: {
-    //         height: 200,
-    //         transition: 'transform 0.3s ease-in-out',
-    //         '&:hover': {
-    //             transform: 'scale(1.05)',
-    //         },
-    //     },
-    //     icons: {
-    //         position: 'absolute',
-    //         top: 10,
-    //         right: 10,
-    //         display: 'flex',
-    //         flexDirection: 'column',
-    //         gap: 5,
-    //         opacity: 0,
-    //         transition: 'opacity 0.3s',
-    //     },
-    // });
+import {
+  FacebookShareButton,
+  TwitterShareButton,
+  LinkedinShareButton,
+  WhatsappShareButton,
+  FacebookIcon,
+  TwitterIcon,
+  LinkedinIcon,
+  WhatsappIcon
+} from 'react-share';
 
 const HomeProductCard = ({ productData }) => {
+    const [showShareOptions, setShowShareOptions] = useState(false);
+
+    useEffect(() => {
+        const user = JSON.parse(localStorage.getItem("user"));
+
+        fetchDataFromApi(`/api/product/homepage`)
+        .then((res) => {
+            console.log("home data",res.combinedProducts)
+
+          
+        });
+    }, []);
 
     return (
         <Card className="product-card">
@@ -42,15 +39,64 @@ const HomeProductCard = ({ productData }) => {
             </Link>
             <div className="product-icons">
                 <Tooltip title="Add to Wishlist" arrow>
-                    <IconButton color="primary">
-                        <FavoriteBorderIcon />
+                    <IconButton className="tooltipIcon">
+                        <FavoriteBorderIcon className='icon' />
                     </IconButton>
                 </Tooltip>
-                <Tooltip title="Share" arrow>
-                    <IconButton color="primary">
-                        <ShareIcon />
-                    </IconButton>
-                </Tooltip>
+
+                <div  
+                    className="share-button-container"
+                    onMouseEnter={() => setShowShareOptions(true)}
+                    onMouseLeave={() => setShowShareOptions(false)}
+                >
+                    <Tooltip title="" arrow>
+                        <IconButton className="share-button tooltipIcon">
+                            <ShareIcon className='icon' />
+                        </IconButton>
+                    </Tooltip> 
+
+                    {showShareOptions && (
+                        <div className="share-options">
+                            <div>
+                                <FacebookShareButton 
+                                    url="https://www.example.com/product/12345"
+                                    quote="Check out this amazing product!"
+                                    hashtag="#AmazingProduct"
+                                >
+                                    <FacebookIcon size={25} round />
+                                </FacebookShareButton>
+                            </div>
+                            
+                            <div className="mt-2">
+                                <WhatsappShareButton 
+                                    url="https://www.example.com/product/12345"
+                                    title="Check out this amazing product!"
+                                    separator=" - "
+                                >
+                                    <WhatsappIcon size={25} round />
+                                </WhatsappShareButton>
+                            </div>
+                           
+                        </div>
+
+                    )}
+
+                   
+             
+
+                    {/* <Tooltip title="Share on LinkedIn" arrow>
+                        <LinkedinShareButton 
+                        url={productUrl} 
+                        title={productTitle} 
+                        summary={productDescription} 
+                        source="YourSiteName"
+                        >
+                        <LinkedinIcon size={40} round />
+                        </LinkedinShareButton>
+                    </Tooltip> */}
+
+                   
+                </div>
             </div>
 
             <CardContent>

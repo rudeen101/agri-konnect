@@ -4,21 +4,22 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
+import ImageUpload from "../../components/imageUpload/ImageUpload";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
+// import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImage } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+// import { deleteImages } from "../../utils/api";
+// import { deleteData, postData } from "../../utils/api";
 
 
 
@@ -27,7 +28,12 @@ const AddHomeBannerSlide = () =>{
     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [formFields, setFormFields] = useState({
-        images: [],
+        imageUrl: "",
+        title: "",
+        subtitle: "",
+        ctaText: "",
+        ctaUrl: "",
+        alt: ""
     });
 
     const [previews, setPreviews] = useState([])
@@ -36,7 +42,7 @@ const AddHomeBannerSlide = () =>{
 
     const formData = new FormData();
 
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -67,33 +73,34 @@ const AddHomeBannerSlide = () =>{
         try {
             const files = e.target.files;
 
+
             setUploading(true);
 
-            for (let i = 0; i < files.length; i++) {
+           
+for (let i = 0; i < files.length; i++) {
+    const file = files[i];
 
-                if (files[i] && files[i].type === 'image/jpeg' || files[i].type === 'image/jpg' || files[i].type === 'image/png' || files[i].type === 'image/webp'){
-                    const file = files[i];
-                    selectedImages.push(file);
-                    formData.append(`images`, file);
-                }
-                else{
-                    context.setAlertBox({
-                        open: true,
-                        error: true,
-                        msg: 'Please select a valid JPG or PNG image file'
-                    });
-
-                    return false;
-                }
-
-                formFields.images = selectedImages;
-                
-            }
+    // ✅ Corrected Condition (Properly Check Image Type)
+    if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp')) {
+        selectedImages.push(file);
+        formData.append("images", file); // ✅ Append each file to FormData
+    } 
+    else {
+        context.setAlertBox({
+            open: true,
+            error: true,
+            msg: "Please select a valid JPG or PNG image file"
+        });
+        return false;
+    }
+}
         } catch (error) {
             console.log(error)
         }
 
-        uploadImage(apiEndPoint, formData).then((res) => {
+
+        uploadImages(apiEndPoint, formData).then((res) => {
+            console.log("++++",res)
             fetchDataFromApi('/api/imageUpload').then((response) =>  {
                 if (response !== undefined && response !== null && response !== response.length !== 0){
                     response.length !== 0 && response?.map((item) => {
@@ -142,29 +149,40 @@ const AddHomeBannerSlide = () =>{
         const appendedArray = [...previews, ...uniqueArray];
         console.log(formFields);
 
+        // return
+
         img_arr = [];
 
-        formFields.images = appendedArray;
+        formFields.imageUrl = appendedArray[0];
 
-        if (previews.length !== 0){
-            setIsLoading(true);
-
-            postData(`/api/homeSliderBanner/create`, formFields).then((res) => {
-                setIsLoading(false)
-
-                deleteData('/api/imageUpload/deleteAllImages');
-                history('/homeBannerSlide/list');
-            });
-        } 
-        else {
+        if (formFields.imageUrl ===  "") {
             context.setAlertBox({
                 open: true,
-                error: true,
-                msg: 'Make sure to add image!'
+                msg: "Please add banner image",
+                error: true
             });
+            return false
         }
-    }
 
+        if (formFields.title ===  "") {
+            context.setAlertBox({
+                open: true,
+                msg: "Please add banner title.",
+                error: true
+            });
+            return false
+        }
+   
+        setIsLoading(true);
+
+        postData(`/api/homeSliderBanner/create`, formFields).then((res) => {
+            setIsLoading(false)
+
+            deleteData('/api/imageUpload/deleteAllImages');
+            // navigate('/homeBannerSlide/list');
+        });
+    } 
+   
 
     return (
         <>
@@ -199,7 +217,50 @@ const AddHomeBannerSlide = () =>{
                         <div className="col-sm-9">
                             <div className="">
                                 <div className="card p-4 mt-0">
-                                    <h6>Media and Publish</h6>
+                                    <div className="form-group">
+                                        <h6>Title</h6>
+                                        <input type="text"
+                                            name="title" 
+                                            value={formFields.title} 
+                                            onChange={changeInput}   
+                                        />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Sub Title</h6>
+                                        <input type="text"
+                                            name="subtitle" 
+                                            value={formFields.subtitle} 
+                                            onChange={changeInput}   
+                                        />                                    
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Call to Action Text</h6>
+                                        <input type="text"
+                                            name="ctaText" 
+                                            value={formFields.ctaText} 
+                                            onChange={changeInput}   
+                                        />                                    
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Call to Action URL </h6>
+                                        <input type="text"
+                                            name="ctaUrl" 
+                                            value={formFields.ctaUrl} 
+                                            onChange={changeInput}   
+                                        />                                    
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Image Alt Text (Optional)</h6>
+                                        <input type="text"
+                                            name="alt" 
+                                            value={formFields.alt} 
+                                            onChange={changeInput}   
+                                        />  
+                                    </div>
 
                                     <div className="imgUploadBox d-flex align-items-center">
                                         {
@@ -242,8 +303,8 @@ const AddHomeBannerSlide = () =>{
                                                     </label>
                                                     <input 
                                                         type="file"
-                                                        multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
+                                                        multiple
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/uploads')}
                                                         name="images"
                                                         id="fileInput"
                                                     />
@@ -258,6 +319,8 @@ const AddHomeBannerSlide = () =>{
 
                                     {/* <MultipleFileUpload></MultipleFileUpload> */}
                                     <Button type="submit" className="btn-blue btn-large w-100 btn-big   "> <FaCloudUploadAlt /> &nbsp; {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : "PUBLISH AND VIEW"} </Button>
+                                
+                                    {/* <ImageUpload></ImageUpload> */}
                                 </div>
 
                                 

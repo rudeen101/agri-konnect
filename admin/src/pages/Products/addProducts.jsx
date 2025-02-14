@@ -24,13 +24,11 @@ import image from "../../assets/images/quality.png"
 import Avatar from "../../assets/images/rudeen.jpg";
 import UserAvatarImg from "../../components/userAvatarImg/userAvatarImg";
 import { FaReply } from "react-icons/fa";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api2";
 
 
 const ProductUpload = () =>{
@@ -78,7 +76,8 @@ const ProductUpload = () =>{
         productWeight: [],
         packagingType: [],
         location: "",
-        tags: []
+        tags: [],
+        images: []
     });
 
     const inputChange = (e)=> {
@@ -111,21 +110,21 @@ const ProductUpload = () =>{
         fetchDataFromApi('/api/imageUpload').then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/category/deleteImage?img=${img}`).then((res => {
-                        deleteData('/api/imageUpload/deleteAllImages');
+                    deleteImages(`/api/imageUpload/deleteImage?img=${img}`).then((res => {
+                        deleteDataFromApi('/api/imageUpload/deleteAllImages');
                     }));
                 })
             })
         });
 
-        fetchDataFromApi('/api/productWeight').then((res) => {
-            console.log("res", res)
-            setProductWeight(res)
-        });
+        // fetchDataFromApi('/api/productWeight').then((res) => {
+        //     console.log("res", res)
+        //     setProductWeight(res)
+        // });
 
-        fetchDataFromApi('/api/productSize').then((res) => {
-            setProductSize(res)
-        });
+        // fetchDataFromApi('/api/productSize').then((res) => {
+        //     setProductSize(res)
+        // });
    
     }, []);
 
@@ -270,9 +269,7 @@ const ProductUpload = () =>{
 
                     }, 200);
                 }
-            })
-          
-    
+            })  
         })
     }
 
@@ -433,7 +430,7 @@ const ProductUpload = () =>{
 
         setIsLoading(true);
 
-        postData(`/api/product/create`, formFields).then((res) => {
+        postDataToApi(`/api/product/create`, formFields).then((res) => {
             context.setAlertBox({
                 open: true,
                 msg: "Product created successfully!",
@@ -443,7 +440,7 @@ const ProductUpload = () =>{
 
             context.fetchCategory();
 
-            deleteData('/api/imageUpload/deleteAllImages');
+            deleteDataFromApi('/api/imageUpload/deleteAllImages');
 
             // history('/product/listing')
         }).catch((error)=>{
@@ -810,68 +807,68 @@ const ProductUpload = () =>{
                                 </div>
 
                                 <div className="card p-4 mt-0">
-                                <div className="imagesUploadSection">
-                                    <h5>Media And Published</h5>
-                                </div>
-
-                                {/* <MultipleFileUpload></MultipleFileUpload> */}
-
-                                    <div className="imgUploadBox d-flex align-items-center">
-                                        {
-                                            previews?.length !== 0 && previews?.map((img, index) => {
-                                                return (
-                                                    <div className="uploadBox" key={index}>
-                                                        <span className="remove" onClick={() => removeImage(index, img)}>
-                                                            <IoMdClose />
-                                                        </span>
-                                                        <div className="box">
-                                                            <LazyLoadImage
-                                                                alt={"image"}
-                                                                efect="blur"
-                                                                className="w-100"
-                                                                src={img}
-                                                            />
-                                                        </div>
-                                                
-                                                    </div>
-                                                )
-                                            })
-                                        }
-                              
-
-                                        <div className="uploadBox">
-
-                                            {
-                                                uploading === true ?
-                                                <div className="pregressBar text-center d-flex align-items-center justify-content-center flex-column">
-                                                    <CircularProgress />
-                                                    <span>Uploading...</span>
-                                                </div>
-                                                :
-                                                <>
-                                                    <label for="fileInput">
-                                                        <div className="info">
-                                                            <FaRegImages className="icon" />
-                                                            <h6 className="mt-3">Upload Image</h6>
-                                                        </div>
-                                                    </label>
-
-                                                    <input 
-                                                        type="file"
-                                                        multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
-                                                        name="images"
-                                                        id="fileInput"
-                                                    />
-                                                </>
-                                            }
-                                         
-                                      
-                                        </div>
+                                    <div className="imagesUploadSection">
+                                        <h5>Media And Published</h5>
                                     </div>
 
-                                <Button type="submit" className="btn-blue btn-large w-100 btn-big   "> <FaCloudUploadAlt /> &nbsp; {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : "PUBLISH AND VIEW"} </Button>
-                            </div>
+                                    {/* <MultipleFileUpload></MultipleFileUpload> */}
+
+                                        <div className="imgUploadBox d-flex align-items-center">
+                                            {
+                                                previews?.length !== 0 && previews?.map((img, index) => {
+                                                    return (
+                                                        <div className="uploadBox" key={index}>
+                                                            <span className="remove" onClick={() => removeImage(index, img)}>
+                                                                <IoMdClose />
+                                                            </span>
+                                                            <div className="box">
+                                                                <LazyLoadImage
+                                                                    alt={"image"}
+                                                                    efect="blur"
+                                                                    className="w-100"
+                                                                    src={img}
+                                                                />
+                                                            </div>
+                                                    
+                                                        </div>
+                                                    )
+                                                })
+                                            }
+                                
+
+                                            <div className="uploadBox">
+
+                                                {
+                                                    uploading === true ?
+                                                    <div className="pregressBar text-center d-flex align-items-center justify-content-center flex-column">
+                                                        <CircularProgress />
+                                                        <span>Uploading...</span>
+                                                    </div>
+                                                    :
+                                                    <>
+                                                        <label for="fileInput">
+                                                            <div className="info">
+                                                                <FaRegImages className="icon" />
+                                                                <h6 className="mt-3">Upload Image</h6>
+                                                            </div>
+                                                        </label>
+
+                                                        <input 
+                                                            type="file"
+                                                            multiple  
+                                                            onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
+                                                            name="images"
+                                                            id="fileInput"
+                                                        />
+                                                    </>
+                                                }
+                                            
+                                        
+                                            </div>
+                                        </div>
+
+                                    <Button type="submit" className="btn-blue btn-large w-100 btn-big   "> <FaCloudUploadAlt /> &nbsp; {isLoading === true ? <CircularProgress color="inherit" className="loader" /> : "PUBLISH AND VIEW"} </Button>
+                                </div>
                         </div>
 
                            

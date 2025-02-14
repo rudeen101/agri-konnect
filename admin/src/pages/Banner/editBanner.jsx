@@ -10,7 +10,7 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,9 +19,9 @@ import MenuItem from '@mui/material/MenuItem';
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, editData } from "../../utils/api";
+// import { uploadImage } from "../../utils/api";
+// import { deleteImages } from "../../utils/api";
+// import { deleteData, editData } from "../../utils/api";
 
 
 
@@ -48,7 +48,7 @@ const EditBanner = () =>{
 
     const formData = new FormData();
 
-    const history = useNavigate();
+    const navigate = useNavigate();
     const { id } = useParams();
     
 
@@ -227,13 +227,13 @@ const EditBanner = () =>{
 
         if (formFields.catName !== "" && formFields.subCatName !== "" && previews.length !== 0){
             setIsLoading(true);
-            editData(`/api/banner/${id}`, formFields).then((res) => {
+            updateDataToApi(`/api/banner/${id}`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchBanner();
 
-                deleteData('/api/imageUpload/deleteAllImages');
+                deleteDataFromApi('/api/imageUpload/deleteAllImages');
 
-                history('/banner/list')
+                navigate('/banner/list')
             });
         } 
         else {
@@ -401,7 +401,7 @@ const EditBanner = () =>{
                                                     <input 
                                                         type="file"
                                                         multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
                                                         name="images"
                                                         id="fileInput"
                                                     />

@@ -25,7 +25,7 @@ const Login = () =>{
     });
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
 
 
        const changeInput = (e) => {
@@ -61,7 +61,7 @@ const Login = () =>{
                 }
     
                 setIsLoading(true);
-                postData("/api/user/signin", formFields).then((res) => {
+                postData("/api/auth/signin", formFields).then((res) => {
                     
                     if (res.user?.isAdmin === false) {
                         localStorage.removeItem('user');
@@ -89,7 +89,7 @@ const Login = () =>{
                             setTimeout(() => {
                                 setInputIndex(true);
                                 setIsLoading(false)
-                                history("/");
+                                navigate("/");
                             }, 2000);
                         }
                     }else {   

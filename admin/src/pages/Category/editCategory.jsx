@@ -11,15 +11,13 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, editData } from "../../utils/api";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { uploadImage } from "../../utils/api";
-import { deleteImages } from "../../utils/api";
-import { deleteData, postData } from "../../utils/api";
+
 
 
 
@@ -46,7 +44,7 @@ const EditSubCategory = () =>{
 
     const formData = new FormData();
 
-    const history = useNavigate();
+    const navigate = useNavigate();
 
 
     useEffect(() => {
@@ -56,7 +54,7 @@ const EditSubCategory = () =>{
             res?.map((item) => {
                 item?.images?.map((img) => {
                     deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
-                        deleteData('/api/imageUpload/deleteAllImages');
+                        deleteDataFromApi('/api/imageUpload/deleteAllImages');
                     });
                 });
             });
@@ -64,8 +62,7 @@ const EditSubCategory = () =>{
 
 
         fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
-            console.log("*******",res)
-            context.setProgress(20);  
+           context.setProgress(20);  
             setCategory(res);
             setPreviews(res.images);
             setFormFields({
@@ -181,13 +178,13 @@ const EditSubCategory = () =>{
         if (formFields.name !== "" && formFields.color !== "" && previews.length !== 0){
             setIsLoading(true);
 
-            editData(`/api/category/${id}`, formFields).then((res) => {
+            updateDataToApi(`/api/category/${id}`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchCategory();
 
-                deleteData('/api/imageUpload/deleteAllImages');
+                deleteDataFromApi('/api/imageUpload/deleteAllImages');
 
-                history('/category');
+                navigate('/category');
             });
         } 
         else {
@@ -279,17 +276,20 @@ const EditSubCategory = () =>{
                                                 </div>
                                                 :
                                                 <>
+                                                    <label for="fileInput">
+                                                        <div className="info">
+                                                            <FaRegImages className="icon" />
+                                                            <h6 className="mt-3">Upload Image</h6>
+                                                        </div>
+                                                    </label>
+
                                                     <input 
                                                         type="file"
                                                         multiple  
-                                                        onChange={(e) => onChangeFile(e, '/api/category/upload')}
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
                                                         name="images"
+                                                        id="fileInput"
                                                     />
-                                            
-                                                    <div className="info">
-                                                        <FaRegImages />
-                                                        <h5>Image upload</h5>
-                                                    </div>
                                                 </>
                                             }
                                          
