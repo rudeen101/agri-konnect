@@ -1,22 +1,52 @@
-// models/Order.js
-const {
-    Schema,
-    model
-  } = require("mongoose");
+const mongoose = require("mongoose");
 
-  
-const orderSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  items: [
+const OrderSchema = new mongoose.Schema(
     {
-      product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product' },
-      quantity: { type: Number, required: true },
-      price: { type: Number, required: true },
-    },
-  ],
-  total: { type: Number, required: true },
-  status: { type: String, default: 'Pending' },
-  createdAt: { type: Date, default: Date.now },
-});
+        orderNumber: { type: String, required: true, unique: true },
+        user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+        orderItems: [
+            {
+                product: { type: mongoose.Schema.Types.ObjectId, ref: "Product", required: true },
+                name: { type: String, required: true },
+                quantity: { type: Number, required: true },
+                price: { type: Number, required: true },
+                images:[
+                    {
+                        type: String,
+                        required: true
+                    }
+                ],
+            },
+        ],
+        deliveryAddress: {
+            fullName: { type: String, required: true },
+            phone: { type: String, required: true },
+            address: { type: String, required: true },
+            city: { type: String, required: true },
+            country: { type: String, required: true, default: "Liberia" },
+            pickupStation: { type: String, default: "" },
+        },
 
-module.exports = mongoose.model('Order', orderSchema);
+        paymentDetails: {
+            method: {
+              type: String,
+              enum: ["MoMo", "OrangeMoney", "Cash"],
+              required: true,
+            },
+            accountName: { type: String }, // Optional, for digital payments
+            accountPhone: { type: String }, // Optional, for digital payments
+        },
+        totalPrice: { type: Number, required: true },
+        paymentStatus: { type: String, enum: ["pending", "paid"], default: "pending" },
+        status: { type: String, enum: ["pending", "shipped", "delivered", "cancelled"], default: "pending" },
+        deliveredAt: { type: Date },
+        createdAt: { type: Date, default: Date.now },
+
+    },
+    { timestamps: true }
+);
+
+module.exports = mongoose.model("Order", OrderSchema);
+
+
+

@@ -16,7 +16,7 @@ router.get('/:userId', verifyToken, async (req, res) => {
 });
 
 // POST add a product to wishlist
-router.post('/:userId', verifyToken, async (req, res) => {
+router.post('/add/:userId', verifyToken, async (req, res) => {
     try {
         const { productId } = req.body;
         
@@ -42,6 +42,35 @@ router.delete('/:userId/:productId', verifyToken, async (req, res) => {
 
     } catch (err) {
         res.status(500).json({ error: 'Failed to remove product from wishlist' });
+    }
+});
+
+
+// ✅ Toggle Wishlist Status (Add/Remove)
+router.post("/toggle", verifyToken, async (req, res) => {
+    try {
+        const { userId, productId } = req.body;
+
+        if (!userId || !productId) {
+            return res.status(400).json({ error: "User ID and Product ID are required" });
+        }
+
+        // Check if the product is already in the wishlist
+        const existingWish = await Wishlist.findOne({ user: userId, product: productId });
+
+        if (existingWish) {
+            // If found, remove from wishlist
+            await Wishlist.deleteOne({ _id: existingWish._id });
+            return res.status(200).json({ success: true, isWishlisted: false, msg: "Removed from Wishlist" });
+        } else {
+            // If not found, add to wishlist
+            const newWish = new Wishlist({ user: userId, product: productId });
+            await newWish.save();
+            return res.status(201).json({ success: true, isWishlisted: true, msg: "Added to Wishlist" });
+        }
+    } catch (error) {
+        console.error("Wishlist Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 

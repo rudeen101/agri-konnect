@@ -61,6 +61,7 @@ const searchRoutes = require("./routes/search.js");
 const tagRoutes = require("./routes/tag.js");
 const authRoutes = require("./routes/auth.js");
 const adminRoutes = require("./routes/admin.js");
+const orderRoutes = require("./routes/order.js")
 
 app.use("/upoads", express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
@@ -76,6 +77,7 @@ app.use(`/api/search`, searchRoutes);
 app.use(`/api/tag`, tagRoutes);
 app.use(`/api/auth`, authRoutes);
 app.use(`/api/admin`, adminRoutes);
+app.use(`/api/order`, orderRoutes);
 // app.use(`/api/productWeight`, prouductWeightRoutes);
 // app.use(`/api/productSize`, prouductSizeRoutes);
 

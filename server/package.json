@@ -10,7 +10,7 @@
   "author": "Rudeen N. Zarwolo",
   "license": "ISC",
   "dependencies": {
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^3.0.2",
     "body-parser": "^1.20.3",
     "cloudinary": "^1.21.0",
     "connect-mongo": "^5.1.0",

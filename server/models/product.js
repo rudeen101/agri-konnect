@@ -53,7 +53,7 @@ const productSchema = new Schema({
         required: true
     },
     countInStock: {
-        type: String,
+        type: Number,
         required: true
     },
     ratings: [Number], 

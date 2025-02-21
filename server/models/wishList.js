@@ -2,8 +2,8 @@
 const mongoose = require('mongoose');
 
 const wishlistSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true },
+  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // User who added to wishlist
+  product: { type: mongoose.Schema.Types.ObjectId, ref: 'Product', required: true }, // Wishlisted product
   addedAt: { type: Date, default: Date.now },
 });
 

@@ -6,8 +6,9 @@ const User = require('../models/users');
 // Middleware to verify JWT token
 const verifyToken = (req, res, next) => {
 	// JWT is typically sent in the Authorization header as Bearer token
-	const authHeader =  req.header("Authorization")
-	if (!authHeader || !authHeader.startsWith("Bearer ")) {
+	const authHeader =  req.header("Authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
 		return res.status(401).json({ error: 'Unauthorized: No token provided' });
 	}
 

@@ -1,5 +1,14 @@
 const mongoose = require("mongoose");
 
+const addressSchema = mongoose.Schema({
+    fullName: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: { type: String, required: true },
+    city: { type: String, required: true },
+    country: { type: String, default: "Liberia" },
+    pickupStation: { type: String, default: "" } // Optional field for pickup stations
+});
+
 const UserSchema = new mongoose.Schema({
     name: {
         type: String,
@@ -40,6 +49,11 @@ const UserSchema = new mongoose.Schema({
     refreshToken: { 
         type: String 
     }, // Store refresh token in DB
+
+    addresses: { 
+        type: [addressSchema], 
+        default: [] 
+    }, // Stores multiple addresses
 
     deleted: { 
         type: Boolean, 

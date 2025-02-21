@@ -1,7 +1,7 @@
 // routes/auth.js
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 const User = require('../models/users');
 const { verifyToken, authorize } = require('../middleware/auth');
 const { generateAccessToken, generateRefreshToken } = require("../utils/jwtHelper");
@@ -123,10 +123,15 @@ router.post('/signup', async (req, res) => {
 // Login Endpoint: Issues JWT token on successful login
 router.post('/signin', async (req, res) => {
     const { contact, password } = req.body;
+    console.log("password",password)
+    
     try {
-		const user = await User.findOne({ email });
+		const user = await User.findOne({ contact });
 		if (!user) return res.status(400).json({ error: 'Invalid credentials' });
-		const isMatch = await bcrypt.compare(password, user.password);
+
+        console.log("user pass", user.password);
+        
+		const isMatch = bcrypt.compare(password, user.password);
 		if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 		
 		// Create JWT payload

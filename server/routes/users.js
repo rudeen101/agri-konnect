@@ -3,7 +3,7 @@ const {ImageUpload} = require('../models/imageUpload');
 const { isAuthenticated } = require('../middleware/auth');
 const express = require('express');
 const router = express.Router();
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcryptjs");
 const multer = require("multer");
 const fs = require("fs");
 const { verifyToken } = require('../middleware/auth');
@@ -49,6 +49,22 @@ router.get('/profile', verifyToken, async (req, res) => {
     } catch (err) {
         console.error("Error fetching profile:", err);
         res.status(500).json({ error: 'Failed to fetch profile' });
+    }
+});
+
+//Get the user address
+router.get('/address', verifyToken, async (req, res) => {
+    try {
+        // Exclude the password field from the returned user data.
+        const userAddress = await User.findOne({ _id: req.user.id }, "addresses -_id");
+
+    if (!userAddress) {
+        return res.status(404).json({ error: 'User not found' });
+    }
+    res.json({ userAddress });
+    } catch (err) {
+        console.error("Error fetching address:", err);
+        res.status(500).json({ error: 'Failed to fetch address' });
     }
 });
 

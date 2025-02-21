@@ -184,12 +184,26 @@ router.get('/', async (req, res) => {
         //   ]
         // }).lean();
         const homeSliderBanner = await HomeSliderBanner.find();
-        console.log(homeSliderBanner)
         res.json({ homeSliderBanner });
     } catch (error) {
         console.error("Error fetching banners:", error);
         res.status(500).json({ error: 'Failed to fetch banners' });
     }
+});
+
+router.get('/:id',  async (req, res) => {
+
+    try {
+        const bannerId = req.params.id;
+
+        const homeSliderBanner = await HomeSliderBanner.findById(bannerId);
+      
+        return res.status(200).send(homeSliderBanner);
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ error: 'Failed to Home Slider Banner' });
+    }
+
 });
 
 /**
@@ -216,7 +230,7 @@ router.post('/create', verifyToken, authorize('admin'), async (req, res) => {
  */
 router.put('/:bannerId', verifyToken, authorize('admin'), async (req, res) => {
   try {
-    const updatedBanner = await Banner.findByIdAndUpdate(
+    const updatedBanner = await HomeSliderBanner.findByIdAndUpdate(
         req.params.bannerId, 
         req.body, 
         { new: true, runValidators: true }
@@ -237,9 +251,9 @@ router.put('/:bannerId', verifyToken, authorize('admin'), async (req, res) => {
  * Deletes a banner.
  * Protected route: Only admin can delete banners.
  */
-router.delete('/:bannerId', verifyToken, authorize('admin'), async (req, res) => {
+router.delete('/:id', verifyToken, authorize('admin'), async (req, res) => {
     try {
-        const deletedBanner = await Banner.findByIdAndDelete(req.params.bannerId);
+        const deletedBanner = await HomeSliderBanner.findByIdAndDelete(req.params.id);
 
         if (!deletedBanner) return res.status(404).json({ error: 'Banner not found' });
 
