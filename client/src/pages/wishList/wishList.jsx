@@ -8,7 +8,7 @@ import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutl
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import QuantityBox from "../../components/quantityBox/quantityBox";
 import { MyContext } from "../../App";
-import { deleteData, fetchDataFromApi, editData } from "../../utils/api";
+import { deleteData, fetchDataFromApi, editData } from "../../utils/api2";
 import { FaHome } from "react-icons/fa";
 
 const WishList = ({userId}) => {

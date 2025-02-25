@@ -22,9 +22,11 @@ import WishList from './pages/wishList/wishList';
 import Profile from './pages/profile/profile';
 import Orders from './pages/orders/orders';
 import Transactions from './pages/transsactions/transactions';
+import Checkout from './pages/checkout/Chackout';
+import ThankYouPage from './pages/thankYou/ThankYouPage';
 
 
-import { fetchDataFromApi, postData } from './utils/api';
+import { fetchDataFromApi, postDataToApi } from './utils/apiCalls';
 
 const MyContext = createContext();
 
@@ -39,7 +41,7 @@ const App = () => {
 	const [isOpenFilters, setIsOpenFilters] = useState()
 	const [cartTotalAmount, setCartTotalAmount] = useState();
 	const [selectedCounty, setSelectedCounty] = useState("");
-	const [cartData, setCartData] = useState("");
+	const [cartData, setCartData] = useState([]);
 	const [userData, setUserData] = useState("");
 	const [headerFooterDisplay, setHeaderFooterDisplay] = useState(true);
 	const [addingToCart, setAddingToCart] = useState(false);
@@ -78,9 +80,9 @@ const App = () => {
 	// });
 
 	useEffect(() => {
-		const token = localStorage.getItem("token");
+		const accessToken = localStorage.getItem("accessToken");
 
-		if (token !== "" && token !== undefined && token !== null) {
+		if (accessToken !== "" && accessToken !== undefined && accessToken !== null) {
 
 			setIsLogin(true);
 
@@ -96,8 +98,8 @@ const App = () => {
 		window.scrollTo(0,0);
 
 		fetchCategory();
-		getCartData()
-		getWishListData()
+		// getCartData()
+		// getWishListData()
 	}, []);
 
 	//fetch and set cateory and sub category
@@ -124,11 +126,14 @@ const App = () => {
 
 	//fetch and set cart data
 	const getCartData = () => {
-		const user = JSON.parse(localStorage.getItem("user"));
-	
-		fetchDataFromApi(`/api/cart?userId=${user?.userId}`).then((res) => {
-			setCartData(res);
-		})
+		const userLogin = JSON.parse(localStorage.getItem("isLogin"));
+
+		if(userLogin){
+			fetchDataFromApi(`/api/cart`).then((res) => {
+				console.log("cart",res)
+				setCartData(res);
+			})
+		}
 	}
 
 	const getWishListData = () => {
@@ -143,7 +148,7 @@ const App = () => {
 
 		if (isLogin !== false) {
 			setAddingToCart(true)
-			postData(`/api/cart/add`, data).then((res) => {
+			postDataToApi(`/api/cart/add`, data).then((res) => {
 				if (res.status !== false) {
 					setAlertBox({
 						open: true,
@@ -218,6 +223,7 @@ const App = () => {
 		addToCart,
 		cartData,
 		setCartData,
+		fetchCategory,
 		addingToCart,
 		setAddingToCart,
 		getCartData,
@@ -231,7 +237,7 @@ const App = () => {
 	}
 
 	
-	const userId = userData?.userId
+	const user = userData
 
 	return (
 		<BrowserRouter>
@@ -263,7 +269,7 @@ const App = () => {
 					<Route exact={true} path="/" element={<Home />} />
 					<Route exact={true} path="/product/category/:id" element={<ProductListing />} />
 					<Route exact={true} path="/product/subCat/:id" element={<ProductListing />} />
-					<Route exact={true} path="/product/:id" element={<ProductDetails />} />
+					<Route exact={true} path="/product/:id" element={<ProductDetails user={user}  />} />
 					<Route exact={true} path="*" element={<NotFound />} />
 					{/* <Route exact={true} path="/product-details" element={<ProductDetails />} /> */}
 					<Route exact={true} path="/wishList" element={<WishList />} />
@@ -281,26 +287,37 @@ const App = () => {
 
 					<Route path="/cart" element={
 						<PrivateRoute>
-							<Cart userId={userId} />
+							<Cart user={user} />
 						</PrivateRoute>
 					} />
 
+					<Route path="/checkout" element={
+						<PrivateRoute>
+							<Checkout user={user} />
+						</PrivateRoute>
+					} />
+
+					<Route path="/fulfillment" element={
+						<PrivateRoute>
+							<ThankYouPage user={user} />
+						</PrivateRoute>
+					} />
 					<Route path="/orders" element={
 						<PrivateRoute>
-							<Orders userId={userId} />
+							<Orders user={user} />
 						</PrivateRoute>
 					} />
 
 					<Route path="/wishlist" element={
 						<PrivateRoute>
-							<WishList userId={userId} />
+							<WishList user={user} />
 						</PrivateRoute>
 					} />
 
 					
 					<Route path="/transactions" element={
 						<PrivateRoute>
-							<Transactions userId={userId} />
+							<Transactions user={user} />
 						</PrivateRoute>
 					} />
 				</Routes>

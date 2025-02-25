@@ -5,9 +5,9 @@ import { MyContext } from '../../App';
 
 
 const PrivateRoute = ({ children }) => {
-    const context = useContext(MyContext)
-
-  return context.isLogin ? children : <Navigate to="/login" />;
+	const userLogin = JSON.parse(localStorage.getItem("isLogin"));
+	
+	return userLogin ? children : <Navigate to="/login" />;
 };
 
 export default PrivateRoute;

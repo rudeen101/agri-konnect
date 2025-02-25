@@ -20,7 +20,7 @@ import HomeBannerSlider from "../../components/homeBannerSlder/homeBannerSlider"
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi } from "../../utils/apiCalls";
 import Category from "../../components/categories/category";
 import HomeProductCard from "../../components/product/homeProductCard";
 
@@ -35,7 +35,7 @@ const Home = () => {
     const [filterData, setFilterData] = useState([]);
     const [isLoadingProducts, setIsLoadingProducts] = useState(false);
     const [productData, setProductData] = useState([]);
-    const [homeSliderBanner, setHomeSliderBanner] = useState([]);
+    const [homeSliderBannerData, setHomeSliderBannerData] = useState([]);
     const [featuredProducts, setFeaturedProducts] = useState([]);
     const [topSeller, setTopSeller] = useState([]);
     const [recentlyViewed, setRecentlyViewed] = useState([]);
@@ -84,7 +84,6 @@ const Home = () => {
 
         fetchDataFromApi(`/api/product/homepage`)
         .then((res) => {
-            console.log("home data",res.combinedProducts)
 
             setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
             setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
@@ -121,7 +120,8 @@ const Home = () => {
       
         fetchDataFromApi("/api/homeSliderBanner/")
         .then((res) => {
-            setHomeSliderBanner(res);
+            console.log("HomeBanner", res);
+            setHomeSliderBannerData(res.homeSliderBanner);
         });
         
     }, []);
@@ -147,14 +147,13 @@ const Home = () => {
                 homeSliderBanner?.data?.length > 0 &&  <HomeSlider data={homeSliderBanner} />
             } */}
             {
-                homeSliderBanner?.data?.length > 0 &&  <HomeBannerSlider data={homeSliderBanner} />
+                homeSliderBannerData?.length > 0 &&  <HomeBannerSlider sliderData={homeSliderBannerData} />
             }
            
             {/* <CartSlider /> */}
 
             <div className="categories">
                 <div className="container-fluid">
-                    <br></br>
                     <div className="categoryRow mt-4">
                         { 
                             context.categoryData?.categoryList?.map((category, index) => {
@@ -176,7 +175,6 @@ const Home = () => {
                     <div className="wrapper card">
                         <div className="productCardHeader">
                             <h3 className="hd mb-0 mt-0">Most Popular Items</h3>
-                            {console.log("popular", mostPopular)}
 
                             <ul className="list list-inline mb-0 ml-auto filterTab">
                                 <li className="list-inline-item">

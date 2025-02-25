@@ -11,7 +11,7 @@ import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
-// import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImage } from "../../utils/apiCalls";
+import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
@@ -51,7 +51,7 @@ const AddHomeBannerSlide = () =>{
             res?.map((item) => {
                 item?.images?.map((img) => {
                     deleteImages(`/api/homeSliderBanner/deleteImage?img=${img}`).then((res) => {
-                        deleteData('/api/imageUpload/deleteAllImages');
+                        deleteDataFromApi('/api/imageUpload/deleteAllImages');
                     });
                 });
             });
@@ -99,8 +99,7 @@ for (let i = 0; i < files.length; i++) {
         }
 
 
-        uploadImages(apiEndPoint, formData).then((res) => {
-            console.log("++++",res)
+        uploadImage(apiEndPoint, formData).then((res) => {
             fetchDataFromApi('/api/imageUpload').then((response) =>  {
                 if (response !== undefined && response !== null && response !== response.length !== 0){
                     response.length !== 0 && response?.map((item) => {
@@ -175,11 +174,11 @@ for (let i = 0; i < files.length; i++) {
    
         setIsLoading(true);
 
-        postData(`/api/homeSliderBanner/create`, formFields).then((res) => {
+        postDataToApi(`/api/homeSliderBanner/create`, formFields).then((res) => {
             setIsLoading(false)
 
-            deleteData('/api/imageUpload/deleteAllImages');
-            // navigate('/homeBannerSlide/list');
+            deleteDataFromApi('/api/imageUpload/deleteAllImages');
+            navigate('/homeBannerSlide/list');
         });
     } 
    
@@ -304,7 +303,7 @@ for (let i = 0; i < files.length; i++) {
                                                     <input 
                                                         type="file"
                                                         multiple
-                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/uploads')}
+                                                        onChange={(e) => onChangeFile(e, '/api/imageUpload/upload')}
                                                         name="images"
                                                         id="fileInput"
                                                     />

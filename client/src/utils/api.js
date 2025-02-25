@@ -1,67 +1,81 @@
 import axios from "axios";
 
-const token = localStorage.getItem("token");
+// Create Axios Instance
+const API = axios.create({
+    baseURL: import.meta.env.VITE_APP_BASE_URL,  
+    // headers: { "Content-Type": "application/json" }
+});
 
-const params = {
-    'Authorization': `Bearer ${token}`, //Include api key in the Authorization header
-    'Content-Type': 'applicaiton/json'
-}
+// Request Interceptor (Attach Token)
+// API.interceptors.request.use(
+//     (config) => {
+//         const accessToken = localStorage.getItem("accessToken"); // Get token from localStorage
+//         if (accessToken) {
+//             config.headers["Authorization"] = `Bearer ${accessToken}`;
+//         }
+//         return config;
+//     },
+//     (error) => Promise.reject(error)
+// );
 
-export const fetchDataFromApi = async (url) => {
-    try {
-        const { data } = await axios.get(import.meta.env.VITE_APP_BASE_URL + url,params);
-        return data;
-    } catch (error) {
-        console.log(error);
-        return error;
+// Request Interceptor to Dynamically Set Headers
+API.interceptors.request.use((config) => {
+    // Check if the request contains FormData (file uploads)
+    if (config.data instanceof FormData) {
+        config.headers["Content-Type"] = "multipart/form-data"; // For file uploads
+    } else {
+        config.headers["Content-Type"] = "application/json"; // Default for JSON data
     }
-}
 
-export const uploadImage = async (url, formData) => {
-    try {
-        const { data } = await axios.post(import.meta.env.VITE_APP_BASE_URL + url, formData);
-        return data;
-    } catch (error) {
-        console.log(error);
-        return error;
+    // Add Authorization header if token exists
+    const token = localStorage.getItem("accessToken");
+    if (token) {
+        config.headers["Authorization"] = `Bearer ${token}`;
     }
-}
 
-export const editData = async (url, updatedData) => {
-    try {
-        const { data } = await axios.put(`${import.meta.env.VITE_APP_BASE_URL}${url}`, updatedData);
-        return data;
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
-}
-export const deleteData = async (url) => {
-    try {
-        const { data } = await axios.delete(`${import.meta.env.VITE_APP_BASE_URL}${url}`, params);
-        return data;
-    } catch (error) {
-        console.log(error);
-        return error;
-    }
-}
+    return config;
+}, (error) => {
+    return Promise.reject(error);
+});
 
-export const postData = async (url, formData) => {
-    try {
-        const { data } = await axios.post(import.meta.env.VITE_APP_BASE_URL + url, formData);
-        return data;
-    } catch (error) {
-        // console.log(error);
-        return error.response.data;
-    }
-}
+// Response Interceptor (Handle Errors)
+API.interceptors.response.use(
+    (response) => response, // Return response data
+    async (error) => {
+        console.error("API Error:", error.response.data.error);
 
-export const deleteImages = async (url, image) => {
-    try {
-        const { data } = await axios.delete(`${import.meta.env.VITE_APP_BASE_URL}${url}`, image);
-        return data;
-    } catch (error) {
-        console.log(error);
-        return error;
+        // Handle Unauthorized Errors
+        if (error.response && error.response.status === 401) {
+            localStorage.removeItem("isLogin");
+
+            console.warn("Unauthorized! Redirecting to login...");
+            // window.location.href = "/login"; // Redirect to login
+        }
+
+        if (error.response?.status === 403 && error.response.data.error === "Token expired") {
+            try {
+
+                console.log("expired")
+                const { data } = await API.post("/api/auth/refresh", {
+                    refreshToken: localStorage.getItem("refreshToken")
+                });
+
+                console.error("Token expired and renewd");
+
+                localStorage.setItem("accessToken", data.accessToken);
+                error.config.headers["Authorization"] = `Bearer ${data.accessToken}`;
+
+                return axios(error.config);
+            } catch (refreshError) {
+                console.error("Session expired. Please login again.");
+                localStorage.removeItem("accessToken");
+                localStorage.removeItem("refreshToken");
+                window.location.href = "/login";
+            }
+        }
+
+        return Promise.reject(error);
     }
-}
+);
+
+export default API;

@@ -19,6 +19,8 @@ import LoadingBar from 'react-top-loading-bar';
 import AddCategory from './pages/Category/addCategory';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
+import PrivateRoute from './components/privateRoute/privateRoute';
+
 
 import EditCategory from './pages/Category/editCategory';
 import SubCategory from './pages/Category/SubCategory';
@@ -49,6 +51,10 @@ import AdminList from './pages/AdminAccount/adminList';
 import DeletedUsers from './pages/AdminAccount/deletedUsers';
 import EditAdmin from './pages/AdminAccount/editAdmin';
 import AddAdmin from './pages/AdminAccount/addAdmin';
+
+import OrderListing from './pages/Orders/orderListing';
+import OrderDetails from './pages/Orders/orderDetails';
+
 
 const MyContext = createContext();
 
@@ -222,46 +228,160 @@ const App = () => {
 
 					<div className={`content ${isHiddenSidebarAndHeader === true && 'full'} ${isToggleSidebar === true ? 'toggle' : ""}`}>
 						<Routes>
-							<Route exact={true} path="/" element={<Dashboard />} />
+							<Route exact={true} path="/" element={
+								<PrivateRoute>
+									<Dashboard />
+								</PrivateRoute>
+							} />
 							<Route exact={true} path="/login" element={<Login />} />
 							<Route exact={true} path="/signup" element={<Signup />} />
 
-							<Route exact={true} path="/product/details/:id" element={<ProductDetails />} />
-							<Route exact={true} path="/product/upload" element={<ProductUpload />} />
-							<Route exact={true} path="/product/listing" element={<ProductListing />} />
+							<Route exact={true} path="/product/details/:id" element={
+								<PrivateRoute>
+									<ProductDetails />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/product/upload" element={
+								
+								<PrivateRoute>
+									<ProductUpload />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/product/listing" element={
+								<PrivateRoute>
+									<ProductListing />
+								</PrivateRoute>
 
-							<Route exact={true} path="/productSize" element={<ProductSize />} />
-							<Route exact={true} path="/productSize/add" element={<AddProductSize />} />
+							} />
+
+							<Route exact={true} path="/productSize" element={
+								<PrivateRoute>
+									<ProductSize />
+								</PrivateRoute>
+							} />
+
+							{/* <Route exact={true} path="/productSize/add" element={<AddProductSize />} />
 							<Route exact={true} path="/productSize/edit/:id" element={<EditProductWeight />} />
 
 							<Route exact={true} path="/productWeight" element={<ProductWeight />} />
 							<Route exact={true} path="/productWeight/add" element={<AddProductWeight />} />
-							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} />
+							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} /> */}
 
-							<Route exact={true} path="/category" element={<Category />} />
-							<Route exact={true} path="/category/add" element={<AddCategory />} />
-							<Route exact={true} path="/category/edit/:id" element={<EditCategory />} />
+							<Route exact={true} path="/category" element={
+								<PrivateRoute>
+									<Category />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/category/add" element={
+								<PrivateRoute>
+									<AddCategory />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/category/edit/:id" element={
+								<PrivateRoute>
+									<EditCategory />
+								</PrivateRoute>
+							} />
 
-							<Route exact={true} path="/subCategory" element={<SubCategory />} />
-							<Route exact={true} path="/subCategory/add" element={<AddSubCategory />} />
-							<Route exact={true} path="/subCategory/edit/:id" element={<EditSubCategory />} />
+							<Route exact={true} path="/subCategory" element={
+								<PrivateRoute>
+									<SubCategory />
+								</PrivateRoute>
+							} />
 
-							<Route exact={true} path="/homeBannerSlide/add" element={<AddHomeBannerSlide />} />
-							<Route exact={true} path="/homeBannerSlide/list" element={<HomeBannerSlideList />} />
-							<Route exact={true} path="/homeBannerSlide/edit/:id" element={<EditHomeBannerSlide />} />
+							<Route exact={true} path="/subCategory/add" element={
+								<PrivateRoute>
+									<AddSubCategory />
+								</PrivateRoute>
+							} />
+
+							<Route exact={true} path="/subCategory/edit/:id" element={
+								<PrivateRoute>
+									<EditSubCategory />
+								</PrivateRoute>
+								
+								} />
+
+							<Route exact={true} path="/homeBannerSlide/add" element={
+								<PrivateRoute>
+									<AddHomeBannerSlide />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/homeBannerSlide/list" element={
+								<PrivateRoute>
+									<HomeBannerSlideList />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/homeBannerSlide/edit/:id" element={
+								<PrivateRoute>
+									<EditHomeBannerSlide />
+								</PrivateRoute>
+								} />
 							
-							<Route exact={true} path="/banner/add" element={<AddBanner />} />
-							<Route exact={true} path="/banner/list" element={<BannerList />} />
-							<Route exact={true} path="/banner/edit/:id" element={<EditBanner />} />
+							<Route exact={true} path="/banner/add" element={
+								<PrivateRoute>
+									<AddBanner />
+								</PrivateRoute>
+								
+							} />
+							<Route exact={true} path="/banner/list" element={
+								<PrivateRoute>
+									<BannerList />
+								</PrivateRoute>
+								} />
+							<Route exact={true} path="/banner/edit/:id" element={
+								<PrivateRoute>
+									<EditBanner />
+								</PrivateRoute>
+							} />
 
-							<Route exact={true} path="/tag/add" element={<AddTag />} />
-							<Route exact={true} path="/tag/list" element={<TagList />} />
-							<Route exact={true} path="/tag/edit/:id" element={<EditTag />} />
+							<Route exact={true} path="/tag/add" element={
+								<PrivateRoute>
+									<AddTag />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/tag/list" element={
+								<PrivateRoute>
+									<TagList />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/tag/edit/:id" element={
+								<PrivateRoute>
+									<EditTag />
+								</PrivateRoute>
+							} />
 
-							<Route exact={true} path="/admin/add" element={<AddAdmin />} />
-							<Route exact={true} path="/admin/list" element={<AdminList />} />
-							<Route exact={true} path="/admin/deletedUsers" element={<DeletedUsers />} />
-							<Route exact={true} path="/admin/edit/:id" element={<EditAdmin />} />
+							<Route exact={true} path="/admin/add" element={
+								<PrivateRoute>
+									<AddAdmin />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/admin/list" element={
+								<PrivateRoute>
+									<AdminList />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/admin/deletedUsers" element={
+								<PrivateRoute>
+									<DeletedUsers />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/admin/edit/:id" element={
+								<PrivateRoute>
+									<EditAdmin />
+								</PrivateRoute>
+							} />
+
+							<Route exact={true} path="/admin/order/listing/" element={
+								<PrivateRoute>
+									<OrderListing />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/admin/order/details/:id" element={
+								<PrivateRoute>
+									<OrderDetails />
+								</PrivateRoute>
+							} />
 						</Routes>
 					</div>
 				</div>

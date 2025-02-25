@@ -11,7 +11,7 @@ import { MdFavoriteBorder } from "react-icons/md";
 import ShareIcon from '@mui/icons-material/Share';
 import { MyContext } from "../../App";
 import { Link } from "react-router-dom";
-import { postData } from "../../utils/api";
+import { postData } from "../../utils/api2";
 
 const ProductCard = (props) =>{
     const [productData, setProductData] = useState([]);

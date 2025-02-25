@@ -1,0 +1,30 @@
+.quantity-selector {
+    display: flex;
+    align-items: center;
+}
+
+.quantity-selector button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: var(--golden-yellow);
+    color: white;
+    cursor: pointer;
+    font-size: 13px;
+    border-radius: 8%;
+}
+
+.quantity-selector button:disabled {
+    background: #ddd;
+    cursor: not-allowed;
+}
+
+.quantity-selector input {
+    width: 35px;
+    height: 30px;
+    text-align: center;
+    font-size: 16px;
+    /* border: 1px solid #ccc; */
+    /* border-radius: 5px; */
+    border: none;
+}

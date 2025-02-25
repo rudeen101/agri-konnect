@@ -1,4 +1,14 @@
 
+:root {
+    --primary-teal: #00a99d;
+    --dark-teal: #00776e;
+    --light-teal: #66e2d6;
+    --golden-yellow: #f2a900;
+    --soft-coral: #ff6f61;
+    --charcoal: #2f2f2f;
+    --light-gray: #f4f4f4;
+    --white: #ffffff;
+}
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
 *{
@@ -13,7 +23,7 @@ body{
     overflow-x: hidden;
 }
 body.dark {
-    background-color: #071739 !important;
+    background-color: var(--primary-teal) !important;
 }
 ::-webkit-scrollbar {
     width: 5px !important;
@@ -27,7 +37,7 @@ body.dark {
 }
 
 .btn-blue{
-    background: #0858f7 !important;
+    background: var(--primary-teal) !important;
     font-size: 14px !important;
     font-weight: 600px;
     color: #fff !important;
@@ -91,7 +101,7 @@ header .row{
     margin: 0px !important
 }
 body.dark header{
-    background-color: #112143 !important;
+    background-color: var(--primary-teal) !important;
 }
 header .logo{
     text-decoration: none;
@@ -115,7 +125,7 @@ header button.rounded-circle svg{
 }
 
 header button.rounded-circle:hover svg{
-    color: #0858f7 !important;
+    color: var(--primary-teal) !important;
 }
 
 body.dark header button.rounded-circle{
@@ -687,13 +697,11 @@ table td{
 }
 
 .table td .imageContainer{
-    width: 30%;
-    flex: 0 0 30%
+    width: 100px;
+    overflow: hidden;
+    
 }
-.table td .info{
-    width: 70%;
-    flex: 0 0 70%
-}
+
 
 /* .table td .imageContainer img{
     width: 100px;
@@ -721,9 +729,7 @@ table td .productBox{
     width: 220px;
     padding: 5px
 }
-table td .productBox .info{
-    width: 100%
-}
+
 
 .tableFooter{
     padding-bottom: 20px;

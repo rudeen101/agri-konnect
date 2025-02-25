@@ -69,6 +69,7 @@ const Login = () =>{
 
                     localStorage.setItem("accessToken", res?.accessToken);
                     localStorage.setItem("refreshToken", res?.refreshToken);
+                    localStorage.setItem("isLogin", true);
                     context.setIsLogin(true);
 
                     const user = {

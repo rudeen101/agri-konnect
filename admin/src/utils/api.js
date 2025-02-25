@@ -18,7 +18,7 @@ const API = axios.create({
 //     (error) => Promise.reject(error)
 // );
 
-// 🟢 Request Interceptor to Dynamically Set Headers
+// Request Interceptor to Dynamically Set Headers
 API.interceptors.request.use((config) => {
     // Check if the request contains FormData (file uploads)
     if (config.data instanceof FormData) {

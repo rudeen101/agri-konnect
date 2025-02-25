@@ -11,7 +11,7 @@ import { Link, useNavigate } from "react-router-dom";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 // import backgroundPattern from "../../assets/images/background-pattern.jpg"
-import {postData} from "../../utils/api";
+import {postData} from "../../utils/api2";
 
 const Signup = () =>{
 

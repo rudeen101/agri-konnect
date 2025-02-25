@@ -38,18 +38,18 @@ const HomeBannerSlideList = () =>{
         
         fetchDataFromApi('/api/homeSliderBanner').then((res) => {
 			context.setProgress(30)
-			setHomeSliderBannerData(res);
+			setHomeSliderBannerData(res.homeSliderBanner);
 			context.setProgress(100)
 		})
     }, []);  
 
 
     const deleteHomeBannerSlide = (id) => {
-        deleteData(`/api/homeSliderBanner/${id}`).then((res) => {
-            console.log(res);
-            context.setProgress(100);
+        console.log(id)
+        deleteDataFromApi(`/api/homeSliderBanner/${id}`).then((res) => {
+            context.setProgress(40);
             fetchDataFromApi('/api/homeSliderBanner').then((res) => {
-                setHomeSliderBannerData(res);
+                setHomeSliderBannerData(res.homeSliderBanner);
                 context.setProgress(100);
 
                 context.setAlertBox({
@@ -97,13 +97,15 @@ const HomeBannerSlideList = () =>{
                             <thead className="thead-dark">
                                 <tr>
                                     <th style={{width: '100px'}}>IMAGE</th>
+                                    <th style={{width: '100px'}}>Title</th>
+                                    <th style={{width: '100px'}}>Sub Title</th>
                                     <th>ACTION</th>
                                 </tr>
                             </thead>
                                
                             <tbody>
                                 {
-                                    homeSliderBannerData?.data?.length !== 0 && homeSliderBannerData?.data?.map((slide, index) => {
+                                    homeSliderBannerData?.length !== 0 && homeSliderBannerData?.map((slide, index) => {
                                         return (
                                             <tr key={index}>
                                                 <td>
@@ -113,12 +115,20 @@ const HomeBannerSlideList = () =>{
                                                                 alt={"image"}
                                                                 effect="blur"
                                                                 className="w-100"
-                                                                src={slide?.images[0]}
+                                                                src={slide?.imageUrl}
                                                             />
                                                         </div>
                                                     </div>
                                                 </td>
-                                           
+                     
+                                                <td>
+                                                   <div>{slide?.title}</div>
+                                                </td>
+                                                <td>
+                                                   <div>{slide?.subtitle}</div>
+                                                </td>
+
+                                                                      
                                                 <td>
                                                     <div className="actions d-flex align-items-center">
                                                         <Link to={`/homeBannerSlide/edit/${slide?._id}`}>

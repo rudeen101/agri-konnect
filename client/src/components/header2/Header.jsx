@@ -4,13 +4,11 @@ import "./Header.css"; // Import the updated CSS
 import Logo from '../../assets/images/logo.png';
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import { Button } from "@mui/material";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
 import { MdArrowDropDown } from "react-icons/md";
 import { MyContext } from "../../App";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi } from "../../utils/apiCalls";
 import CircularProgress from '@mui/material/CircularProgress';
-
-
 
 
 const Header = () => {
@@ -23,6 +21,7 @@ const Header = () => {
     const [showBrowserDropdown, setShowBrowserDropdown] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState([]);
+    const [cartData, setCartData] = useState([]);
     
 
     const context = useContext(MyContext);
@@ -34,7 +33,8 @@ const Header = () => {
     const handleLogout = () => {
         context.setIsLogin(false);
         localStorage.removeItem("user");
-        localStorage.removeItem("token");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("isLogin");
         history("/");
     }
 
@@ -85,6 +85,11 @@ const Header = () => {
     useEffect(()=>{
         fetchDataFromApi('/api/category/').then((res)=> {
             setCategories(res);
+        })
+
+        fetchDataFromApi(`/api/cart`).then((res) => {
+            console.log("cart",res)
+            setCartData(res);
         })
     }, [])
 
@@ -167,10 +172,12 @@ const Header = () => {
                 {/* Icons */}
                 <div className="header-icons">
                     <button className="icon-button shoppingCart pr-4">
-                        <FaShoppingCart  />
+                        <Link to={"/cart"}>
+                            <FaShoppingCart  />
+                        </Link>
                         {
-                            context.cartData?.data?.length !== 0 &&
-                            <span className="badge rounded-circle">{context.cartData?.data?.length}</span>
+                            cartData?.length !== 0 &&
+                            <span className="badge rounded-circle">{cartData?.products?.length}</span>
                         }
 
                     </button>

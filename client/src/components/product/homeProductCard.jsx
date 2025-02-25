@@ -1,36 +1,81 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import { Card, CardMedia, CardContent, IconButton, Tooltip } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
-import ShareIcon from '@mui/icons-material/Share';
+import { MdOutlineFavorite } from "react-icons/md";
+import { IoCartOutline } from "react-icons/io5";
+
+
 import "./product.css";
 import img from "../../assets/images/cabbage.jpg"
 import { Link } from 'react-router-dom';
-import { postData, fetchDataFromApi } from "../../utils/api";
-
-import {
-  FacebookShareButton,
-  TwitterShareButton,
-  LinkedinShareButton,
-  WhatsappShareButton,
-  FacebookIcon,
-  TwitterIcon,
-  LinkedinIcon,
-  WhatsappIcon
-} from 'react-share';
+// import { postDataToApi, fetchDataFromApi } from "../../utils/api2";
+import { postDataToApi, fetchDataFromApi, deleteDataFromApi } from '../../utils/apiCalls'
+import { MyContext } from "../../App";
+import WishlistBtn from '../wishlistBtn/WishlistBtn';
+import ShareBtn from '../shareBtn/ShareBtn';
 
 const HomeProductCard = ({ productData }) => {
-    const [showShareOptions, setShowShareOptions] = useState(false);
+    const [isAddedToList, setIsAddedToList] = useState(false);
+    const [addedToWishList, setAddedToWishList] = useState(false);
+    const [inCart, setInCart] = useState(false);
 
+
+    const context = useContext(MyContext);
+
+    // fetch cartitems
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        fetchDataFromApi(`/api/product/homepage`)
-        .then((res) => {
-            console.log("home data",res.combinedProducts)
-
-          
-        });
+        fetchDataFromApi(`/api/cart`).then((res) => {
+            console.log("cartData",res.products)
+            setInCart(res.products.product.some(item => item.productId._id === productData._id));
+        })
     }, []);
+
+    const handleCartToggle = async () => {
+        console.log(inCart);
+
+        if (inCart) {
+            deleteDataFromApi(`/api/cart/remove/${productData?._id}`)
+            .then((res) => {
+                setInCart(false);
+            });
+
+        } else {
+      
+            const cartData= {
+                productId: productData._id,
+                quantity: 1
+            }
+
+            postDataToApi(`/api/cart/add`, cartData)
+            .then((res) => {
+                setInCart(true);
+            });
+        }
+    };
+
+
+    // const handleWishlistToggle = (productId) => {
+
+    //     const productData = {
+    //         productId: productId,
+    //         userId:  context?.userData?.userId
+    //     }
+
+    //     postDataToApi(`/api/wishList/toggle`, productData).then((res) => {
+            
+    //         if (!res.error){
+    //             context.setAlertBox({
+    //                 open: true,
+    //                 error: false,
+    //                 msg: res?.msg
+    //             });
+
+    //             setAddedToWishList(res?.isWishlisted);
+
+    //         }
+            
+    //     });
+    // };
 
     return (
         <Card className="product-card">
@@ -38,65 +83,8 @@ const HomeProductCard = ({ productData }) => {
                 <CardMedia className="product-media" image={productData?.images[0]} />
             </Link>
             <div className="product-icons">
-                <Tooltip title="Add to Wishlist" arrow>
-                    <IconButton className="tooltipIcon">
-                        <FavoriteBorderIcon className='icon' />
-                    </IconButton>
-                </Tooltip>
-
-                <div  
-                    className="share-button-container"
-                    onMouseEnter={() => setShowShareOptions(true)}
-                    onMouseLeave={() => setShowShareOptions(false)}
-                >
-                    <Tooltip title="" arrow>
-                        <IconButton className="share-button tooltipIcon">
-                            <ShareIcon className='icon' />
-                        </IconButton>
-                    </Tooltip> 
-
-                    {showShareOptions && (
-                        <div className="share-options">
-                            <div>
-                                <FacebookShareButton 
-                                    url="https://www.example.com/product/12345"
-                                    quote="Check out this amazing product!"
-                                    hashtag="#AmazingProduct"
-                                >
-                                    <FacebookIcon size={25} round />
-                                </FacebookShareButton>
-                            </div>
-                            
-                            <div className="mt-2">
-                                <WhatsappShareButton 
-                                    url="https://www.example.com/product/12345"
-                                    title="Check out this amazing product!"
-                                    separator=" - "
-                                >
-                                    <WhatsappIcon size={25} round />
-                                </WhatsappShareButton>
-                            </div>
-                           
-                        </div>
-
-                    )}
-
-                   
-             
-
-                    {/* <Tooltip title="Share on LinkedIn" arrow>
-                        <LinkedinShareButton 
-                        url={productUrl} 
-                        title={productTitle} 
-                        summary={productDescription} 
-                        source="YourSiteName"
-                        >
-                        <LinkedinIcon size={40} round />
-                        </LinkedinShareButton>
-                    </Tooltip> */}
-
-                   
-                </div>
+                <WishlistBtn productData={productData}></WishlistBtn>
+                <ShareBtn productData={productData}></ShareBtn>
             </div>
 
             <CardContent>
@@ -106,7 +94,13 @@ const HomeProductCard = ({ productData }) => {
                 <div class="product-stock">Instock: {productData?.countInStock} {productData?.packagingType}</div>   
                 <div class="product-actions">
                     <button>Buy Now</button>
-                    <button>Add to Cart</button>
+
+                    
+                    {/* Cart Toggle Button */}
+                    <button onClick={handleCartToggle} className={`cartBtn ${inCart ? "active" : ""}`}>
+                        <IoCartOutline />{inCart ? "Added to Cart" : "Add to Cart"}
+                    </button>
+                    {/* <button>Add to Cart</button> */}
                 </div>
             </CardContent>
         </Card>

@@ -1,3 +1,14 @@
+:root {
+    --primary-teal: #00a99d;
+    --dark-teal: #00776e;
+    --light-teal: #66e2d6;
+    --golden-yellow: #f2a900;
+    --soft-coral: #ff6f61;
+    --charcoal: #2f2f2f;
+    --light-gray: #f4f4f4;
+    --white: #ffffff;
+}
+
 /********* details sidebar *********/
 .rightPart.sidebarContainer{
     display: flex;
@@ -6,9 +17,8 @@
  
  .rightPart.sidebarContainer .sidebar{
     /* border: 1px solid #ccc; */
-    padding: 25px !important;
+    /* padding: 25px !important; */
     border-radius: 5px;
-    width: 90%;
     height: max-content;
     box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.15) 0px 0px 0px 1px;
  }
@@ -34,6 +44,76 @@
  }
  
  
+ .productDetails .part1, .productDetails .part1{
+	padding: 13px
+ }
  .productDetails .part1, .productDetails .part1 .sliderContainer{
      padding-left: 0px !important
  }
+
+ .addToCart .addToCartBtn {
+	background-color: var(--primary-teal) !important;
+	outline: none !important;
+	color: white !important;
+	font-weight: 700;
+ }
+ .addToCart .addToCartBtn:hover {
+	background-color: var(--dark-teal) !important;
+
+ }
+ .addToCart .addToCartBtn .cartIcon {
+	font-size: 20px;
+
+ }
+ .addToCart .addToCartBtn.active{
+   background-color: var(--dark-teal) !important;
+   color: white;
+ }
+
+.detailsIcon {
+}
+
+
+.detailsIcon button {
+
+   background-color: none !important;
+   width: 80px !important;
+   padding-top: 10px !important;
+   padding-left: 10px !important;
+   padding-right: 0px !important;
+   padding-top: 13px !important;
+   color: var(--dark-teal) !important;
+   display: flex !important;
+   justify-content: center !important;
+   border-radius: 0% !important;
+   border: 1px solid rgba(0,0,0,0.1) !important;
+   border-radius: 5px !important;
+}
+
+
+
+.detailsIcon button .icon {
+   color: var(--primary-teal) !important
+}
+
+.detailsIcon button:hover {
+   padding-top: 10px !important;
+   padding-left: 10px !important;
+   padding-right: 0px !important;
+   padding-top: 13px !important;
+   background-color: none !important;
+   border: 1px solid var(--primary-teal) !important;
+   border-radius: 5px !important;
+}
+
+.detailsIcon .share-options button {
+   border: none !important;
+}
+.detailsIcon .share-options button:hover {
+   border: none !important;
+}
+
+
+
+
+

@@ -65,3 +65,11 @@
     font-weight: bold !important;  
 }
 
+.quantity-selector .text{
+    display: none !important
+}
+
+.deleteLoader .loading{
+    width: 10px;
+    height: 10px;
+}

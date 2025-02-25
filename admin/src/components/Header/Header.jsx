@@ -30,7 +30,7 @@ import Avatar from '@mui/material/Avatar';
 import { IoShieldHalfSharp } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import { postData } from "../../../../client/src/utils/api";
+import { postDataToApi } from "../../utils/apiCalls";
 
 
 
@@ -87,10 +87,11 @@ const Header = () => {
 
             postData("/api/auth/logout", {userId}).then((res) => {
             
-                // Clear stored tokens
+                // Clear stored data
                 localStorage.removeItem("accessToken");
                 localStorage.removeItem("refreshToken");
                 localStorage.removeItem("user");
+                localStorage.removeItem("isLogin");
 
                 // Redirect to login page
                 navigate("/login");

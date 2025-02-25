@@ -22,8 +22,6 @@ import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } f
 import InnerImageZoom from 'react-inner-image-zoom';
 import '../../innerImageZoom/style.css';
 
-
-
 const ProductDetails = () => {
     const [progress, setProgress] = useState(80);
     const [productData, setProductData] = useState([]);
@@ -64,6 +62,7 @@ const ProductDetails = () => {
     useEffect(() => {
         window.scrollTo(0,0);
         fetchDataFromApi(`/api/product/${id}`).then((res) =>{
+            console.log("---",res)
             setZoomImage(res.images[0])
             setProductData(res);
         });

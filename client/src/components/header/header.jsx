@@ -14,7 +14,7 @@ import { Button } from "@mui/material";
 import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
 import Navbar from "../header/nav/nav.jsx";
 import food from "../../assets/images/food.jpg"
-import { fetchDataFromApi } from "../../utils/api.js";
+import { fetchDataFromApi } from "../../utils/api2.js";
 import { IoMdHelpCircleOutline } from "react-icons/io";
 import { FaRegCircleUser } from "react-icons/fa6";
 import MenuDropdown from "../menuDropdown/menuDropdown.jsx";

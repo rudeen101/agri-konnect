@@ -7,7 +7,7 @@ import { Button, CircularProgress } from "@mui/material";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import { MyContext } from "../../App";
-import { fetchDataFromApi } from "../../utils/api";
+import { fetchDataFromApi } from "../../utils/api2";
 
 
 const ProductListing = () =>{
