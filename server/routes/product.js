@@ -99,16 +99,17 @@ router.post('/create', verifyToken, authorize(['admin', 'seller']), async (req, 
             subCat: req.body.subCat,
             category: req.body.category,
             countInStock: req.body.countInStock,
-            rating: req.body.rating,
-            isFeatured: req.body.isFeatired,
-            discount: req.body.discount,
-            // size: req.body.size,
+            isFeatured: req.body.isFeatured,
             productWeight: req.body.productWeight,
             packagingType: req.body.packagingType,
+            minOrder: req.body.minOrder,
+            estimatedDeliveryDate: req.body.estimatedDeliveryDate,
             tags: req.body.tags,
             seller: req.user.id,
             location: req.body.location !== "" ? req.body.location : "All",
         }); 
+
+        console.log(newProduct)
         
         newProduct = await newProduct.save();
     
@@ -486,7 +487,7 @@ router.get('/recommendedCollaborative', verifyToken, async (req, res) => {
             _id: { $nin: [...user.recentlyViewed, ...user.purchaseHistory] },
             category: { $in: user.recentlyViewed.map(p => p.category) },
             tags: { $in: user.recentlyViewed.flatMap(p => p.tags) }
-        }).sort({ popularityScore: -1 }).limit(10).lean();
+        }).populate('seller', 'name _id').sort({ popularityScore: -1 }).limit(10).lean();
 
         // Merge recommendations
         let recommendedCollaboration = [...recommendedProducts, ...collaborativeRecommendations];
@@ -495,7 +496,8 @@ router.get('/recommendedCollaborative', verifyToken, async (req, res) => {
         if (recommendedCollaboration.length < 10) {
             const popularProducts = await Product.find({
                 _id: { $nin: [...user.recentlyViewed, ...user.purchaseHistory] }
-            }).sort({ popularityScore: -1 }).limit(5).lean();
+            }).populate('seller', 'name _id').sort({ popularityScore: -1 }).limit(5).lean();
+            ;
 
             recommendedCollaboration = [...recommendedCollaboration, ...popularProducts];
         }

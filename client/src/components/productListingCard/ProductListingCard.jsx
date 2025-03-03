@@ -3,7 +3,7 @@ import { Card, CardMedia, CardContent, IconButton, Tooltip } from '@mui/material
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import { MdOutlineFavorite } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
-
+import { Rating } from "@mui/material";
 
 import "./productListingCard.css";
 import img from "../../assets/images/cabbage.jpg"
@@ -22,43 +22,23 @@ const ProductListingCard = ({ productData }) => {
 
     const context = useContext(MyContext);
 
-    // fetch cartitems
-    // useEffect(() => {
-    //     fetchDataFromApi(`/api/cart`).then((res) => {
-    //         console.log("cartData",res)
-    //         setInCart(res?.products?.some(item => item.product?._id === productData?._id));
-    //     })
-    // });
-
-    useEffect(() => {
-        // console.log("cartData**", context?.cartData);
-        // setCartData(context?.cartData);
-    })
-
-    const handleCartToggle = async () => {
-        console.log(inCart);
-
-        if (inCart) {
-            deleteDataFromApi(`/api/cart/remove/${productData?._id}`)
-            .then((res) => {
-                setInCart(false);
-            });
-
-        } else {
-      
-            const cartData= {
-                productId: productData._id,
-                quantity: 1
-            }
-
-            postDataToApi(`/api/cart/add`, cartData)
-            .then((res) => {
-                setInCart(true);
-            });
+    function getEstimatedDeliveryDate(days) {
+        const today = new Date();
+        const deliveryDate = new Date(today);
+        deliveryDate.setDate(today.getDate() + days); // Add delivery days
+    
+        const options = { weekday: 'long', month: 'short', day: 'numeric' };
+        const formattedDate = deliveryDate.toLocaleDateString('en-US', options);
+    
+        const currentWeekday = today.toLocaleDateString('en-US', { weekday: 'long' });
+    
+        // If delivery day is the same week, use "This Monday"
+        if (deliveryDate.getDate() - today.getDate() <= 6) {
+            return `This ${formattedDate}`;
         }
-    };
-
-
+    
+        return formattedDate; // Example: "Monday, Jan 29"
+    }
     // const handleWishlistToggle = (productId) => {
 
     //     const productData = {
@@ -93,17 +73,20 @@ const ProductListingCard = ({ productData }) => {
             </div>
 
             <CardContent>
-            <div class="product-title">Organic Farm Fresh Apples</div>
-            <div class="product-description">Delicious, fresh apples grown sustainably and delivered directly to you.</div>
+            <div class="product-title">{productData?.name}</div>
+            <div class="product-description">{productData?.description}</div>
             {/* <div class="product-specs">Specifications: 1 lb per bag, Non-GMO, Freshly packed</div> */}
-            <div class="product-supplier">Supplier: Green Orchards Ltd. (<span>Verified</span>)</div>
+            <div class="product-supplier">Supplier: {productData?.seller?.name} (<span>Verified</span>)</div>
             {/* <div class="product-category">Category: Fresh Fruits</div> */}
-            {/* <div class="product-min-order">Minimum Order: 100 lbs</div> */}
-            <div class="product-price"><span>$5.00</span> $3.99 / lb</div>
+            <div class="product-min-order">Minimum Order: {productData?.minOrder} {productData?.packagingType}(s)</div>
+            <div class="product-price"><span>${productData?.oldPrice}</span> {productData?.price} / {productData?.packagingType}</div>
             {/* <div class="product-discount">Discount: 10% Off</div> */}
-            <div class="product-rating">Rating: ★★★★☆ (4.5/5)</div>
-            <div class="product-delivery">Delivery: Get it by <strong>Monday, Jan 29</strong></div>
-            <div class="product-delivery">Deliver to: <strong>Monrovia, Liberia</strong></div>
+            <div class="product-rating">
+                <Rating className="rating" name="half-rating-read" value={parseFloat(productData?.rating)} precesion={0.5} readOnly /> 
+                <span className='review'>({productData?.rating ? productData?.rating : 0}/5)</span>
+            </div>
+            <div class="product-delivery">Delivery: Get it <strong>{getEstimatedDeliveryDate(productData?.estimatedDeliveryDate)}</strong></div>
+            {/* <div class="product-delivery">Deliver to: <strong>Monrovia, Liberia</strong></div> */}
             <div class="cardAtions">
                 <div className="btnWrapper">
                     <button className='actionBtn'>Buy Now</button>

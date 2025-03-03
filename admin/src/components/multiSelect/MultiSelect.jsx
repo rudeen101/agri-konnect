@@ -21,9 +21,8 @@ const MultiSelectTags = ({ tags, onTagsSelected }) => {
             value={selectedTags}
             onChange={handleChange}
             renderValue={(selected) => selected.map(tag => tag.name).join(', ')}
-            sx={{
-                width: '200px', // Set the fixed width
-            }}
+            className="w-100"
+
         >
             {tags.map(tag => (
                 <MenuItem key={tag._id} value={tag}>

@@ -45,7 +45,6 @@ const App = () => {
 	const [userData, setUserData] = useState("");
 	const [headerFooterDisplay, setHeaderFooterDisplay] = useState(true);
 	const [addingToCart, setAddingToCart] = useState(false);
-	const [wishListData, setWishListData] = useState([]);
 	const [searchedItems, setSearchedItems] = useState([]);
 	const [alertBox, setAlertBox] = useState({
 		open: false,
@@ -58,6 +57,8 @@ const App = () => {
 	const [mostPopular, setMostPopular] = useState([]);
 	const [newArrivals, setNewArrival] = useState([]);
 	const [catProducts, setCatProducts] = useState([]);
+	const [wishlist, setWishlist] = useState([]);
+
 
 	useEffect(() => {
 		const user = JSON.parse(localStorage.getItem("user"));
@@ -112,7 +113,7 @@ const App = () => {
 	useEffect(() => {
 		window.scrollTo(0,0);
 		fetchCategory();
-		// getWishListData()
+		getWishListData()
 	}, []);
 
 	//fetch and set cateory and sub category
@@ -137,13 +138,55 @@ const App = () => {
 	}
 	
 	const getWishListData = () => {
-		fetchDataFromApi(`/api/wishList?userId=${userData.userId}`).then((res) => {
-			if (res?.length !== 0){
-				setWishListData(res);
-			}
+		fetchDataFromApi(`/api/wishList`).then((res) => {
+			setWishlist(res.wishlist);
 		})
 	}
 
+	const addToWishlist = async (product) => {
+
+		postDataToApi(`/api/wishlist/add`, { productId: product._id}).then((res) => {
+			if (!res) {
+				const newWishlist = [...wishlist, { ...product}];
+				setWishlist(newWishlist);
+				localStorage.setItem("wishlist", JSON.stringify(newWishlist));
+			}else {
+				setWishlist(res.wishlist);
+				setAlertBox({
+					open: true,
+					error: false,
+					msg: res.msg
+				});
+
+				getWishListData()
+			}
+		})
+    };
+
+	const removeFromWishlist = async (productId) => {
+
+		deleteDataFromApi(`/api/wishlist/remove/${productId}`).then((res) => {
+			if (!res) {
+				const newWishlist = cart.filter(item => item._id !== productId);
+				setWishlist(newWishlist);
+				localStorage.setItem("wishlist", JSON.stringify(newWishlist));
+			} else {
+				setAlertBox({
+					open: true,
+					error: false,
+					msg: "Item deleted successfully!"
+				});
+				getWishListData()
+			}
+		})
+    };
+
+	const isInWishlist = (productId) => {
+		return wishlist?.items?.some(item => item?.product?._id === productId);
+	}
+
+
+	// Fetch cart data
     useEffect(() => {
 		fetchCartData()
     }, []);
@@ -221,86 +264,6 @@ const App = () => {
 	}
 
 
-	// Add product to cart
-	const addToCart2 = (product) => {
-		setCart((prevCart) => {
-			const existingItem = prevCart.find((item) => item._id === product._id);
-
-			if (existingItem) {
-				return prevCart.map((item) =>
-					item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
-				);
-			}
-
-			return [...prevCart, { ...product, quantity: 1 }];
-		});
-
-		// postDataToApi(`/api/cart/add`, { productId: product._id, quantity: 1 }).then((res) => {
-		// 	if (res.status !== false) {
-		// 		setAlertBox({
-		// 			open: true,
-		// 			error: false,
-		// 			msg: "Item added to cart"
-		// 		});
-
-		// 		setTimeout(() => {
-		// 			setAddingToCart(false)
-		// 		}, 1000);
-
-		// 		getCartData()
-		// 	}else {
-		// 		setAlertBox({
-		// 			open: true,
-		// 			error: true,
-		// 			msg: res.msg
-		// 		});
-	
-		// 		setAddingToCart(false)
-	
-		// 	}
-		// })
-	};
-
-	// const addToCart = (data) => {
-
-	// 	if (isLogin !== false) {
-	// 		setAddingToCart(true)
-	// 		postDataToApi(`/api/cart/add`, data).then((res) => {
-	// 			if (res.status !== false) {
-	// 				setAlertBox({
-	// 					open: true,
-	// 					error: false,
-	// 					msg: "Item added to cart"
-	// 				});
-
-	// 				setTimeout(() => {
-	// 					setAddingToCart(false)
-	// 				}, 1000);
-
-	// 				getCartData()
-	// 			}else {
-	// 				setAlertBox({
-	// 					open: true,
-	// 					error: true,
-	// 					msg: res.msg
-	// 				});
-		
-	// 				setAddingToCart(false)
-		
-	// 			}
-	// 		})
-	// 	}else {
-	// 		setAlertBox({
-	// 			open: true,
-	// 			error: true,
-	// 			msg: "Please login to add to cart!"
-	// 		});
-
-	// 	}
-	
-	// }
-
-
 	const signIn = () => {
 		const userLogin = localStorage.getItem("isLogin");
 		setIsLogin(userLogin);
@@ -341,9 +304,6 @@ const App = () => {
 		fetchCategory,
 		addingToCart,
 		setAddingToCart,
-		wishListData,
-		setWishListData,
-		getWishListData,
 		searchedItems,
 		setSearchedItems,
 		recentlyViewed,
@@ -359,7 +319,12 @@ const App = () => {
 		addToCart, 
 		removeFromCart, 
 		updateQuantity,
-		isInCart
+		isInCart,
+		wishlist,
+		addToWishlist, 
+		removeFromWishlist, 
+		isInWishlist
+
 	}
 
 	

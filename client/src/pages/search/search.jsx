@@ -8,6 +8,7 @@ import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import { MyContext } from "../../App";
 import { fetchDataFromApi } from "../../utils/api2";
+import ProductListingCard from "../../components/productListingCard/ProductListingCard";
 
 
 const SearchPage = () =>{
@@ -100,7 +101,7 @@ const SearchPage = () =>{
                                                 context?.searchedItems?.map((item, index) => {
                                                     return(
                                                         <div className="item" key={index}>
-                                                            <ProductCard data={item} />
+                                                            <ProductListingCard productData={item} />
                                                         </div>
                                                     )
                                                 })

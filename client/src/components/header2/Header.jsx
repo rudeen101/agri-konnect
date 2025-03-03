@@ -69,6 +69,10 @@ const Header = () => {
         })
     }, [])
 
+    const getCategory = () => {
+
+    }
+
     const cartCount = context?.cart?.items?.reduce((total, item) => total + item.quantity, 0);
 
 
@@ -109,16 +113,20 @@ const Header = () => {
                                 categories?.categoryList?.length !== 0 &&
                                 categories?.categoryList !== undefined &&
                                 categories?.categoryList.map((cat, index) => (
-                                <li
-                                    key={index}
-                                    onClick={() => {
-                                        setSelectedCategory(cat.name);
-                                        getCategory(cat);
-                                        setShowCategories(false);
-                                    }}
-                                >
-                                {cat.name}
-                                </li>
+                                    <Link to={`/product/category/${cat?._id}`} key={index}>
+                                        <li
+                                            key={index}
+                                            onClick={() => {
+                                                setSelectedCategory(cat.name);
+                                                // getCategory(cat);
+                                                setShowCategories(false);
+                                            }}
+                                        >
+                                        {cat.name}
+                                        </li>
+                                    </Link>
+
+                       
                             ))}
                         </ul>
                     )}
@@ -192,7 +200,13 @@ const Header = () => {
                         {showUserDropdown && (
                             <div className="user-dropdown">
                                 <button className="dropdown-item"> My Account</button>
-                                <button className="dropdown-item">WishList</button>
+                                <Link to={`/wishList`}>
+
+                                <button className="dropdown-item">
+                                        WishList
+                                </button>
+                                </Link>
+
                                 <button className="dropdown-item">Profile</button>
                                 {
                                     context.isLogin ? <Button className="btn-g signup w-100" onClick={handleLogout}>Logout</Button>
@@ -262,7 +276,6 @@ const Header = () => {
                         <Link to={`/product/subCat/${subCat?._id}`} key={index}>
                             <li key={index} onClick={() => {
                                 setSelectedCategory(subCat.name); 
-                                getSubCategory(subCat)
                             }}>
                                 {subCat.name} 
                             </li>

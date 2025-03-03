@@ -8,7 +8,7 @@ import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutl
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
 import QuantityBox from "../../components/quantityBox/quantityBox";
 import { MyContext } from "../../App";
-import { deleteData, fetchDataFromApi, editData } from "../../utils/api2";
+import {fetchDataFromApi, deleteDataFromApi } from "../../utils/apiCalls";
 import { FaHome } from "react-icons/fa";
 
 const WishList = ({userId}) => {
@@ -22,17 +22,17 @@ const WishList = ({userId}) => {
     const [wishListData, setWishListData] = useState([]);
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0,0);
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("accessToken");
 
 		if (token !== "" && token !== undefined && token !== null) {
             setIsLogin(true);
             setWishListData(context.wishListData);
         } else{
-            history("/login");
+            navigate("/login");
         }
 
     },[]);
@@ -44,7 +44,7 @@ const WishList = ({userId}) => {
     const removeItem = (id) => {
         setIsLoading(true);
 
-        deleteData(`/api/wishList/${id}`).then((res) => {
+        deleteDataFromApi(`/api/wishList/${id}`).then((res) => {
             context.setAlertBox({
                 open: true,
                 error: false,

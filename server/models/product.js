@@ -80,10 +80,6 @@ const productSchema = new Schema({
         type: Number, 
         default: 0 
     },
-    discount: {
-        type: String,
-        required: true
-    },
     // size: [
     //     {
     //         type: String,
@@ -112,6 +108,10 @@ const productSchema = new Schema({
         type: Date,
         default: Date.now
     },
+    estimatedDeliveryDate: { 
+        type: Number, 
+        default: 0 
+    },
     views: { 
         type: Number,
         default: 0 
@@ -126,6 +126,10 @@ const productSchema = new Schema({
         default: 0 
     }, // Avg rating (e.g., 4.5)
     reviewCount: { 
+        type: Number, 
+        default: 0 
+    }, // Number of reviews
+    minOrder: { 
         type: Number, 
         default: 0 
     }, // Number of reviews

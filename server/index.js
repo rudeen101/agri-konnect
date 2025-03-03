@@ -72,7 +72,7 @@ app.use(`/api/homeSliderBanner`, homeSliderBannerRoutes);
 app.use(`/api/cart`, cartRoutes);
 app.use(`/api/productReviews`, productReviewsRoutes);
 app.use(`/api/banner`, bannerRoutes);
-app.use(`/api/wishList`, wishListRoutes);
+app.use(`/api/wishlist`, wishListRoutes);
 app.use(`/api/search`, searchRoutes);
 app.use(`/api/tag`, tagRoutes);
 app.use(`/api/auth`, authRoutes);

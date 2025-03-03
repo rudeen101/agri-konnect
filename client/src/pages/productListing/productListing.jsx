@@ -7,7 +7,8 @@ import { Button, CircularProgress } from "@mui/material";
 import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import FilterListOutlinedIcon from '@mui/icons-material/FilterListOutlined';
 import { MyContext } from "../../App";
-import { fetchDataFromApi } from "../../utils/api2";
+import { fetchDataFromApi } from "../../utils/apiCalls";
+import ProductListingCard from "../../components/productListingCard/ProductListingCard";
 
 
 const ProductListing = () =>{
@@ -65,7 +66,6 @@ const ProductListing = () =>{
     }
     
     const filterByPrice = (price, catId) => {
-        console.log(catId)
         let url =  window.location.href;
         let apiEndPoint = "";
 
@@ -166,7 +166,7 @@ const ProductListing = () =>{
                                                 productData?.products?.map((product, index) => {
                                                     return(
                                                         <div className="item" key={index}>
-                                                            <ProductCard data={product} />
+                                                            <ProductListingCard productData={product} />
                                                         </div>
                                                     )
                                                 })

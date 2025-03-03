@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./wishlistBtn.css"; // Import CSS for styling
 import {IconButton, Tooltip } from '@mui/material';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
@@ -9,30 +9,10 @@ import { MdOutlineFavorite } from "react-icons/md";
 
 const WishlistBtn = ({ productData }) => {
 
-    const [addedToWishList, setAddedToWishList] = useState(false);
     const context = useContext(MyContext);
 
-    const handleWishlistToggle = (productId) => {
-
-        const productData = {
-            productId: productId,
-            userId:  context?.userData?.userId
-        }
-
-        postDataToApi(`/api/wishList/toggle`, productData).then((res) => {
-            
-            if (!res.error){
-                context.setAlertBox({
-                    open: true,
-                    error: false,
-                    msg: res?.msg
-                });
-
-                setAddedToWishList(res?.isWishlisted);
-
-            }
-            
-        });
+    const handleWishlistToggle = (product) => {
+        context?.addToWishlist(product)        
     };
 
     return (
@@ -40,9 +20,9 @@ const WishlistBtn = ({ productData }) => {
             <IconButton className="tooltipIcon">
                 
                 {
-                    addedToWishList === true ? 
-                    <MdOutlineFavorite className='icon' onClick={() => handleWishlistToggle(productData?._id)} />
-                    : <FavoriteBorderIcon className='icon' onClick={() => handleWishlistToggle(productData?._id)} />
+                    context?.isInWishlist(productData._id) ? 
+                    <MdOutlineFavorite className='icon' onClick={() => handleWishlistToggle(productData)} />
+                    : <FavoriteBorderIcon className='icon' onClick={() => handleWishlistToggle(productData)} />
                 }
             </IconButton>
         </Tooltip>

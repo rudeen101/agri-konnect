@@ -51,15 +51,31 @@
 
 
 .product-card .product-rating {
+    display: flex;
+    align-items: center;
+}
+
+.product-card .product-rating .rating {
     margin-top: 0.5em;
     margin-bottom: 1em;
     color: var(--golden-yellow);
-    font-size: 0.9em;
+    font-size: 1em;
+}
+.product-card .product-rating .review {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    color: var(--golden-yellow);
+    font-size: .8em;
 }
 
 .product-card .product-supplier {
     font-size: 0.85em;
     color: var(--charcoal);
+    margin-bottom: 0.5em;
+}
+.product-card .product-min-order {
+    font-size: 0.85em;
+    color: var(--dark-teal);
     margin-bottom: 0.5em;
 }
 .product-card .product-supplier span {

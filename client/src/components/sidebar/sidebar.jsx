@@ -24,8 +24,6 @@ const Sidebar = (props) => {
     const [catId, setCatId] = useState("");
 
     const context = useContext(MyContext);
-    console.log("****",context.categoryData)
-
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
@@ -59,7 +57,7 @@ const Sidebar = (props) => {
                             context?.categoryData?.categoryList?.length !== 0 && context?.categoryData?.categoryList?.length !== undefined &&
                             context?.categoryData?.categoryList?.map((category, index) => {
                                 return (
-                                    <Link to={`/category/${category?._id}`}>
+                                    <Link to={`/product/category/${category?._id}`}>
                                         <div className="catItem  d-flex align-items-center">
                                             <span className="img"><img src={category?.images[0]} alt="produdct image" width={50}/></span>
                                             <h6 className="mb-0 ml-3">{category?.name}</h6>
