@@ -79,13 +79,17 @@ router.post('/create', async (req, res) => {
             images: imagesArr,
             color: req.body.color,
             slug: req.body.slug,
+            isFeatured: req.body.isFeatured,
+            type: req.body.type
         }
     }
     else{
         catObj = {
             name: req.body.name,
             slug: req.body.slug,
-            color: req.body.color
+            color: req.body.color,
+            type: req.body.type
+
         }
     }
 
@@ -108,34 +112,8 @@ router.post('/create', async (req, res) => {
     res.status(201).json(category);
 }); 
 
-const createCategories = (categories, parentId=null) => {
-    const categoryList = [];
-
-    let category;
-    if (parentId == null) {
-        category = categories.filter((cat) => cat.parentId == undefined);
-    }
-    else{
-        category = categories.filter((cat) => cat.parentId == parentId);
-    }
-
-    for (let cat of category){
-        categoryList.push({
-            _id: cat.id,
-            name: cat.name,
-            images: cat.images,
-            colo: cat.color,
-            slug: cat.slug,
-            children: createCategories(categories, cat._id)
-        })
-    }
-
-    return categoryList;
-}
-
 router.get('/', async (req, res) => {
     try {
-        console.log(Category);
 
         const categoryList = await Category.find();
 
@@ -279,7 +257,9 @@ router.put("/:id", async(req, res) => {
         {
             name: req.body.name,
             images: req.body.images,
-            color: req.body.color
+            color: req.body.color,
+            isFeatured: req.body.isFeatured,
+            type: req.body.type
         },
         {new: true}
     );
@@ -294,5 +274,34 @@ router.put("/:id", async(req, res) => {
     imagesArr = [];
     res.send(category); 
 });
+
+
+// get child categories for given categories
+const createCategories = (categories, parentId=null) => {
+    const categoryList = [];
+
+    let category;
+    if (parentId == null) {
+        category = categories.filter((cat) => cat.parentId == undefined); //get all main categories
+    }
+    else{
+        category = categories.filter((cat) => cat.parentId == parentId); // get all categories with parent id (sub categories)
+    }
+
+    for (let cat of category){ 
+        categoryList.push({
+            _id: cat.id,
+            name: cat.name,
+            images: cat.images,
+            colo: cat.color,
+            slug: cat.slug,
+            isFeatured: cat.isFeatured,
+            type: cat.type,
+            children: createCategories(categories, cat._id) // get all sub categories for this category
+        })
+    }
+
+    return categoryList;
+}
 
 module.exports = router;

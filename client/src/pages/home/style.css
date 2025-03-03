@@ -93,3 +93,39 @@
 .bannerCol{
     padding: 18px 15px !important
 }
+
+
+/******************************
+Category style
+*******************************/
+
+
+.categoryRow {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 16px;
+    padding: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .category-container {
+        justify-content: space-evenly;
+    }
+}
+
+@media (max-width: 768px) {
+    .categoryRow {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .categoryRow {
+        flex-direction: column;
+        align-items: center;
+    }
+}

@@ -56,7 +56,6 @@ const productSchema = new Schema({
         type: Number,
         required: true
     },
-    ratings: [Number], 
     isFeatured: {
         type:  Boolean,
         default: false
@@ -70,6 +69,10 @@ const productSchema = new Schema({
         default: false
     },
     salesCount: 
+    {   type: Number,
+        default: 0 
+    },
+    wishlistCount: 
     {   type: Number,
         default: 0 
     },

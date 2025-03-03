@@ -15,7 +15,7 @@ const OrderDetails = () => {
     const [progress, setProgress] = useState(80);
     const [orderData, setOrderData] = useState([]);
     const [subOrderData, setSubOrderData] = useState([]);
-    const [statusList, setStatusList] = useState(["pending", "confirmed", "processing", "delivered", "received", "cancelled"])
+    const [statusList, setStatusList] = useState(["pending", "confirmed", "processing", "delivered", "received", "completed", "cancelled"])
     const context = useContext(MyContext);
     const {id} = useParams();
 
@@ -36,9 +36,9 @@ const OrderDetails = () => {
         });
     }
     
-    const handleStatusChange = (status, id) => {
+    const handleStatusChange = (status, id, productId) => {
         let orderId = subOrderData?._id
-        updateDataToApi(`/api/order/status/${id}`, {status, orderId}).then((res) => {
+        updateDataToApi(`/api/order/status/${id}`, {status, orderId, productId}).then((res) => {
             fetchData()
 
         });
@@ -125,7 +125,7 @@ const OrderDetails = () => {
                                            
                                             <td>
                                                 <div className="actions d-flex align-items-center">
-                                                    <StyledSelect onSelectChange={handleStatusChange} orderId={product?._id} selectData={statusList}></StyledSelect>
+                                                    <StyledSelect onSelectChange={handleStatusChange} orderId={product?._id} selectData={statusList} productId={product?.product}></StyledSelect>
                                                 </div>
                                             </td>
                                         </tr>

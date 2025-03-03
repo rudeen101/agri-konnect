@@ -5,6 +5,7 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
+import StyledSelect2 from "../../components/styledSelect/StyledSelect2";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
@@ -31,6 +32,8 @@ const EditSubCategory = () =>{
         images: [],
         color: "",
         slug: "",
+        isFeatured: "",
+        type: "mainCategory",
         parentId: ""
     });
 
@@ -62,13 +65,16 @@ const EditSubCategory = () =>{
 
 
         fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
-           context.setProgress(20);  
+           context.setProgress(20); 
+           console.log(res) 
             setCategory(res);
             setPreviews(res.images);
             setFormFields({
                 name: res.name,
                 slug: res.name,
-                color: res.color
+                color: res.color,
+                isFeatured: res.isFeatured,
+                type: res.type
             });
             context.setProgress(100);
         });
@@ -147,7 +153,9 @@ const EditSubCategory = () =>{
         })
     }
 
-
+    const handleSelectChangeIsFeatured = (selectValue) => {
+        formFields.isFeatured = selectValue;
+    }
 
     const removeImage = async (index, imgUrl) => {
         console.log(imgUrl);
@@ -235,13 +243,19 @@ const EditSubCategory = () =>{
 
                                     <div className="form-group">
                                         <h6>Category Name</h6>
-                                        <input type="text" name="name" onChange={changeInput}  value={formFields.name}  />
+                                        <input type="text" name="name" onChange={changeInput}  value={formFields?.name}  />
                                     </div>
 
                                     <div className="form-group">
                                         <h6>Color</h6>
-                                        <input type="text" name="color" onChange={changeInput} value={formFields.color} />
+                                        <input type="text" name="color" onChange={changeInput} value={formFields?.color} />
                                     </div>
+
+                                    <div className="form-group">
+                                    <h6>Feature Category</h6>
+                                        <StyledSelect2  onSelectChange={handleSelectChangeIsFeatured} selectData={["true", "false"]} defaultOption={formFields?.isFeatured ? "true" : "false"}></StyledSelect2>
+                                    </div>
+
 
                                     <div className="imgUploadBox d-flex align-items-center">
                                         {

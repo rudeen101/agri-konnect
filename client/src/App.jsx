@@ -26,7 +26,7 @@ import Checkout from './pages/checkout/Chackout';
 import ThankYouPage from './pages/thankYou/ThankYouPage';
 
 
-import { fetchDataFromApi, postDataToApi } from './utils/apiCalls';
+import { deleteDataFromApi, fetchDataFromApi, postDataToApi, updateDataToApi } from './utils/apiCalls';
 
 const MyContext = createContext();
 
@@ -41,7 +41,7 @@ const App = () => {
 	const [isOpenFilters, setIsOpenFilters] = useState()
 	const [cartTotalAmount, setCartTotalAmount] = useState();
 	const [selectedCounty, setSelectedCounty] = useState("");
-	const [cartData, setCartData] = useState([]);
+	const [cart, setCart] = useState([]);
 	const [userData, setUserData] = useState("");
 	const [headerFooterDisplay, setHeaderFooterDisplay] = useState(true);
 	const [addingToCart, setAddingToCart] = useState(false);
@@ -52,32 +52,47 @@ const App = () => {
 		error: false,
 		msg: ''
 	});
+	const [recentlyViewed, setRecentlyViewed] = useState([]);
+	const [recommendedProducts, setRecommendedProducts] = useState([]);
+	const [recommendedCollaborative, setRecommendedCollaborative] = useState([]);
+	const [mostPopular, setMostPopular] = useState([]);
+	const [newArrivals, setNewArrival] = useState([]);
+	const [catProducts, setCatProducts] = useState([]);
 
+	useEffect(() => {
+		const user = JSON.parse(localStorage.getItem("user"));
 
-	const [county, setCounty] = useState(
-		[
-		"Bomi",
-		"Bong",
-		"Gbarpolu",
-		"Grand Bassa",
-		"Grand Cape Mount",
-		"Grand Gedeh",
-		"Grand Kru",
-		"Lofa",
-		"Margibi",
-		"Maryland",
-		"Montserrado",
-		"Nimba",
-		"River Gee",
-		"Rivercess",
-		"Sinoe"
-	])
+		fetchDataFromApi(`/api/product/homepage`)
+		.then((res) => {
+			setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
+			setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
+			setCatProducts(res.combinedProducts.find(p => p.category === "catProducts"));
+		});
+	}, []);
 
-	// const [userData, setUserData] = useState({
-	// 	name: "",
-	// 	email: "",
-	// 	userId: ""
-	// });
+	// Get products recently viewed by a user
+	useEffect(() => {
+		fetchDataFromApi(`/api/product/recentlyViewed`)
+		.then((res) => {
+			setRecentlyViewed(res);
+		});
+	}, []);
+
+	// Get recommended products
+	useEffect(() => {
+		fetchDataFromApi(`/api/product/recommended`)
+		.then((res) => {
+			setRecommendedProducts(res);
+		});
+	}, []);
+
+	// Get recommended collaboritive products
+	useEffect(() => {
+		fetchDataFromApi(`/api/product/recommendedCollaborative`)
+		.then((res) => {
+			setRecommendedCollaborative(res);
+		});
+	}, []);
 
 	useEffect(() => {
 		const accessToken = localStorage.getItem("accessToken");
@@ -96,9 +111,7 @@ const App = () => {
 
 	useEffect(() => {
 		window.scrollTo(0,0);
-
 		fetchCategory();
-		// getCartData()
 		// getWishListData()
 	}, []);
 
@@ -118,24 +131,11 @@ const App = () => {
 				}
 			});
 
-			console.log("&&&", subCatArray)
 			setSubCategoryData(subCatArray);
 			setProgress(100);
 		})
 	}
-
-	//fetch and set cart data
-	const getCartData = () => {
-		const userLogin = JSON.parse(localStorage.getItem("isLogin"));
-
-		if(userLogin){
-			fetchDataFromApi(`/api/cart`).then((res) => {
-				console.log("cart",res)
-				setCartData(res);
-			})
-		}
-	}
-
+	
 	const getWishListData = () => {
 		fetchDataFromApi(`/api/wishList?userId=${userData.userId}`).then((res) => {
 			if (res?.length !== 0){
@@ -144,45 +144,163 @@ const App = () => {
 		})
 	}
 
-	const addToCart = (data) => {
+    useEffect(() => {
+		fetchCartData()
+    }, []);
 
-		if (isLogin !== false) {
-			setAddingToCart(true)
-			postDataToApi(`/api/cart/add`, data).then((res) => {
-				if (res.status !== false) {
-					setAlertBox({
-						open: true,
-						error: false,
-						msg: "Item added to cart"
-					});
-
-					setTimeout(() => {
-						setAddingToCart(false)
-					}, 1000);
-
-					getCartData()
-				}else {
-					setAlertBox({
-						open: true,
-						error: true,
-						msg: res.msg
-					});
+	const fetchCartData = () =>{
 		
-					setAddingToCart(false)
-		
-				}
-			})
-		}else {
-			setAlertBox({
-				open: true,
-				error: true,
-				msg: "Please login to add to cart!"
-			});
-
-		}
-	
+		fetchDataFromApi(`/api/cart`).then((res) => {
+			if (!res) {
+				const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
+                setCart(storedCart);
+			} else {
+                setCart(res.cart || []);
+			}
+        });
 	}
+
+	const addToCart = async (product, quantity = 1) => {
+
+		postDataToApi(`/api/cart/add`, { productId: product._id, quantity }).then((res) => {
+			if (!res) {
+				const newCart = [...cart, { ...product, quantity }];
+				setCart(newCart);
+				localStorage.setItem("cart", JSON.stringify(newCart));
+			}else {
+				setCart(res.cart);
+				setAlertBox({
+					open: true,
+					error: false,
+					msg: res.msg
+				});
+
+				fetchCartData()
+			}
+		})
+    };
+
+	const removeFromCart = async (productId) => {
+
+		deleteDataFromApi(`/api/cart/remove/${productId}`).then((res) => {
+			if (!res) {
+				const newCart = cart.filter(item => item._id !== productId);
+				setCart(newCart);
+				localStorage.setItem("cart", JSON.stringify(newCart));
+			} else {
+				setAlertBox({
+					open: true,
+					error: false,
+					msg: "Item deleted successfully!"
+				});
+				fetchCartData()
+			}
+		})
+    };
+
+	const updateQuantity = async (itemId, quantity) => {
+
+		updateDataToApi(`/api/cart/update/${itemId}`, { quantity }).then((res) => {
+			if (!res) {
+				setCart(cart.map(item => item._id === itemId ? { ...item, quantity } : item));
+				localStorage.setItem("cart", JSON.stringify(cart));
+			} else {
+				setAlertBox({
+					open: true,
+					error: false,
+					msg: "Cart quantity updated."
+				});
+
+				fetchCartData()
+			}
+		})
+    };
+
+	const isInCart = (productId) => {
+		return cart?.items?.some(item => item?.product?._id === productId);
+	}
+
+
+	// Add product to cart
+	const addToCart2 = (product) => {
+		setCart((prevCart) => {
+			const existingItem = prevCart.find((item) => item._id === product._id);
+
+			if (existingItem) {
+				return prevCart.map((item) =>
+					item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item
+				);
+			}
+
+			return [...prevCart, { ...product, quantity: 1 }];
+		});
+
+		// postDataToApi(`/api/cart/add`, { productId: product._id, quantity: 1 }).then((res) => {
+		// 	if (res.status !== false) {
+		// 		setAlertBox({
+		// 			open: true,
+		// 			error: false,
+		// 			msg: "Item added to cart"
+		// 		});
+
+		// 		setTimeout(() => {
+		// 			setAddingToCart(false)
+		// 		}, 1000);
+
+		// 		getCartData()
+		// 	}else {
+		// 		setAlertBox({
+		// 			open: true,
+		// 			error: true,
+		// 			msg: res.msg
+		// 		});
 	
+		// 		setAddingToCart(false)
+	
+		// 	}
+		// })
+	};
+
+	// const addToCart = (data) => {
+
+	// 	if (isLogin !== false) {
+	// 		setAddingToCart(true)
+	// 		postDataToApi(`/api/cart/add`, data).then((res) => {
+	// 			if (res.status !== false) {
+	// 				setAlertBox({
+	// 					open: true,
+	// 					error: false,
+	// 					msg: "Item added to cart"
+	// 				});
+
+	// 				setTimeout(() => {
+	// 					setAddingToCart(false)
+	// 				}, 1000);
+
+	// 				getCartData()
+	// 			}else {
+	// 				setAlertBox({
+	// 					open: true,
+	// 					error: true,
+	// 					msg: res.msg
+	// 				});
+		
+	// 				setAddingToCart(false)
+		
+	// 			}
+	// 		})
+	// 	}else {
+	// 		setAlertBox({
+	// 			open: true,
+	// 			error: true,
+	// 			msg: "Please login to add to cart!"
+	// 		});
+
+	// 	}
+	
+	// }
+
+
 	const signIn = () => {
 		const userLogin = localStorage.getItem("isLogin");
 		setIsLogin(userLogin);
@@ -220,20 +338,28 @@ const App = () => {
 		setUserData,
 		headerFooterDisplay,
 		setHeaderFooterDisplay,
-		addToCart,
-		cartData,
-		setCartData,
 		fetchCategory,
 		addingToCart,
 		setAddingToCart,
-		getCartData,
 		wishListData,
 		setWishListData,
 		getWishListData,
 		searchedItems,
-		setSearchedItems
-		
-
+		setSearchedItems,
+		recentlyViewed,
+		newArrivals,
+		mostPopular,
+		setCatProducts,
+		catProducts,
+		setRecommendedProducts,
+		recommendedProducts,
+		setRecommendedCollaborative,
+		recommendedCollaborative,
+		cart, 
+		addToCart, 
+		removeFromCart, 
+		updateQuantity,
+		isInCart
 	}
 
 	

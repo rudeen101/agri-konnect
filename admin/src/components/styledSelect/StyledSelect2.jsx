@@ -1,12 +1,12 @@
 import { useState } from "react";
 import "./styledSelect.css";
 
-const StyledSelect = ({onSelectChange, orderId, selectData, productId}) => {
+const StyledSelect2 = ({onSelectChange, selectData, defaultOption}) => {
     const [data, setData] = useState("");
  
     const handleSelectChange  = (e) => {
         setData(e.target.value);
-        onSelectChange(e.target.value, orderId, productId);
+        onSelectChange(e.target.value);
     }
 
     return (
@@ -22,7 +22,7 @@ const StyledSelect = ({onSelectChange, orderId, selectData, productId}) => {
                 className="selectElem"
             >
                 <option value="" disabled>
-                    Change Status
+                    {defaultOption}
                 </option>
               
                 {selectData.map((item, index) => (
@@ -35,4 +35,4 @@ const StyledSelect = ({onSelectChange, orderId, selectData, productId}) => {
     );
 };
 
-export default StyledSelect;
+export default StyledSelect2;

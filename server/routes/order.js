@@ -1,11 +1,14 @@
 // routes/orders.js
 const express = require('express');
 const {Order, SubOrder} = require('../models/order');
+const Product = require('../models/product');
 // const SubOrder = require('../models/order');
 const User = require('../models/users');
 const { verifyToken, authorize } = require('../middleware/auth');
 const crypto = require("crypto");
 const sendEmail = require("../utils/sendEmail");
+const calculatePopularityScore = require('../utils/calculatePopularityScore');
+
 const router = express.Router();
 
 
@@ -151,10 +154,10 @@ router.get('/user/:userId', verifyToken, async (req, res) => {
   }
 });
 
-router.put("/status/:id", async (req, res) => {
+router.put("/status/:id", verifyToken, async (req, res) => {
     try {
         const { id } = req.params;
-        const { status, orderId} = req.body;
+        const { status, orderId, productId} = req.body;
 
         // Find the order and ensure you are updating the right order
         // const order = await SubOrder.findById({ _id: id});
@@ -171,6 +174,26 @@ router.put("/status/:id", async (req, res) => {
 
         order.isReceived = true;
         const result = await order.save();
+
+        const product = await Product.findById(productId);
+        product.salesCount += 1;
+        product.popularityScore = calculatePopularityScore(product);
+        await product.save();
+        
+        
+        if (status === "completed") {
+            const product = await Product.findById(productId);
+            product.salesCount += 1;
+            product.popularityScore = calculatePopularityScore(product);
+            await product.save();
+
+            const user = await User.findById(req.user.id);
+            let purchaseHistory = user.purchaseHistory.filter(id => id.toString() !== productId);
+            purchaseHistory.unshift(productId); // Add new product at the start
+            purchaseHistory = purchaseHistory.slice(0, 6); // Keep only the last 6 items
+            await User.findByIdAndUpdate(req.user.id, { purchaseHistory: purchaseHistory }, { new: true });
+            
+        }
 
         // const productItem = result.orderItems.find(item => item._id.toString() === id);
 

@@ -9,52 +9,87 @@
     --white: #ffffff;
 }
 
-.categories {
-    margin-top: 30px
+.category-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: 0.3s;
+    /* text-align: center; */
+    max-width: 300px; /* Adjust as needed */
+    margin: auto;
 }
 
-.categoryRow {
+.category-heading {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 12px;
+}
+
+.category-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr) !important;
-    grid-column-gap: 20px;
-    grid-row-gap: 20px; 
+    grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+    gap: 12px;
+    justify-content: center;
 }
 
-.category{
-    background-color: white;
-    padding: 20px 20px
-}
-
-.categoryRow .category .heading{
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--charcoal)
-}
-
-.category .categoryItems {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr) !important;
-    grid-column-gap: 15px;
-    grid-row-gap: 31px;
-
-
-}
-.category .categoryItems .catItem {
-    width: 100%;
-    height: 100px
-    /* background: red; */
-    /* padding: 30px */
-}
-.category .categoryItems img {
-    width: 100%;
-    height: 100px;
-    object-fit: cover;
-}
-.category .categoryItems p {
-    font-size: 14px;
+.category-grid-item {
+    background: #f8f8f8;
+    border-radius: 6px;
+    padding: 8px;
     text-align: center;
+    transition: 0.3s;
 }
-.categoryRow .category .categoryLink a{
-    color: var(--primary-teal) !important;
-    margin-top: 20px !important
+
+.category-grid-item:hover {
+    background: #f1f1f1;
+}
+
+.category-link {
+    text-decoration: none;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.category-img {
+    width: 100%;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 6px;
+}
+
+.category-caption {
+    font-size: 0.9rem;
+    margin-top: 6px;
+    font-weight: 500;
+}
+
+.category-more {
+    text-align: center;
+    margin-top: 12px;
+}
+
+.see-more-link {
+    text-decoration: none;
+    color: #007bff;
+    font-weight: bold;
+}
+
+.see-more-link:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .category-grid {
+        grid-template-columns: repeat(2, 1fr); /* Still 2 per row on smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .category-card {
+        max-width: 100%; /* Full width on smaller screens */
+    }
 }

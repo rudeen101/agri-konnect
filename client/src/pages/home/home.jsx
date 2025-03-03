@@ -3,27 +3,21 @@ import HomeSlider from "./slider/homeSlider";
 import CartSlider from "../../components/cartSlider/cartSlider";
 import Banner from "../../components/banner/banner";
 import "./style.css";
-import ProductCard from "../../components/product/product";
 import ProductCardBanner from "../../components/product/productBanner";
 import bannerImg from "../../assets/images/images3.jpg";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import image from "../../assets/images/fruits-vegetables .png"
-import TopProduct from "./topProduct/topProduct"
-import Newsletter from "../../components/newsletter/newsletter";
-import Footer from "../../components/footer/footer";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MyContext } from "../../App";
 import HomeBannerSlider from "../../components/homeBannerSlder/homeBannerSlider";
-
-
-import Tabs from '@mui/material/Tabs';
-import Tab from '@mui/material/Tab';
 import { fetchDataFromApi } from "../../utils/apiCalls";
 import Category from "../../components/categories/category";
 import HomeProductCard from "../../components/product/homeProductCard";
-
+import ProductSliderContainer from "../../components/sliderContainer/SliderContainer";
+import ProductInspirations from "../../components/productInspiration/ProductInspiration";
+import ProductListingCard from "../../components/productListingCard/ProductListingCard";
 
 const Home = () => {
 
@@ -52,17 +46,6 @@ const Home = () => {
 
     const context = useContext(MyContext)
 
-    const settings ={
-        dots: false,
-        infinite: true,
-        // infinite: context.windowWidth < 992 ? false : true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        fade: false,
-        arrows: true
-    }; 
-
     const bannerSlider ={
         dots: false,
         infinite: true,
@@ -79,19 +62,19 @@ const Home = () => {
         }
     }, [context.categoryData]);
 
-    useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("user"));
+    // useEffect(() => {
+    //     const user = JSON.parse(localStorage.getItem("user"));
 
-        fetchDataFromApi(`/api/product/homepage`)
-        .then((res) => {
+    //     fetchDataFromApi(`/api/product/homepage`)
+    //     .then((res) => {
 
-            setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
-            setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
-            setRecentlyViewed(res.combinedProducts.find(p => p.category === "recentlyViewed"));
+    //         setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
+    //         setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
+    //         setRecentlyViewed(res.combinedProducts.find(p => p.category === "recentlyViewed"));
 
-            setIsLoading(false);
-        });
-    }, []);
+    //         setIsLoading(false);
+    //     });
+    // }, []);
 
     // useEffect(() => {
 
@@ -139,8 +122,6 @@ const Home = () => {
         });
     }
 
-
-
     return(
         <>
             {/* {
@@ -156,12 +137,11 @@ const Home = () => {
                 <div className="container-fluid">
                     <div className="categoryRow mt-4">
                         { 
-                            context.categoryData?.categoryList?.map((category, index) => {
-
-                                return (
-                                    <Category catData={category} />
-                                );
-                            })
+                            context.categoryData?.categoryList?.map((category, index) => (
+                                <div className="d-flex">
+                                    <Category catData={category} key={index}/>
+                                </div>
+                            ))
                         }
                     </div>
                 </div>
@@ -169,74 +149,22 @@ const Home = () => {
                 
       
             {/* Popular Product */}
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
+            {
+                context?.mostPopular?.products?.length !== 0 &&
+                <section className="homeProducts homeProductsSection2 pt-0">   
+                    <ProductSliderContainer products={context?.mostPopular?.products} title={"Most Popular Items"}></ProductSliderContainer>
+                </section>
+            }
+        
 
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Most Popular Items</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                   
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        mostPopular?.products?.length !== 0 && mostPopular.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-
-            {/* Newly Released Product */}                       
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                   
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
+            {/* Newly Released Product */}  
+            {
+                context?.newArrivals?.products?.length !== 0 &&
+                <section className="homeProducts homeProductsSection2 pt-0">
+                    <ProductSliderContainer products={context?.newArrivals?.products} title={"New Arrivals"}></ProductSliderContainer>
+                </section>
+            }                     
+      
 
             {/* Category section */}                       
             <div className="categories">
@@ -247,7 +175,7 @@ const Home = () => {
                             context.categoryData?.categoryList?.map((category, index) => {
 
                                 return (
-                                    <Category catData={category} />
+                                    <Category catData={category} key={index} />
                                 );
                             })
                         }
@@ -257,267 +185,52 @@ const Home = () => {
 
             {/* User recently viewed products */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Recently viewed Items</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
+                {
+                    context?.recentlyViewed?.length !== 0 &&
+                    <section className="homeProducts homeProductsSection2 pt-0">
+                        <ProductSliderContainer products={context?.recentlyViewed} title={"Recently Viewed Items"}></ProductSliderContainer>
+                    </section>
+                }     
             </section>
 
-            {/* Top Fresh Produce Items */}                       
+            {/* Recommended products */}                       
             <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Recommended Items for you</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
+                {
+                    context?.recommendedProducts?.length !== 0 &&
+                    <section className="homeProducts homeProductsSection2 pt-0">
+                        <ProductSliderContainer products={context?.recommendedProducts} title={"Recommended for you"}></ProductSliderContainer>
+                    </section>
+                }     
             </section>
-            
-             {/* Slider with banner top fresh produce  */}   
+
+            {/* Top Fresh Produce Items */} 
+
             <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        {/* <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div> */}
-                   
-                        <div className="row">
-                            <div className="col-md-3 bannerCol">
-                                <div className="item card">
-                                <img src={image} alt="" />
-                                </div>
-                            </div>
-                            <div className="col-md-9">
-                                <Slider {...bannerSlider} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
+                {
+                    context?.catProducts?.products?.length !== 0 && context?.catProducts?.products?.map((category, index) => (
+                        <>
+                            {
+                                category?.products?.length !== 0 &&
+                                <section className="homeProducts homeProductsSection2 pt-0">
+                                    <ProductSliderContainer products={category?.products} title={category?.category}></ProductSliderContainer>
+                                </section>
+    
+                            }
+                        </>
+                    ))
+                }   
             </section>
 
-             {/* Slider with banner for farm inputs  */}   
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
 
-                    <div className="wrapper card">
-                        {/* <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">New Arrivals</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div> */}
-                   
-                        <div className="row">
-                            <div className="col-md-3 bannerCol">
-                                <div className="item card">
-                                <img src={image} alt="" />
-                                </div>
-                            </div>
-                            <div className="col-md-9">
-                                <Slider {...bannerSlider} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
+            {/*  products inspiration */}                       
+                       <section className="homeProducts homeProductsSection2 pt-0">
+                {
+                    context?.recommendedCollaborative?.length !== 0 &&
+                    <section className="homeProducts homeProductsSection2 pt-0">
+                        <ProductInspirations products={context?.recommendedCollaborative}></ProductInspirations>
+                    </section>
+                }     
             </section>
-
-            {/* Lifestock */}                       
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Lifestock</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-
-            {/* Aquatic */}                       
-            <section className="homeProducts homeProductsSection2 pt-0">
-                <div className="container-fluid">
-
-                    <div className="wrapper card">
-                        <div className="productCardHeader">
-                            <h3 className="hd mb-0 mt-0">Aquatic</h3>
-
-                            <ul className="list list-inline mb-0 ml-auto filterTab">
-                                <li className="list-inline-item">
-                                    <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                                </li>
-                            </ul>
-                        </div>
-                
-                        <div className="row">
-                            <div className="col-md-12">
-                                <Slider {...settings} className="productSlider">
-                                    {
-                                        newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                            return (
-                                                <div className="item"  key={index}>
-                                                    <HomeProductCard productData={product}></HomeProductCard>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                </Slider>
-                            </div>
-                        </div>    
-                    </div>
-                </div>    
-            </section>
-
-            {/* Slider with banner for industrial Items  */}   
-            <section className="homeProducts homeProductsSection2 pt-0">
-            <div className="container-fluid">
-
-                <div className="wrapper card">
-                    {/* <div className="productCardHeader">
-                        <h3 className="hd mb-0 mt-0">New Arrivals</h3>
-
-                        <ul className="list list-inline mb-0 ml-auto filterTab">
-                            <li className="list-inline-item">
-                                <a href="#" className="cursor">View All <NavigateNextIcon></NavigateNextIcon></a>
-                            </li>
-                        </ul>
-                    </div> */}
-            
-                    <div className="row">
-                        <div className="col-md-3 bannerCol">
-                            <div className="item card">
-                            <img src={image} alt="" />
-                            </div>
-                        </div>
-                        <div className="col-md-9">
-                            <Slider {...bannerSlider} className="productSlider">
-                                {
-                                    newArrival?.products?.length !== 0 && newArrival.products?.map((product, index) => {
-
-                                        return (
-                                            <div className="item"  key={index}>
-                                                <HomeProductCard productData={product}></HomeProductCard>
-                                            </div>
-                                        )
-                                    })
-                                }
-                            </Slider>
-                        </div>
-                    </div>    
-                </div>
-            </div>    
-            </section>
-            
-
-            
-           
 
         </>
       

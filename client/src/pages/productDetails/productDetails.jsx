@@ -42,9 +42,6 @@ import ProductReviews from "../../components/productReviews/ProductReviews";
 const ProductDetails = ({userId}) =>{
 
     const [zoomImage, setZoomImage] = useState("");
-    const [bigImageSize, setBigImageSize] = useState([1500, 1500]);
-    const [smallImageSize, setSmallImageSize] = useState([150, 150]);
-    const [activeStatus, setActiveStatus] = useState(0);
     // const [addToCart, setAddToCart] = useState(0);
     const [minusFromCart, setMinusFromCart] = useState(0);
     const [activeTabs, setActiveTabs] = useState(0)
@@ -70,158 +67,65 @@ const ProductDetails = ({userId}) =>{
     
     const {id} = useParams();
     const context = useContext(MyContext);
-    const zoomSlider = useRef();
     const user = JSON.parse(localStorage.getItem("user"));
-
-
-    const settings ={
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        fade: false,
-        arrows: true
-    }; 
-
-    const relatedProductSlider ={
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 5,
-        slidesToScroll: 1,
-        fade: false,
-        arrows: true
-    }; 
-
-    const goto = (image, index) =>{
-        setZoomImage(image);
-        zoomSlider.current.slickGoTo(index);
-    }
-
-    const isActive = (status) => {
-        setActiveStatus(status)
-    }
-
-    // const quantity = (value) => {
-    //     setProductQuantity(value)
-    // }
-
-    const selectedItem = () => {}
-
-    const addToCart = () => {
-        const user = JSON.parse(localStorage.getItem("user"));
-
-        cartFields.userId = user?.userId;
-        cartFields.productId = productData?._id;
-        cartFields.price = productData?.price;
-        cartFields.productName = productData?.name;
-        cartFields.rating = productData?.rating;
-        cartFields.price = productData?.price; 
-        cartFields.subTotal = parseInt(productData?.price * productQuantity); 
-        cartFields.countInStock = productData?.countInStock; 
-        cartFields.image = productData?.images[0];
-        cartFields.quantity = productQuantity;
-
-        context.addToCart(cartFields);
-    }
 
     useEffect(() => {
         window.scrollTo(0,0);
-        fetchDataFromApi(`/api/product/${id}`).then((res) =>{
+        fetchDataFromApi(`/api/product/details/${id}`).then((res) =>{
             setProductData(res);
-            console.log("product", res)
             setZoomImage(res.images[0])
         });
 
-        getAllReviews(id);
+        getReviews();
         // checkWishList(id)
 
     }, [id]);
 
     useEffect(() => {
         fetchDataFromApi(`/api/cart`).then((res) => {
-            console.log("cartData",res.products)
-            setInCart(res.products.some(item => item.productId._id === productData._id));
+            // setInCart(res.products.some(item => item.productId._id === productData._id));
         })
     }, [context?.isLogin]);
 
-    const getAllReviews = (productId) => {
-        fetchDataFromApi(`/api/productReviews/${productId}`).then((res) => {
+    useEffect(() => {
+        postDataToApi(`/api/product/recentlyViewed/add`, { productId: id }).then((res) => {
+            console.log("recentlyviewed",res);
+        })
+    }, []);
+
+    const getReviews = () => {
+
+        fetchDataFromApi(`/api/productReviews/${id}`)
+        .then((res) =>{
             setReviewsData(res);
         })
-    }
-
-    const addReview = (e) => {
-        e.preventDefault();
-
-        setIsLoading(true)
-        if (context.isLogin === true) {
-            if (reviews?.review === "") {
-                context?.setAlertBox({
-                    open: true,
-                    error: true,
-                    msg: "You must enter review!"
-                });
-                return false;
-            } else{
-
-                reviews.customerId = user?.userId;
-                reviews.customerName = user?.username;
-                reviews.productId = id;
-
-                postDataToApi(`/api/productReviews/add?id=${id}`, reviews).then((res) => {
-                    if (res) {
-                        setIsLoading(false)
-                        getAllReviews(id);
-                    }
-                })
-            }
-        } else{
-            context?.setAlertBox({
-                open: true,
-                error: true,
-                msg: "You must login first!"
-            });
-        }
+        .catch(err => console.error("Error fetching reviews:", err));
     }
 
     const handleQuantityChange = (newQuantity, productId) => {
         setQuantity(newQuantity);
     };
 
-      const handleCartToggle = async () => {
-            console.log(inCart);
-    
-            if (inCart) {
-                deleteDataFromApi(`/api/cart/remove/${productData?._id}`)
-                .then((res) => {
-                    setInCart(false);
-                });
-    
-            } else {
-          
-                const cartData= {
-                    productId: productData._id,
-                    quantity: quantity
-                }
-    
-                postDataToApi(`/api/cart/add`, cartData)
-                .then((res) => {
-                    setInCart(true);
-                });
+    const handleCartToggle = async () => {   
+        if (inCart) {
+            deleteDataFromApi(`/api/cart/remove/${productData?._id}`)
+            .then((res) => {
+                setInCart(false);
+            });
+
+        } else {
+        
+            const cartData= {
+                productId: productData._id,
+                quantity: quantity
             }
-        };
 
-
-
-    // const plus = () => {
-    //     setAddToCart(addToCart++);
-    // }
-
-    // const minus = () => {
-    //     setMinusFromCart(minusFromCart--);
-    // }
+            postDataToApi(`/api/cart/add`, cartData)
+            .then((res) => {
+                setInCart(true);
+            });
+        }
+    };
 
     return (
         <div className="productDetails">
@@ -246,12 +150,11 @@ const ProductDetails = ({userId}) =>{
                             <div className="col-md-6 productInfo">
                                 <h1>{productData?.name}</h1>
                                 <div className="d-flex align-items-center ratingContainer">
-                                    <Rating className="rating" name="half-rating-read" value={parseInt(productData?.rating)} precission={0.4} readOnly />
-                                    <div className="reviewNumber">({reviewsData?.reviews?.length !== 0 && reviewsData?.reviews?.length} reviews)</div>
+                                    <Rating className="rating" name="half-rating-read" value={parseInt(reviewsData[0]?.rating)} precission={0.4} readOnly />
+                                    <div className="reviewNumber">({reviewsData?.length !== 0 ? reviewsData?.length : 0} review(s))</div>
                                 </div>
                                 <div className="brand">Business Name: <span >{productData?.brand}</span></div>
                                 <hr></hr>
-
 
                                 <div className="priceContainer d-flex align-items-center mb-3">
                                     <span className="text-g priceLarge mr-3">USD {productData?.price}</span>
@@ -316,7 +219,7 @@ const ProductDetails = ({userId}) =>{
                                             <Button className={`${activeTabs === 0 && 'active'}`} onClick={()=> setActiveTabs(0)}>Product Details</Button>
                                         </li>
                                         <li className="list-inline-item">
-                                            <Button className={`${activeTabs === 2 && 'active'}`} onClick={()=> setActiveTabs(2)}>Reviews ({reviewsData?.length !== 0 && reviewsData.length})</Button>
+                                            <Button className={`${activeTabs === 2 && 'active'}`} onClick={()=> setActiveTabs(2)}>Review(s) ({reviewsData?.length !== 0 ? reviewsData.length: 0})</Button>
                                         </li>
                                         <li className="list-inline-item">
                                             <Button className={`${activeTabs === 3 && 'active'}`} onClick={()=> setActiveTabs(3)}>Business Details</Button>

@@ -1,0 +1,12 @@
+.productCardContainer .slick-slide {
+    display: flex !important;  /* Ensure it aligns properly */
+    justify-content: flex-start !important;  /* Aligns everything left */
+}
+
+.productCardContainer .product-card {
+    width: 170px !important;  /* Force a fixed width */
+    max-width: 200px !important;  
+    min-width: 150px;
+    margin-right: 5px !important;  /* Adjust spacing */
+}
+

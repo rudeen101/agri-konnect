@@ -48,8 +48,6 @@ const Checkout = ({user}) => {
     const [showAddressModal, setShowAddressModal] = useState(false);
     const [showPaymentModal, setShowPaymentModal] = useState(false);
 
-    const [cartData, setCartData] = useState([]);
-
     const [formFields, setFormFields] = useState({
         fullName:"",
         phone: "",
@@ -68,17 +66,9 @@ const Checkout = ({user}) => {
     useEffect(() => {
         window.scrollTo(0, 0);
 
-        fetchDataFromApi(`/api/cart`).then((res) => {
-            localStorage.setItem("cart", JSON.stringify(res.products));
-            const cart = JSON.parse( localStorage.getItem("cart"));
-            console.log("===", cart);
-            setCartData(cart);
-        });
-
         //fetch user address
         fetchDataFromApi(`/api/user/address`).then((res) => {
             const userAddreses = res.userAddress.addresses;
-            console.log("address", userAddreses);
             setAddresses(userAddreses);
             setSelectedAddress(userAddreses[0])
         });
@@ -125,7 +115,6 @@ const Checkout = ({user}) => {
             address: formFields.address,
             city: formFields.city,
         }
-        console.log(newAddress);
 
         setAddresses(prevAddresses => [...prevAddresses, newAddress]);
         setSelectedAddress(newAddress);
@@ -133,13 +122,7 @@ const Checkout = ({user}) => {
     };
   
     const handleQuantityChange = (newQuantity, productId) => {
-        setCartData((prevCart) =>
-            prevCart.map((item) =>
-                item.product._id === productId
-                    ? { ...item, quantity: Math.max(1, newQuantity) } // Prevent quantity below 1
-                    : item
-            )
-        );
+        context?.updateQuantity(productId, newQuantity)
     };
 
     //get input data
@@ -157,7 +140,7 @@ const Checkout = ({user}) => {
 
     // Calculate grand total
     const calculateTotal = () => {
-        return cartData.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
+        return  context?.cart?.items?.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
 
     //Calculate 30% of total amount
@@ -169,24 +152,6 @@ const Checkout = ({user}) => {
         return ((30 / 100) * totalAmount).toFixed(2); // 30% of totalAmount
     };
 
-    const removeItem = (productId) => {
-        setIsLoading(true);
-
-        deleteDataFromApi(`/api/cart/remove/${productId}`).then((res) => {
-
-            setCartData(prevCart => prevCart.filter(item => item.product._id !== productId));
-
-            context.setAlertBox({
-                open: true,
-                error: false,
-                msg: "Item deleted successfully!"
-            })
-        })
-
-        setIsLoading(false);
-        // getCartData()
-
-    }
 
     const handlePlaceOrder = () => {
         if (selectedAddress.fullName ===  "") {
@@ -288,8 +253,6 @@ const Checkout = ({user}) => {
             totalPrice: calculateTotal(),
         };
 
-        console.log(orderData)
-
         postDataToApi(`/api/order/create`, orderData).then((res) => {
             setIsCheckoutLoading(true);
 
@@ -327,7 +290,6 @@ const Checkout = ({user}) => {
  
     const handleConfirmPayment = () => {
         navigate("/fulfillment");
-
     }
 
 
@@ -429,7 +391,7 @@ const Checkout = ({user}) => {
                                     </div>
 
                                     {/* Order Review & Checkout */}
-                                    <div className="checkout-card">
+                                    <div className="checkout-card" id="orderReview">
                                         <h4>Review & Place Order</h4>
                                         <div className="cartWrapper">
                                             <div className="table-responsive">
@@ -447,7 +409,7 @@ const Checkout = ({user}) => {
             
                                                     <tbody>
                                                         {
-                                                            cartData?.length !== 0 && cartData?.map((item, index) => {
+                                                            context?.cart?.items?.length !== 0 && context?.cart?.items?.map((item, index) => {
                                                                 return(
                                                                     <tr key={index}>
                                                                         <td>
@@ -477,12 +439,12 @@ const Checkout = ({user}) => {
                                                                                 quantity={quantity}
                                                                             /> */}
 
-                                                                            <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?.product?._id} initialQuantity={quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
+                                                                            <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
 
                                                                         </td>
                         
                                                                         <td>
-                                                                            <span className="text-g">${(item.product.price * item.quantity).toFixed(2)}</span>
+                                                                            <span className="text-g">${(item?.product?.price * item?.quantity).toFixed(2)}</span>
                                                                         </td>
                         
                                                                         <td>
@@ -493,7 +455,7 @@ const Checkout = ({user}) => {
                                                                                     <CircularProgress className="loading" />
                                                                                 </button>
                                                                                 :
-                                                                                <span className="cursor" onClick={() => removeItem(item?.product?._id)}><DeleteOutlineOutlinedIcon /></span>
+                                                                                <span className="cursor" onClick={() =>  context?.removeFromCart(item?._id)}><DeleteOutlineOutlinedIcon /></span>
 
                                                         
                                                                             }
@@ -549,7 +511,9 @@ const Checkout = ({user}) => {
                                 </div>
 
                                 <br />  
-                                <Button className="btn-g btn-lg">Preceed To Checkkout</Button>
+                                <a href="#orderReview">
+                                    <Button className="btn-g btn-lg">Review & Place Order</Button>
+                                </a>
                             </div>
                         </div>
                     </div>

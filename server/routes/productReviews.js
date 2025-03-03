@@ -1,29 +1,58 @@
 const express = require("express");
 const Review = require("../models/productReviews");
+const Product = require("../models/product")
 const verifyBuyer = require("../middleware/verifyBuyer");
 const { verifyToken, authorize } = require('../middleware/auth');
 const router = express.Router();
 
 //**Submit a New Review (Only Verified Buyers)**
-router.post("/", verifyToken, verifyBuyer, async (req, res) => {
-    const { productId, rating, comment } = req.body;
-
+router.post("/add", verifyToken, verifyBuyer, async (req, res) => {
+ 
     try {
-        const existingReview = await Review.findOne({ user: req.user.userId, product: productId });
+        const { productId, rating, comment } = req.body;
+        const userId = req.user.id; // Get user from token
+
+        // Check if the user has already reviewed this product
+        const existingReview = await Review.findOne({ product: productId, user: userId });
         if (existingReview) {
-            return res.status(400).json({ message: "You have already reviewed this product." });
+            return res.status(400).json({ message: "You have already reviewed this product" });
         }
 
+        // Create the new review
         const review = new Review({
-            user: req.user.userId,
+            user: userId,
             product: productId,
             rating,
-            comment,
-            status: "pending" // New reviews require admin approval
+            comment
         });
 
         await review.save();
-        res.status(201).json({ message: "Review submitted successfully and is pending approval!", review });
+
+        // Update Product rating
+        const reviews = await Review.find({ product: productId });
+        const totalRating = reviews.reduce((acc, rev) => acc + rev.rating, 0);
+        const avgRating = totalRating / reviews.length;
+
+        const product = await Product.findById(productId)
+        product.averageRating = avgRating;
+        product.reviewCount = reviews.length;
+        product.popularityScore = calculatePopularityScore(product);
+
+        res.status(201).json({ message: "Review added successfully", review });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
+// **Get Reviews by product Id**
+router.get("/:id", async (req, res) => {
+    try {
+        const {id} = req.params;
+        console.log(id)
+
+        const reviews = await Review.find({product: id})
+            .populate("user", "name");
+        res.status(200).json(reviews);
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
@@ -34,7 +63,8 @@ router.put("/:reviewId", verifyToken, async (req, res) => {
     try {
         const review = await Review.findById(req.params.reviewId);
         if (!review) return res.status(404).json({ message: "Review not found." });
-        if (review.user.toString() !== req.user.userId) {
+
+        if (review.user.toString() !== req.user.id) {
             return res.status(403).json({ message: "Unauthorized to edit this review." });
         }
 
@@ -43,7 +73,7 @@ router.put("/:reviewId", verifyToken, async (req, res) => {
         review.status = "pending"; // Resets approval after edit
         await review.save();
 
-        res.status(200).json({ message: "Review updated and is pending re-approval.", review });
+        res.status(200).json({ message: "Review updated.", review });
     } catch (error) {
         res.status(500).json({ message: "Server error", error });
     }
@@ -54,11 +84,6 @@ router.delete("/:reviewId", verifyToken, async (req, res) => {
     try {
         const review = await Review.findById(req.params.reviewId);
         if (!review) return res.status(404).json({ message: "Review not found." });
-
-        // Allow Admins or the Review Author to delete
-        if (review.user.toString() !== req.user.userId && !req.user.roles.includes("admin")) {
-            return res.status(403).json({ message: "Unauthorized to delete this review." });
-        }
 
         await review.deleteOne();
         res.status(200).json({ message: "Review deleted successfully." });

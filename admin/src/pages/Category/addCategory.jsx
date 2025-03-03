@@ -12,7 +12,7 @@ import MultipleFileUpload from "../../components/fileUploader/fileIploader";
 
 import image from "../../assets/images/quality.png"
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteImages, deleteDataFromApi, uploadImage } from "../../utils/apiCalls";
-
+import StyledSelect2 from "../../components/styledSelect/StyledSelect2";
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -30,7 +30,9 @@ const AddCategory = () =>{
         images: [],
         color: "",
         slug: "",
-        parentId: ""
+        parentId: "",
+        isFeatured: false,
+        type: "mainCategory"
     });
 
     const [previews, setPreviews] = useState([])
@@ -129,7 +131,9 @@ const AddCategory = () =>{
         })
     }
 
-
+    const handleSelectChange = (selectValue) => {
+        formFields.isFeatured = selectValue;
+    }
 
     const removeImage = async (index, imgUrl) => {
         const imgIndex = previews.indexOf(imgUrl);
@@ -154,6 +158,7 @@ const AddCategory = () =>{
 
         formFields.slug = formFields.name;
         formFields.images = appendedArray;
+
 
         if (formFields.name !== "" && formFields.color !== "" && previews.length !== 0){
             setIsLoading(true);
@@ -216,6 +221,11 @@ const AddCategory = () =>{
                                     <div className="form-group">
                                         <h6>Color</h6>
                                         <input type="text" name="color" onChange={changeInput} />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Feature Category</h6>
+                                        <StyledSelect2  onSelectChange={handleSelectChange} selectData={["true", "false"]} defaultOption={"false"}></StyledSelect2>
                                     </div>
 
                                     <div className="imgUploadBox d-flex align-items-center">

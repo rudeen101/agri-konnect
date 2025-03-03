@@ -54,7 +54,7 @@ const SubOrderSchema = new mongoose.Schema({
     },
 
     subTotal: { type: Number, required: true },
-    status: { type: String, enum: ["pending", "confirmed", "processing", "delivered", "received", "cancelled"], default: "pending" },
+    status: { type: String, enum: ["pending", "confirmed", "processing", "delivered", "received", "completed", "cancelled"], default: "pending" },
     trackingNumber: { type: String, unique: true },
     deliveredAt: { type: Date },
     createdAt: { type: Date, default: Date.now }

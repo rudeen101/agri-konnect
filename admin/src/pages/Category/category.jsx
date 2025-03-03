@@ -41,6 +41,7 @@ const Category = () =>{
     
     const fetchCategory = () => {
 		fetchDataFromApi('/api/category').then((res) => {
+            console.log(res)
 			context.setProgress(30)
 			setCategoryData(res);
 			context.setProgress(100)
@@ -101,6 +102,7 @@ const Category = () =>{
                                 <tr>
                                     <th style={{width: '100px'}}>IMAGE</th>
                                     <th>CATEGORY</th>
+                                    <th>ISFEATURED</th>
                                     <th>COLOR</th>
                                     <th>ACTION</th>
                                 </tr>
@@ -125,6 +127,9 @@ const Category = () =>{
                                                 </td>
                                                 <td>
                                                     {category?.name}
+                                                </td>
+                                                <td>
+                                                    {category?.isFeatured?.toString()}
                                                 </td>
                                                 <td>
                                                     {category?.colo}

@@ -28,66 +28,27 @@ const Cart = ({user}) => {
     const context = useContext(MyContext);
     const history = useNavigate();
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
+    // useEffect(() => {
+    //     window.scrollTo(0, 0);
 
-        fetchDataFromApi(`/api/cart`).then((res) => {
-            localStorage.setItem("cart", JSON.stringify(res.products));
-            const cart = JSON.parse( localStorage.getItem("cart"));
-            console.log("===", cart);
+        // fetchDataFromApi(`/api/cart`).then((res) => {
+        //     localStorage.setItem("cart", JSON.stringify(res.products));
+        //     const cart = JSON.parse( localStorage.getItem("cart"));
+        //     console.log("===", cart);
 
-            setCartData(cart);
-        });
-    }, []);
+        //     setCartData(cart);
+        // });
+    // }, []);
 
 
     const handleQuantityChange = (newQuantity, productId) => {
-        setCartData((prevCart) =>
-            prevCart.map((item) =>
-                item.product._id === productId
-                    ? { ...item, quantity: Math.max(1, newQuantity) } // Prevent quantity below 1
-                    : item
-            )
-        );
+        context?.updateQuantity(productId, newQuantity)
     };
 
     // Calculate grand total
     const calculateTotal = () => {
-        return cartData.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
+        return context?.cart?.items?.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
-
-    // const handleQuantityChange = (newQuantity, productId) => {
-
-    //     // setQuantity(newQuantity)
-    //     setCartData((prevCart) =>
-    //         prevCart.map((item) => {
-    //             item?.product?._id === productId
-    //                 ? { ...item, quantity: newQuantity}
-    //                 : item
-    //         })
-    //     );
-
-    // };
-
-    const removeItem = (productId) => {
-        setIsLoading(true);
-
-        deleteDataFromApi(`/api/cart/remove/${productId}`).then((res) => {
-
-            setCartData(prevCart => prevCart.filter(item => item.product._id !== productId));
-
-            context.setAlertBox({
-                open: true,
-                error: false,
-                msg: "Item deleted successfully!"
-            })
-        })
-
-        setIsLoading(false);
-        // getCartData()
-
-    }
-
 
     return (
         <>
@@ -114,7 +75,7 @@ const Cart = ({user}) => {
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <div className="left">
                                     <h4 className="hd mb-0">Your Cart</h4>
-                                    <p><span className="text-g"><b>{cartData?.length}</b></span> product(s) in your cart</p>
+                                    <p><span className="text-g"><b>{context?.cart?.length}</b></span> product(s) in your cart</p>
                                 </div>
 
                                 {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
@@ -137,7 +98,7 @@ const Cart = ({user}) => {
         
                                                 <tbody>
                                                     {
-                                                        cartData?.length !== 0 && cartData?.map((item, index) => {
+                                                        context?.cart?.items?.length !== 0 && context?.cart?.items?.map((item, index) => {
                                                             return(
                                                                 <tr key={index}>
                                                                     <td>
@@ -149,7 +110,7 @@ const Cart = ({user}) => {
                                                                             </div>
                     
                                                                             <div className="info pl-4">
-                                                                                <Link to={`/product/${item?._id}`}>
+                                                                                <Link to={`/product/${item?.product?._id}`}>
                                                                                     <h6>{item?.product?.name?.substr(0,100) + "..."}</h6>
                                                                                 </Link>
                                                                             </div>
@@ -167,12 +128,12 @@ const Cart = ({user}) => {
                                                                             quantity={quantity}
                                                                         /> */}
 
-                                                                        <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?.product?._id} initialQuantity={quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
+                                                                        <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
 
                                                                     </td>
                     
                                                                     <td>
-                                                                        <span className="text-g">${(item.product.price * item.quantity).toFixed(2)}</span>
+                                                                        <span className="text-g">${(item?.product?.price * item?.quantity).toFixed(2)}</span>
                                                                     </td>
                     
                                                                     <td>
@@ -183,8 +144,7 @@ const Cart = ({user}) => {
                                                                                 <CircularProgress className="loading" />
                                                                             </button>
                                                                             :
-                                                                            <span className="cursor" onClick={() => removeItem(item?.product?._id)}><DeleteOutlineOutlinedIcon /></span>
-
+                                                                            <span className="cursor" onClick={() => context?.removeFromCart(item?._id)}><DeleteOutlineOutlinedIcon /></span>
                                                     
                                                                         }
                                                                         

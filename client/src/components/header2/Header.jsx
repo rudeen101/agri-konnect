@@ -20,22 +20,18 @@ const Header = () => {
     const [showHelpDropdown, setShowHelpDropdown] = useState(false);
     const [showBrowserDropdown, setShowBrowserDropdown] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [categories, setCategories] = useState([]);
-    const [cartData, setCartData] = useState([]);
-    
+    const [categories, setCategories] = useState([]);  
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
     const searchInput = useRef();
 
-
-    
     const handleLogout = () => {
         context.setIsLogin(false);
         localStorage.removeItem("user");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("isLogin");
-        history("/");
+        navigate("/");
     }
 
     const handleLogin = () => {
@@ -43,22 +39,7 @@ const Header = () => {
         // context.setIsLogin(true);
     }
 
-    const getCategory = (catData) => {
-        fetchDataFromApi(`/api/search?q=${catData.name}`).then((res) => {
-            context.setSearchedItems(res);
-            setTimeout(() => {
-                history("/search");
-                searchInput.current.value = "";
-            }, 2000);
-        })
-        // context.setIsLogin(true);
-    }
-
-    const getSubCategory = (subCat) => {
-        console.log("selected cat", subCat)
-        // context.setIsLogin(true);
-    }
-    
+   
     const searchProducts = (e) => {
         // setSearchFields(searchInput.current.value)
 
@@ -67,7 +48,7 @@ const Header = () => {
             fetchDataFromApi(`/api/search?q=${searchInput.current.value}`).then((res) => {
                 context.setSearchedItems(res);
                 setTimeout(() => {
-                    history("/search");
+                    navigate("/search");
                     setIsLoading(false);
                     searchInput.current.value = "";
                 }, 2000);
@@ -86,12 +67,10 @@ const Header = () => {
         fetchDataFromApi('/api/category/').then((res)=> {
             setCategories(res);
         })
-
-        fetchDataFromApi(`/api/cart`).then((res) => {
-            console.log("cart",res)
-            setCartData(res);
-        })
     }, [])
+
+    const cartCount = context?.cart?.items?.reduce((total, item) => total + item.quantity, 0);
+
 
     return (
         <>
@@ -175,11 +154,7 @@ const Header = () => {
                         <Link to={"/cart"}>
                             <FaShoppingCart  />
                         </Link>
-                        {
-                            cartData?.length !== 0 &&
-                            <span className="badge rounded-circle">{cartData?.products?.length}</span>
-                        }
-
+                        <span className="badge rounded-circle">{cartCount}</span>
                     </button>
 
                     <div

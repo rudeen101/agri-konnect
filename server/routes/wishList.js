@@ -1,7 +1,9 @@
 // routes/wishlist.js
 const express = require('express');
 const Wishlist = require('../models/wishList');
+const Product = require('../models/product');
 const { verifyToken } = require('../middleware/auth');
+const calculatePopularityScore = require('../utils/calculatePopularityScore')
 
 const router = express.Router();
 
@@ -46,7 +48,7 @@ router.delete('/:userId/:productId', verifyToken, async (req, res) => {
 });
 
 
-// ✅ Toggle Wishlist Status (Add/Remove)
+// Toggle Wishlist Status (Add/Remove)
 router.post("/toggle", verifyToken, async (req, res) => {
     try {
         const { userId, productId } = req.body;
@@ -66,6 +68,13 @@ router.post("/toggle", verifyToken, async (req, res) => {
             // If not found, add to wishlist
             const newWish = new Wishlist({ user: userId, product: productId });
             await newWish.save();
+
+            const product = await Product.findById(productId);
+            product.wishlistCount += 1;
+            product.popularityScore = calculatePopularityScore(product);
+
+            await product.save();
+
             return res.status(201).json({ success: true, isWishlisted: true, msg: "Added to Wishlist" });
         }
     } catch (error) {

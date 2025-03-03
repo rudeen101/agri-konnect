@@ -113,7 +113,7 @@ h1, h2, h4, h2, h5, h6{
 }
 
 .btn-large{
-    padding: 5px 25px !important
+    padding: 8px 25px !important
 }
 
 .btn-big {
@@ -1110,8 +1110,8 @@ Signup Sttyle
 Product Card
 *******************************/
 .productCard{
-    width: 100%;
-    height: 320px;
+    width: 100px;
+    height: 200px;
     border: 1px solid rgba(0,0,0,0.1);
     overflow: hidden;
     border-radius: 10px;
@@ -1138,8 +1138,10 @@ Product Card
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     overflow: hidden;
     font-family: 'Roboto', Arial, sans-serif;
-    margin: 1em auto;
+    /* margin: 1em auto; */
+    margin: 10px 0px;
     transition: transform 0.3s ease;
+    
 }
 
 .product-card:hover {
@@ -1149,8 +1151,9 @@ Product Card
 
 .product-card img {
     width: 100%;
-    height: 180px;
+    height: 150px !important; 
     object-fit: cover;
+
 }
 
 .product-card .card-body {
@@ -1161,20 +1164,19 @@ Product Card
     font-size: 0.9em;
     font-weight: bold;
     color: var(--charcoal);
-    margin-bottom: 0.3em;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+    
 }
 
 .product-card .product-price {
-    font-size: 1.2em;
+    font-size: 1em;
     color: var(--soft-coral);
     font-weight: bold;
-    margin-bottom: 0.1em;
 }
 .product-card .product-price .pricePckage {
-    font-size: 0.7em;
+    font-size: 0.8em;
     color: var(--soft-coral);
     font-weight: bold;
     margin-bottom: 0.3em;
@@ -1187,9 +1189,8 @@ Product Card
 } */
 
 .product-card .product-stock {
-    color: var(--golden-yellow);
+    color: var(--dark-teal);
     font-size: 0.9em;
-    margin-bottom: 1em;
 }
 
 .product-card .product-actions {
@@ -1233,7 +1234,7 @@ Product Card
 } */
 
 .product-media {
-    height: 200px;
+    height: 150px;
     object-fit: cover;
     transition: transform 0.3s ease-in-out;
 }

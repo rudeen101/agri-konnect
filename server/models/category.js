@@ -18,6 +18,13 @@ const categorySchema = new Schema({
     color: {
         type: String,
     },
+    type: {
+        type: String,
+    },
+    isFeatured: {
+        type: Boolean,
+        default: false
+    },
     parentId: {
         type: String,
     }

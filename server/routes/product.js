@@ -2,6 +2,7 @@ const  Category = require('../models/category');
 const  User = require('../models/users');
 const  ProductReviews = require('../models/productReviews');
 const  Product = require('../models/product');
+const  calculatePopularityScore = require('../utils/calculatePopularityScore');
 const  Tag = require('../models/tag');
 const {ImageUpload} = require("../models/imageUpload");
 const express = require("express");
@@ -12,6 +13,7 @@ const mongoose = require("mongoose");
 const { error } = require('console');
 const { verifyToken, authorize } = require('../middleware/auth');
 const cloudinary = require("cloudinary").v2;
+const getRecommendedProductsCollaborative = require("../utils/getRecommendedProductsCollaborative")
 
 
 var imagesArray = [];
@@ -352,18 +354,7 @@ router.get('/homepage', async (req, res) => {
 
         const now = new Date();
 
-        let recommendedProducts = [];
-
-        // Fetch products for each category
-        // const topSellers = await Product.find({ 
-        //     // is_top_seller: true, 
-        //     salesCount: { $gte: thresholds.topSellers }, // Apply sales count threshold
-        //     price: { $gte: minPrice || 0, $lte: maxPrice || Number.MAX_VALUE } 
-        // })
-        //     .sort({ salesCount: -1 }) // Sort top sellers by sales count
-        //     .lean()
-        //     .limit(limit);
-
+        // fetch more popular products
         const mostPopular = await Product.find({ 
             // is_popular: true, 
             popularityScore: { $gte: thresholds.mostPopular }, // Apply popularity score threshold
@@ -374,6 +365,7 @@ router.get('/homepage', async (req, res) => {
             .limit(limit);
 
 
+        // fetch newly released products
         const newlyReleased = await Product.find({
             dateCreated: { $gte: new Date(now.setDate(now.getDate() - thresholds.newlyReleasedDays)) } // Filter products released within the threshold
         })
@@ -381,46 +373,28 @@ router.get('/homepage', async (req, res) => {
             .lean()
             .limit(limit);
 
-            const user = await User.findById(userId).populate('recentlyViewed').lean();
-            const recentlyViewed = user?.recentlyViewed || [];
+        // fetch popular products by category
+        const categories = await Category.find();
+        const categoryList = []
 
-            
-        // Fetch user-specific data if a userId is provided
-        if (userId) {
-            const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
+        // loop through each featured category to get its popular products
+        for (const category of categories) {
+            if (category.type === "mainCategory" && category.isFeatured === true) {
 
-            if (user) {
-                // Get products from purchase history and recently viewed
-                const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
-                const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
-
-                // Find related products based on purchase and viewing history
-                const relatedProducts = await Product.find({
-                    _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
-                    tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
-                }).lean();
-
-                recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
+                const products = await fetchPopularProductsByCategory(category._id, thresholds, 10);
+                categoryList.push({
+                    category: category.name,
+                    products: products
+                });
             }
         }
-    
-        // Fetch global recommended products if no specific user data
-        const globallyRecommended = await Product.find({ is_recommended: true })
-            .sort({ popularity_score: -1 })
-            .limit(limit)
-            .lean();
 
-        // Combine both sources
-        recommendedProducts = [
-            ...recommendedProducts,
-            ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
-        ];
 
     // Combine products from all categories
     const combinedProducts = [
-        {products: recentlyViewed, category: 'recentlyViewed'},
         {products: newlyReleased, category: 'newlyReleased'},
         {products: mostPopular, category: 'mostPopular'},
+        {products: categoryList, category: 'catProducts'},
         // ...topSellers.map((p) => ({ ...p, category: 'topSeller'})),
     ];
 
@@ -443,8 +417,6 @@ router.get('/homepage', async (req, res) => {
             }
         }
 
-       
-
         res.json({
             total: combinedProducts.length,
             page: parseInt(page),
@@ -457,84 +429,86 @@ router.get('/homepage', async (req, res) => {
     }
 });
 
-router.get('/recommended', async (req, res) => {
+router.get('/recommended', verifyToken, async (req, res) => {
     try {
-        const { userId, limit = 10, sort = 'popularity' } = req.query;
+        const userId = req.user.id;
+        const user = await User.findById(userId).populate("recentlyViewed purchaseHistory");
 
-        let recommendedProducts = [];
+        if (!user) return res.status(404).json({ message: "User not found" });
 
-        // Fetch user-specific data if a userId is provided
-        if (userId) {
-            const user = await User.findById(userId).populate(['recentlyViewed', 'purchaseHistory']).lean();
+        // Get product IDs from recently viewed and purchased
+        const viewedProductIds = user.recentlyViewed.map(product => product._id);
+        const purchasedProductIds = user.purchaseHistory.map(product => product._id);
 
-            if (user) {
-                // Get products from purchase history and recently viewed
-                const purchaseHistory = user.purchaseHistory.map(p => p._id.toString());
-                const recentlyViewed = user.recentlyViewed.map(p => p._id.toString());
+        // Get recommended products based on category & tags
+        let recommendedProducts = await Product.find({
+            _id: { $nin: [...viewedProductIds, ...purchasedProductIds] }, // Exclude already viewed/purchased
+            category: { $in: user.recentlyViewed.map(p => p.category) }, // Same category
+            tags: { $in: user.recentlyViewed.flatMap(p => p.tags) } // Matching tags
+        })
+        .sort({ popularityScore: -1 }) // Sort by popularity
+        .limit(10)
+        .lean();
 
-                // Find related products based on purchase and viewing history
-                const relatedProducts = await Product.find({
-                    _id: { $nin: [...purchaseHistory, ...recentlyViewed] }, // Exclude already viewed/purchased
-                    tags: { $in: user.purchaseHistory.flatMap(p => p.tags || []) },
-                }).lean();
 
-                recommendedProducts = relatedProducts.map(p => ({ ...p, category: 'related' }));
-            }
-        }
-
-        // Fetch global recommended products if no specific user data
-        const globallyRecommended = await Product.find({ is_recommended: true })
-            .sort({ popularity_score: -1 })
-            .limit(limit)
+        // If not enough recommended products, fetch popular ones
+        if (recommendedProducts.length < 10) {
+            const popularProducts = await Product.find({
+                _id: { $nin: [...viewedProductIds, ...purchasedProductIds] }
+            })
+            .sort({ popularityScore: -1 })
+            .limit(10)
             .lean();
 
-        // Combine both sources
-        recommendedProducts = [
-            ...recommendedProducts,
-            ...globallyRecommended.map(p => ({ ...p, category: 'global' })),
-        ];
-
-        // Deduplicate products by ID
-        const uniqueProducts = Array.from(
-            new Map(recommendedProducts.map(p => [p._id.toString(), p])).values()
-        );
-
-        // Sort products if requested
-        if (sort) {
-            switch (sort) {
-                case 'price_asc':
-                    uniqueProducts.sort((a, b) => a.price - b.price);
-                    break;
-                case 'price_desc':
-                    uniqueProducts.sort((a, b) => b.price - a.price);
-                    break;
-                case 'popularity':
-                    uniqueProducts.sort((a, b) => b.popularityScore - a.popularityScore);
-                    break;
-                case 'sales':
-                    uniqueProducts.sort((a, b) => b.sales_count - a.salesCount);
-                    break;
-                default:
-                    return res.status(400).json({ error: 'Invalid sort parameter' });
-            }
+            recommendedProducts = [...recommendedProducts, ...popularProducts];
         }
 
-        // Limit results
-        const finalProducts = uniqueProducts.slice(0, limit);
+        res.status(200).json(recommendedProducts);
+    } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        res.status(500).json({ message: "Server error" });
+    }
+});
 
-        res.json({
-            total: uniqueProducts.length,
-            limit: parseInt(limit),
-            recommendedProducts: finalProducts,
-        });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Failed to fetch recommended products' });
+
+router.get('/recommendedCollaborative', verifyToken, async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const user = await User.findById(userId).populate("recentlyViewed purchaseHistory");
+
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        // Get products from collaborative filtering
+        const collaborativeRecommendations = await getRecommendedProductsCollaborative(userId);
+
+        // Get category & tag-based recommendations
+        let recommendedProducts = await Product.find({
+            _id: { $nin: [...user.recentlyViewed, ...user.purchaseHistory] },
+            category: { $in: user.recentlyViewed.map(p => p.category) },
+            tags: { $in: user.recentlyViewed.flatMap(p => p.tags) }
+        }).sort({ popularityScore: -1 }).limit(10).lean();
+
+        // Merge recommendations
+        let recommendedCollaboration = [...recommendedProducts, ...collaborativeRecommendations];
+
+        // If not enough recommendations, fetch popular products
+        if (recommendedCollaboration.length < 10) {
+            const popularProducts = await Product.find({
+                _id: { $nin: [...user.recentlyViewed, ...user.purchaseHistory] }
+            }).sort({ popularityScore: -1 }).limit(5).lean();
+
+            recommendedCollaboration = [...recommendedCollaboration, ...popularProducts];
+        }
+
+        res.status(200).json(recommendedCollaboration);
+    } catch (error) {
+        console.error("Error fetching recommendations:", error);
+        res.status(500).json({ message: "Server error" });
     }
 });
 
 // GET product details by ID
-router.get('/:id', async (req, res) => {
+router.get('/details/:id', async (req, res) => {
     try {
 
         const product = await Product.findById(req.params.id).
@@ -545,11 +519,9 @@ router.get('/:id', async (req, res) => {
 
         product.views += 1;
         product.lastInteraction = Date.now();
-        await product.save();
-
         product.popularityScore = calculatePopularityScore(product);
-
-
+        await product.save();
+        
         return res.status(200).send(product);
         
     } catch (error) {
@@ -557,6 +529,49 @@ router.get('/:id', async (req, res) => {
     }
 
 });
+
+
+// Add a product to recently viewed list
+router.post('/recentlyViewed/add', verifyToken, async (req, res) => {
+    try {
+        const { productId } = req.body;
+        if (!productId) {
+            return res.status(400).json({ message: "Product ID is required" });
+        }
+
+        const user = await User.findById(req.user.id);
+        if (!user) return res.status(404).json({ message: "User not found" });
+
+        let updatedRecentlyViewed = user.recentlyViewed.filter(id => id.toString() !== productId);
+        updatedRecentlyViewed.unshift(productId); // Add new product at the start
+        updatedRecentlyViewed = updatedRecentlyViewed.slice(0, 6); // Keep only the last 6 items
+
+        // Update the user document
+        await User.findByIdAndUpdate(req.user.id, { recentlyViewed: updatedRecentlyViewed }, { new: true });
+        res.status(200).json({ message: "Recently viewed updated", recentlyViewed: user.recentlyViewed });
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message });
+    }
+});
+
+//Fetch recently viewed products
+router.get('/recentlyViewed', verifyToken, async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id).populate("recentlyViewed", "name price images countInStock packagingType");
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        res.status(200).json(user.recentlyViewed);
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: error.message });
+    }
+});
+
 
 router.put('/:id', verifyToken, authorize(['admin', 'seller']), async (req, res) => {
     try {
@@ -575,8 +590,6 @@ router.put('/:id', verifyToken, authorize(['admin', 'seller']), async (req, res)
             { $set: updatedData }, // Update only fields provided in the request
             { new: true, runValidators: true } // Return updated product and validate fields
         );
-
-        console.log(updatedProduct);
 
         res.status(200).json({
             message: 'Product updated successfully',
@@ -648,121 +661,24 @@ router.get('/:productId/ratings', async (req, res) => {
     }
 });
 
+// Fetch popular products by category
+const fetchPopularProductsByCategory = async (categoryId, thresholds, limit) => {
+    try {
 
+        const products = await Product.find({ 
+            catId: categoryId,  // Ensure categoryId is an ObjectId
+            popularityScore: { $gte: thresholds.mostPopular } 
+        })
+        .sort({ popularityScore: -1 })
+        .lean()
+        .limit(limit);
 
-// router.post('/sale/:id/', async (req, res) => {
-//     try {
-//         const product = await Product.findById(req.params.id);
-//         if (!product) return res.status(404).json({ error: 'Product not found' });
-
-//         product.salesCount += req.body.quantity || 1;
-//         product.lastInteraction = Date.now();
-//         await product.save();
-
-//         product.popularityScore = calculatePopularityScore(product);
-
-
-//         res.json({ message: 'Sale count updated', product });
-//     } catch (err) {
-//         res.status(500).json({ error: 'Failed to update sales count' });
-//     }
-// });
-
-
-
-// A function to calculate product popularity score
-
-function calculatePopularityScore(product) {
-    const w1 = 0.5; // Weight for sales count
-    const w2 = 2;   // Weight for average rating
-    const w3 = 0.3; // Weight for review count
-    const w4 = 0.1; // Weight for view count
-
-    return (
-        w1 * product.salesCount +
-        w2 * product.averageRating +
-        w3 * product.reviewCount +
-        w4 * product.view_count
-    );
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// const createCategories = (categories, parentId=null) => {
-//     const categoryList = [];
-
-//     let category;
-//     if (parentId == null) {
-//         category = categories.filter((cat) => cat.parentId == undefined);
-//     }
-//     else{
-//         category = categories.filter((cat) => cat.parentId == parentId);
-//     }
-
-//     for (let cat of category){
-//         categoryList.push({
-//             _id: cat.id,
-//             name: cat.name,
-//             images: cat.images,
-//             colo: cat.color,
-//             slug: cat.slug,
-//             children: createCategories(categories, cat._id)
-//         })
-//     }
-
-//     return categoryList;
-// }
-
-// router.get('/subCat/get/count', async (req, res) => {
-//     const category = await Category.find()
-
-//     if (!category) {
-//         res.status(500).json({
-//             success: false
-//         });
-//     }
-//     else{
-//         const subCatList = [];
-//         for (cat of category) {
-//             if (cat.parentId !== undefined) {
-//                 subCatList.push(cat);
-//             }
-//         }
-
-//         res.send({
-//             categoryCount: subCatList.length,
-//         });
-//     }
-
-// });
-
-// router.get('/:id', async (req, res) => {
-//     const categoryId = req.params.id;
-
-//     const category = await Category.findById(categoryId)
-
-//     if (!category) {
-//         res.status(500).json({
-//             message: "The category wit the given id was not found."
-//         });
-//     }
-    
-//     return res.status(200).send(category);
-
-// });
-
+        return products;
+    } catch (error) {
+        console.error("Error fetching popular products:", error);
+        return [];
+    }
+};
 
 
 

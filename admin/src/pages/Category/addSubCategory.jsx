@@ -5,7 +5,7 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
-
+import StyledSelect2 from "../../components/styledSelect/StyledSelect2";
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -40,7 +40,9 @@ const AddSubCategory = () =>{
         images: [],
         color: "",
         slug: "",
-        parentId: ""
+        parentId: "",
+        isFeatured: false,
+        type: "subCategory"
     });
 
     const [previews, setPreviews] = useState([])
@@ -181,6 +183,10 @@ const AddSubCategory = () =>{
         })
     }
 
+    const handleSelectChange = (selectValue) => {
+        formFields.isFeatured = selectValue;
+    }
+
     const removeImage = async (index, imgUrl) => {
         const imgIndex = previews.indexOf(imgUrl);
         deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
@@ -265,6 +271,11 @@ const AddSubCategory = () =>{
                                     <div className="form-group">
                                         <h6>Sub Category Name</h6>
                                         <input type="text" name="name" onChange={changeInput}   />
+                                    </div>
+
+                                    <div className="form-group">
+                                        <h6>Feature Category</h6>
+                                        <StyledSelect2  onSelectChange={handleSelectChange} selectData={["true", "false"]} defaultOption={"false"}></StyledSelect2>
                                     </div>
 
                                     <div className="imgUploadBox d-flex align-items-center">

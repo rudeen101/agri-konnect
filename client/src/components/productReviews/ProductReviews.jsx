@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "./productReviews.css";
 import { fetchDataFromApi, postDataToApi, deleteDataFromApi, updateDataToApi } from "../../utils/apiCalls";
+import { MyContext } from "../../App";
 
 
 const ProductReviews = ({ productId, user }) => {
     const [reviews, setReviews] = useState([]);
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(1);
     const [comment, setComment] = useState("");
     const [editingReview, setEditingReview] = useState(null);
     const [error, setError] = useState(null);
+    const context = useContext(MyContext);
 
     useEffect(() => {
         // axios.get(`/api/reviews/${productId}`)
@@ -17,7 +19,6 @@ const ProductReviews = ({ productId, user }) => {
 
         fetchDataFromApi(`/api/productReviews/${productId}`)
         .then((res) =>{
-            console.log("reviews", res);
             setReviews(res);
         })
         .catch(err => console.error("Error fetching reviews:", err));
@@ -39,11 +40,22 @@ const ProductReviews = ({ productId, user }) => {
 
             const postReviews = { productId, rating, comment }
 
-            postDataToApi(`/api/productReviews/`, postReviews)
+            postDataToApi(`/api/productReviews/add`, postReviews)
             .then((res) => {
-                setReviews([...reviews, res.review]);
-                setRating(0);
-                setComment("");
+                if(res.error) {
+                    setRating(1);
+                    setComment("");
+                    context.setAlertBox({
+                        open: true,
+                        msg: res.message,
+                        error: true
+                    })
+                } else{
+                    console.log("reviews", res)
+                    setReviews([...reviews, res.review]);
+                 
+                }
+      
             })
         } catch (err) {
             setError(err.response?.data?.message || "Error submitting review");
@@ -55,21 +67,14 @@ const ProductReviews = ({ productId, user }) => {
         e.preventDefault();
 
         try {
-            // const { data } = await axios.put(`/api/reviews/${editingReview._id}`, { rating, comment }, { headers });
-
-            // setReviews(reviews.map(r => (r._id === editingReview._id ? data.review : r)));
-            // setEditingReview(null);
-            // setRating(0);
-            // setComment("");
 
             const reviewData = { rating, comment }
 
-            
             updateDataToApi(`/api/productReviews/${editingReview._id}`, reviewData)
             .then((res) => {
-                setReviews(reviews.map(r => (r._id === editingReview._id ? res.review : r)));
+                setReviews(reviews.map(review => (review._id === editingReview._id ? res.review : review)));              
                 setEditingReview(null);
-                setRating(0);
+                setRating(1);
                 setComment("");
             });
         } catch (err) {
@@ -78,17 +83,14 @@ const ProductReviews = ({ productId, user }) => {
     };
 
     // Delete a Review
-    const deleteReview = async (reviewId) => {
+    const deleteReview = (reviewId) => {
         try {
-            // await axios.delete(`/api/reviews/${reviewId}`, { headers });
-
-            // setReviews(reviews.filter(r => r._id !== reviewId));
 
             deleteDataFromApi(`/api/productReviews/${reviewId}`)
-            .then((res) => {
-                setReviews(reviews.filter(r => r._id !== reviewId));
+                .then((res) => {
+                    setReviews(reviews.filter(review => review._id !== reviewId));
+                });
 
-            });
         } catch (err) {
             setError("Error deleting review");
         }
@@ -96,22 +98,22 @@ const ProductReviews = ({ productId, user }) => {
 
     return (
         <div className="review-section">
-            <h3>Customer Reviews</h3>
+            <h4 className="hd mb-3">Customer Reviews</h4> <span>(Only verified buyer can add review.)</span>
             {reviews.length === 0 ? <p>No reviews yet.</p> : (
                 reviews.map((review, index) => (
                     <div key={index} className="review">
-                        <strong>{review.user.name}</strong>
-                        <p>Rating: {review.rating} ⭐</p>
-                        <p>{review.comment}</p>
+                        <strong>{review?.user.name}</strong>
+                        <p>Rating: {review?.rating} ⭐</p>
+                        <p>{review?.comment}</p>
 
-                        {user && user.id === review.user._id && (
+                        {user && user.userId === review?.user._id && (
                             <div>
-                                <button onClick={() => {
+                                <button className="btn-g" onClick={() => {
                                     setEditingReview(review);
-                                    setRating(review.rating);
-                                    setComment(review.comment);
-                                }}>Edit</button>
-                                <button onClick={() => deleteReview(review._id)}>Delete</button>
+                                    setRating(review?.rating);
+                                    setComment(review?.comment);
+                                }}>Edit</button> &nbsp;
+                                <button className="btn-g" onClick={() => deleteReview(review?._id)}>Delete</button>
                             </div>
                         )}
                     </div>
@@ -120,7 +122,7 @@ const ProductReviews = ({ productId, user }) => {
 
             {user && (
                 <form onSubmit={editingReview ? updateReview : submitReview}>
-                    <h4>{editingReview ? "Edit Your Review" : "Write a Review"}</h4>
+                    <h4 className="hd mb-3 mt-3">{editingReview ? "Edit Your Review" : "Write a Review"}</h4>
                     {error && <p style={{ color: "red" }}>{error}</p>}
                     <select value={rating} onChange={(e) => setRating(e.target.value)}>
                         <option value="0">Select Rating</option>
@@ -131,7 +133,7 @@ const ProductReviews = ({ productId, user }) => {
                         <option value="5">5 - Excellent</option>
                     </select>
                     <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Write your review"></textarea>
-                    <button type="submit">{editingReview ? "Update Review" : "Submit Review"}</button>
+                    <button className="btn-g btn-large" type="submit">{editingReview ? "Update Review" : "Submit Review"}</button>
                 </form>
             )}
         </div>

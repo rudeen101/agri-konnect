@@ -5,7 +5,7 @@ import { MdOutlineFavorite } from "react-icons/md";
 import { IoCartOutline } from "react-icons/io5";
 
 
-import "./product.css";
+import "./productListingCard.css";
 import img from "../../assets/images/cabbage.jpg"
 import { Link } from 'react-router-dom';
 // import { postDataToApi, fetchDataFromApi } from "../../utils/api2";
@@ -14,7 +14,7 @@ import { MyContext } from "../../App";
 import WishlistBtn from '../wishlistBtn/WishlistBtn';
 import ShareBtn from '../shareBtn/ShareBtn';
 
-const HomeProductCard = ({ productData }) => {
+const ProductListingCard = ({ productData }) => {
     const [isAddedToList, setIsAddedToList] = useState(false);
     const [addedToWishList, setAddedToWishList] = useState(false);
     const [inCart, setInCart] = useState(false);
@@ -83,7 +83,7 @@ const HomeProductCard = ({ productData }) => {
     // };
 
     return (
-        <Card className="product-card">
+        <Card className="productListingCard product-card">
             <Link to={`/product/${productData?._id}`}>
                 <CardMedia className="product-media" image={productData?.images[0]} />
             </Link>
@@ -93,23 +93,28 @@ const HomeProductCard = ({ productData }) => {
             </div>
 
             <CardContent>
-                <div className="product-title">{productData?.name}</div>
-                <div className="product-price">${productData?.price}/<span className='pricePckage'>{productData?.packagingType}</span></div>
-                {/* <div className="product-discount">Discount: 15% Off</div> */}
-                <div className="product-stock">Instock: {productData?.countInStock} {productData?.packagingType}</div>   
-                <div className="product-actions">
-                    {/* <button>Buy Now</button> */}
-
-                    
-                    {/* Cart Toggle Button */}
-                    {/* <button onClick={handleCartToggle} className={`cartBtn ${inCart ? "active" : ""}`}>
-                        <IoCartOutline />{inCart ? "Added to Cart" : "Add to Cart"}
-                    </button> */}
-                    {/* <button>Add to Cart</button> */}
+            <div class="product-title">Organic Farm Fresh Apples</div>
+            <div class="product-description">Delicious, fresh apples grown sustainably and delivered directly to you.</div>
+            {/* <div class="product-specs">Specifications: 1 lb per bag, Non-GMO, Freshly packed</div> */}
+            <div class="product-supplier">Supplier: Green Orchards Ltd. (<span>Verified</span>)</div>
+            {/* <div class="product-category">Category: Fresh Fruits</div> */}
+            {/* <div class="product-min-order">Minimum Order: 100 lbs</div> */}
+            <div class="product-price"><span>$5.00</span> $3.99 / lb</div>
+            {/* <div class="product-discount">Discount: 10% Off</div> */}
+            <div class="product-rating">Rating: ★★★★☆ (4.5/5)</div>
+            <div class="product-delivery">Delivery: Get it by <strong>Monday, Jan 29</strong></div>
+            <div class="product-delivery">Deliver to: <strong>Monrovia, Liberia</strong></div>
+            <div class="cardAtions">
+                <div className="btnWrapper">
+                    <button className='actionBtn'>Buy Now</button>
+                    <button className='actionBtn'  onClick={() => context?.addToCart(productData)}>
+                        {context?.isInCart(productData._id) ? "In Cart" : "Add to Cart"}
+                    </button>
                 </div>
+            </div>
             </CardContent>
         </Card>
     );
 };
 
-export default HomeProductCard;
+export default ProductListingCard;

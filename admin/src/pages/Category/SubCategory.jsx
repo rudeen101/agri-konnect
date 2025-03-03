@@ -104,6 +104,7 @@ const SubCategory = () =>{
                                 <tr>
                                     <th style={{width: '100px'}}>IMAGE</th>
                                     <th>CATEGORY</th>
+                                    <th>ISFEATURED</th>
                                     <th>SUB CATEGORY</th>
                                 </tr>
                             </thead>
@@ -130,6 +131,9 @@ const SubCategory = () =>{
                                                     <td>
                                                         {category?.name}
                                                     </td>
+                                                    <td>
+                                                    {category?.isFeatured?.toString()}
+                                                </td>
                                                     <td className="d-flex flex-gap-20">
                                                         {
                                                             category?.children?.length !== 0 && category?.children?.map((subCate, index) => {

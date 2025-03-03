@@ -3,9 +3,8 @@ import "./products.css";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-
+import { useNavigate } from "react-router-dom";
 import { MyContext } from "../../App";
-
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormHelperText from '@mui/material/FormHelperText';
@@ -14,13 +13,6 @@ import Select from '@mui/material/Select';
 import { Button, Rating, CircularProgress } from "@mui/material/";
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 import MultiSelectTags from "../../components/multiSelect/MultiSelect";
-
-
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-
 import Avatar from "../../assets/images/rudeen.jpg";
 import UserAvatarImg from "../../components/userAvatarImg/userAvatarImg";
 import { FaReply } from "react-icons/fa";
@@ -28,7 +20,6 @@ import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, up
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-// import { uploadImage } from "../../utils/api2";
 
 
 const ProductUpload = () =>{
@@ -37,24 +28,17 @@ const ProductUpload = () =>{
     const [subCategoryData, setSubCategoryData] = useState([]);
     const [ratingValue, setRatingValue] = useState(1);
     const [isFeaturedVal, setIsFeaturedVal] = useState([]);
-    const [productWeight, setProductWeight] = useState([]);
-    const [productSize, setProductSize] = useState([]);
-
     const [tagName, setTagName] = useState([]);
     const [tagData, setTagData] = useState([]);
-  
-    const [productWeightData, setProductWeightData] = useState([]);
-    const [productSizeData, setProductSizeData] = useState([]);
-
-
-
-    const [isLoading, setIsLoading] = useState(false);
+     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [previews, setPreviews] = useState([]);
     const formData = new FormData();
 
 
     const context = useContext(MyContext);
+    const navigate = useNavigate();
+
 
 
     const [formFields, setFormFields] = useState({
@@ -72,7 +56,6 @@ const ProductUpload = () =>{
         rating: 0,
         isFeatured: null,
         discount: null,
-        // size: [],
         productWeight: [],
         packagingType: [],
         location: "",
@@ -116,21 +99,10 @@ const ProductUpload = () =>{
                 })
             })
         });
-
-        // fetchDataFromApi('/api/productWeight').then((res) => {
-        //     console.log("res", res)
-        //     setProductWeight(res)
-        // });
-
-        // fetchDataFromApi('/api/productSize').then((res) => {
-        //     setProductSize(res)
-        // });
-   
     }, []);
 
 
     const selectCategory  = (catName, catId) => {
-        console.log(catId)
         formFields.catName = catName;
         formFields.category = catId;
         formFields.catId = catId;
@@ -138,7 +110,6 @@ const ProductUpload = () =>{
         setTagName([])
 
         fetchDataFromApi(`/api/tag/category/${catId}`).then((res) => {
-            console.log("catTag",res.tags)
             context.setProgress(30)
             setTagData(res.tags);
             context.setProgress(100)
@@ -154,7 +125,6 @@ const ProductUpload = () =>{
     }
 
     const handleChangeCategory  = (event) => {
-        console.log("testing..", event.target.value);
         setCategoryVal(event.target.value);
     }
 
@@ -241,7 +211,6 @@ const ProductUpload = () =>{
                 
             }
         } catch (error) {
-            console.log(error)
         }
 
         uploadImage(apiEndPoint, formData).then((res) => {
@@ -442,9 +411,8 @@ const ProductUpload = () =>{
 
             deleteDataFromApi('/api/imageUpload/deleteAllImages');
 
-            // history('/product/listing')
+            navigate('/product/listing')
         }).catch((error)=>{
-            console.log("-------",error)
         });
     }
 

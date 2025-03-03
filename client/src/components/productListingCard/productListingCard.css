@@ -1,0 +1,135 @@
+.productListingCard {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease-in-out;
+}
+
+.productListingCard .product-media {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease-in-out;
+}
+
+.product-card .card-body {
+    padding: 1em;
+}
+
+
+
+.product-card .product-title {
+    font-size: 1em;
+    font-weight: bold;
+    color: var(--charcoal);
+    margin-bottom: 0.2em;
+}
+
+.product-card .product-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* Limit to 2 lines */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: 3em; /* Adjust based on line height */
+    line-height: 1.5em; /* Set line height */
+    font-size: 0.9em;
+    color: var(--dark-teal);
+    margin-bottom: 0.5em;
+}
+
+.product-card .product-price {
+    /* font-size: 1.1em; */
+    color: var(--soft-coral);
+    font-weight: bold;
+}
+
+.product-card .product-price span {
+    font-size: 0.8em;
+    color: gray;
+    text-decoration: line-through;
+    font-weight:400;
+}
+
+
+.product-card .product-rating {
+    margin-top: 0.5em;
+    margin-bottom: 1em;
+    color: var(--golden-yellow);
+    font-size: 0.9em;
+}
+
+.product-card .product-supplier {
+    font-size: 0.85em;
+    color: var(--charcoal);
+    margin-bottom: 0.5em;
+}
+.product-card .product-supplier span {
+    color: var(--dark-teal);
+}
+
+.product-card .product-delivery {
+    font-size: 0.85em;
+    color: var(--charcoal);
+    margin-bottom: .8em;
+}
+
+.cardAtions {
+    display: none !important; 
+}
+
+/* Show the button when hovering over the product card */
+.productListingCard:hover .cardAtions {
+    display: inline-block !important
+}
+
+.cardAtions .btnWrapper {
+    display: flex !important;
+    gap: 1em !important;
+    justify-content: center !important;
+   
+}
+
+
+.product-card .actionBtn {
+    padding: 0.5em 1em;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9em;
+    background-color: var(--primary-teal) !important;
+    color: var(--white);
+    transition: background-color 0.3s ease;
+}
+
+.product-card .actionBtn:hover {
+    background-color: var(--dark-teal) !important;
+}
+
+footer {
+    background-color: var(--dark-teal);
+    color: var(--light-teal);
+    text-align: center;
+    padding: 1.5em 1em;
+    margin-top: 2em;
+    position: relative;
+}
+
+footer p {
+    margin: 0.5em 0;
+}
+
+
+
+.product-card .card-body:hover .cardAtions {
+    display: block !important;
+}
+
+.css-1lt5qva-MuiCardContent-root:last-child {
+    padding-bottom: 13px !important;
+}
+
+@media (max-width: 768px) {
+
+    .product-card {
+        width: 90%;
+    }
+}
