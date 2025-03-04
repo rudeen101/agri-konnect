@@ -48,7 +48,7 @@ const Header = () => {
             fetchDataFromApi(`/api/search?q=${searchInput.current.value}`).then((res) => {
                 context.setSearchedItems(res);
                 setTimeout(() => {
-                    navigate("/search");
+                    navigate(`/search/${searchInput.current.value}`);
                     setIsLoading(false);
                     searchInput.current.value = "";
                 }, 2000);

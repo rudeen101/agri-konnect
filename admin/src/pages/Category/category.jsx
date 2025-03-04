@@ -1,14 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./category.css";
-import DashboardBox from "../../components/dashboardBox/DashboardBox";
-import { FaUserCircle } from "react-icons/fa";
-import { IoMdCart } from "react-icons/io";
-import { MdShoppingBag } from "react-icons/md";
-import { GiStarsStack } from "react-icons/gi";
 import { Button, Pagination } from "@mui/material";
-import { HiDotsVertical } from "react-icons/hi";
-import { Chart } from "react-google-charts";
-import { FaEye } from "react-icons/fa";
 import { FaPencilAlt } from "react-icons/fa";
 import { MdDelete } from "react-icons/md";
 import food from "../../assets/images/food.jpg"
@@ -17,12 +9,6 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormHelperText from '@mui/material/FormHelperText';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 import { Link } from "react-router-dom";
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
 

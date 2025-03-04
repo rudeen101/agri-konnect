@@ -366,7 +366,7 @@ const App = () => {
 					<Route exact={true} path="/wishList" element={<WishList />} />
 					<Route exact={true} path="/login" element={<Login />} />
 					<Route exact={true} path="/signup" element={<Signup />} />
-					<Route exact={true} path="/search" element={<SearchPage />} />
+					<Route exact={true} path="/search/:query" element={<SearchPage />} />
 
 
 					 {/* Protected Routes */}

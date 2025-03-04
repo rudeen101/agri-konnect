@@ -1,83 +1,30 @@
-import React, { useState, useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import "./wishList.css";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 import { Button, Rating } from "@mui/material";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import wishListImg from "../../assets/images/wishlist2.png";
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import QuantityBox from "../../components/quantityBox/quantityBox";
 import { MyContext } from "../../App";
-import {fetchDataFromApi, deleteDataFromApi } from "../../utils/apiCalls";
 import { FaHome } from "react-icons/fa";
 
 const WishList = ({userId}) => {
-    const [cartData, setCartData] = useState([]);
-    const [productQuantity, setProductQuantity] = useState();
-    const [changeQuantity, setChangeQuantity] = useState(0);
-    const [cartFields, setCartFields] = useState({});
-    const [isLoading, setIsLoading] = useState(false);
-    const [isLogin, setIsLogin] = useState();
-    const [user, setUser] = useState();
-    const [wishListData, setWishListData] = useState([]);
 
     const context = useContext(MyContext);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        window.scrollTo(0,0);
-        const token = localStorage.getItem("accessToken");
-
-		if (token !== "" && token !== undefined && token !== null) {
-            setIsLogin(true);
-            setWishListData(context.wishListData);
-        } else{
-            navigate("/login");
-        }
-
-    },[]);
-
-    useEffect(() => {
-
-    })
-
-    const removeItem = (id) => {
-        setIsLoading(true);
-
-        deleteDataFromApi(`/api/wishList/${id}`).then((res) => {
-            context.setAlertBox({
-                open: true,
-                error: false,
-                msg: "Item deleted successfully!"
-            })
-
-            setIsLoading(false);
-            fetchDataFromApi(`/api/wishList?userId=${context?.userData.userId}`).then((res) => {
-                    context?.setWishListData(res);
-            });
-        })
-
-     
-
-    }
-
 
     return (
         <>
             <div className="breadcrumbWrapper mb-4">
-                <div className="container-fluid">
-                    <ul className="breadcrumb breadcrumb2 mb-0">
-                        <li>
-                            <Link ro={"/"}>Home</Link>
-                        </li>
-                        <li>
-                            <Link ro={"/"}>Shop</Link>
-                        </li>
-                        <li>
-                            <Link ro={"/"}>Cart</Link>
-                        </li>
-                    </ul>
-                </div>
+                <ul className="breadcrumb breadcrumb2 mb-0">
+                    <li>
+                        <Link to={"/"}>Home</Link>
+                    </li>
+                    <li>
+                        <Link to={"#"}>Acccount</Link>
+                    </li>
+                    <li>
+                        <Link to={"#"}>Wishlist</Link>
+                    </li>
+                </ul>
             </div>
 
             <section className="cartSection mb-5">
@@ -86,14 +33,14 @@ const WishList = ({userId}) => {
                         <div className="listWrapper">
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <div className="left">
-                                <p>You have<span className="text-g"><b>{context.wishListData?.data?.length}</b></span> item(s) in your wishlist</p>
+                                <p>You have <span className="text-g"><b>{context.wishlist?.items?.length}</b></span> item(s) in your wishlist</p>
                                     <h4 className="hd mb-0">Your Wishlist</h4>
                                 </div>
 
                                 {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
                             </div>
                             {
-                                context.wishListData?.data?.length !== 0 ? (
+                                context?.wishlist?.items?.length !== 0 ? (
                                     <div className="cartWrapper">
                                         <div className="table-responsive">
                                             <table className="table">
@@ -108,24 +55,24 @@ const WishList = ({userId}) => {
         
                                                 <tbody>
                                                     {
-                                                        wishListData?.data?.length !== 0 && wishListData?.data?.map((item, index) => {
+                                                        context?.wishlist?.items?.length !== 0 && context?.wishlist?.items?.map((item, index) => {
                                                             return(
                                                                 <tr key={index}>
                                                                     <td width="70%">
                                                                         <div className="d-flex align-items-center">
                                                                             <div className="img">
                                                                                 <Link to={`/product/${item.productId}`}>
-                                                                                    <img src={item?.image} alt="" className="w-100" />
+                                                                                    <img src={item?.product?.images[0]} alt="" className="w-100" />
                                                                                 </Link>
                                                                             </div>
                     
                                                                             <div className="info pl-4">
                                                                                 <Link to={`/product/${item.productId}`}>
-                                                                                    <h6>{item?.productName?.substr(0,100) + "..."}</h6>
+                                                                                    <h6>{item?.product?.name?.substr(0,100) + "..."}</h6>
                                                                                 </Link>
                                                                                 <div className="d-flex justify-items-center">
-                                                                                    <Rating name="half-rating-read" value={parseFloat(item?.rating)} precission={0.5} readOnly />
-                                                                                    <span>({parseFloat(item?.rating)})</span>
+                                                                                    <Rating name="half-rating-read" value={parseFloat(item?.product?.rating)} precission={0.5} readOnly />
+                                                                                    <span>({parseFloat(item?.product?.rating ? item?.product?.rating : 0)}/5)</span>
                                                                                 </div>
                                                                             
                                                                             </div>
@@ -133,10 +80,10 @@ const WishList = ({userId}) => {
                                                                     </td>
                     
                                                                     <td width="20%">  
-                                                                        <span className="">{item.price}</span>
+                                                                        <span className="">${item?.product?.price}</span>
                                                                     </td>
                                                                                       
-                                                                    <td width="10%"><span className="cursor" onClick={() => removeItem(item?._id)}><DeleteOutlineOutlinedIcon /></span></td>
+                                                                    <td width="10%"><span className="cursor" onClick={() => context?.removeFromWishlist(item?._id)}><DeleteOutlineOutlinedIcon /></span></td>
                                                                 </tr>
                                                             )
                                                         })

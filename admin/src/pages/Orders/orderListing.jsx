@@ -1,6 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./order.css";
-import DashboardBox from "../../components/dashboardBox/DashboardBox";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdCart } from "react-icons/io";
 import { MdShoppingBag } from "react-icons/md";
@@ -178,16 +177,6 @@ const OrderListing = () =>{
                         label="Order List"
                         />
                     </Breadcrumbs>
-                </div>
-
-                <div className="row dashboardBoxContainerRow">
-                    <div className="">
-                        <div className="productListing dashboardBoxContainer d-flex">
-                            <DashboardBox color={["#1da256", "#48d483"]}  icon={<FaUserCircle></FaUserCircle>} grow={true}/>
-                            <DashboardBox color={["#c012e2", "#eb64fe"]}  icon={<IoMdCart></IoMdCart>}/>
-                            <DashboardBox color={["#2c78e5", "#60aff5"]}  icon={<MdShoppingBag></MdShoppingBag>}/>
-                        </div>
-                    </div>
                 </div>
 
                 <div className="card shadow border-0 p-3 mt-4">

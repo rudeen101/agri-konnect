@@ -7,7 +7,8 @@ const ProductInspirations = ({products}) => {
     return (
         <div className="container-fluid inspirations-section">
                 <div  className="inspiration-card">
-                    <h3>Trending Now</h3>
+                    <br />
+                    <h4 className="mt-5 ">Insprational Product Listing..</h4>
                     {/* <p>{inspiration.description}</p> */}
                     <div className="productListing">
                         {products?.map((product, index) => (

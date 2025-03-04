@@ -214,7 +214,6 @@ const Home = () => {
                                 <section className="homeProducts homeProductsSection2 pt-0">
                                     <ProductSliderContainer products={category?.products} title={category?.category}></ProductSliderContainer>
                                 </section>
-    
                             }
                         </>
                     ))
@@ -223,7 +222,7 @@ const Home = () => {
 
 
             {/*  products inspiration */}                       
-                       <section className="homeProducts homeProductsSection2 pt-0">
+            <section className="homeProducts homeProductsSection2 pt-0">
                 {
                     context?.recommendedCollaborative?.length !== 0 &&
                     <section className="homeProducts homeProductsSection2 pt-0">

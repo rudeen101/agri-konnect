@@ -1,0 +1,28 @@
+/* Sidebar Styles */
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+  }
+  
+  .sidebar .MuiDrawer-paper {
+    width: 240px;
+    box-sizing: border-box;
+    /* background-color: #1e1e2d;  */
+    color: #fff; /* White text */
+  }
+  
+  .sidebar .MuiListItemIcon-root {
+    min-width: 40px;
+  }
+  
+  .sidebar .MuiListItemButton-root:hover {
+    background-color: #333; /* Hover background */
+  }
+  
+  .sidebar .MuiCollapse-root {
+    background-color: #2a2a3a; /* Darker background for dropdown */
+  }
+  
+  .sidebar .MuiDivider-root {
+    background-color: #444; /* Divider color */
+  }

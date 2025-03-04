@@ -98,20 +98,23 @@ const ProductListing = () =>{
     }
 
     return(
-        <section className="listingPage">
-            <div className="container-fluid">
-                <div className="breadcrumb flex-column">
-                    <h3 className="">{currentCategory.length !== 0 && currentCategory?.name}</h3>
-                    <ul className="list list-inline mb-0">
-                        <li className="list-inline-item">
-                            <Link to={""}>Home</Link>
-                        </li>
-                        <li className="list-inline-item">
-                            <Link to={`/category/${id}`}>{currentCategory.length !== 0 && currentCategory?.name}</Link>
-                        </li>
-                    </ul>
-                </div>
+        <>
+             <div className="breadcrumbWrapper mb-4">
+                <ul className="breadcrumb breadcrumb2 mb-0">
+                    <li>
+                        <Link to={"/"}>Home</Link>
+                    </li>
+                    <li>
+                        <Link to={"#"}>Category</Link>
+                    </li>
+                    <li>
+                        <Link to={"#"}>{currentCategory?.name}</Link>
+                    </li>
+                </ul>
+            </div>
 
+            <section className="listingPage">
+            <div className="container-fluid">
                 <div className="listingData">
                     <div className="row">
                         <div className="col-md-3 sidebarContainer">
@@ -172,7 +175,7 @@ const ProductListing = () =>{
                                                 })
                                             }
                                         </div>   
-                                   
+                                    
                                 }
                             
                                 {/* <div className="item">
@@ -208,6 +211,8 @@ const ProductListing = () =>{
                 </div>
             </div>
         </section>
+        </>
+
     )
 }
 

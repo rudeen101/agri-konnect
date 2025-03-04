@@ -1,5 +1,4 @@
 import React, { useState, useContext, useEffect } from "react";
-import DashboardBox from "../../components/dashboardBox/DashboardBox";
 import { FaUserCircle } from "react-icons/fa";
 import { IoMdCart } from "react-icons/io";
 import { MdShoppingBag } from "react-icons/md";
