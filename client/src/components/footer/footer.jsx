@@ -1,7 +1,7 @@
 import React from "react";
 import "./footer.css";
 import icon from "../../assets/images/quality.png";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/logo3.png";
 import googlePlay from "../../assets/images/google-play.png";
 import appStore from "../../assets/images/app-store.png";
 import orangeMoney from "../../assets/images/orange-money.png";
@@ -25,7 +25,7 @@ import image from "../../assets/images/fruits-vegetables .png"
 const Footer = () =>{
     return (
         <>
-            <div className="newsletterSection mt-5">
+            {/* <div className="newsletterSection mt-5">
                 <div className="container-fluid">
                     <div className="box d-flex align-items-center">
                         <div className="info">
@@ -40,10 +40,10 @@ const Footer = () =>{
                         </div>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             <div className="footerContainer">
-                <div className="footerBoxes">
+                {/* <div className="footerBoxes">
                     <div className="container-fluid">
                         <div className="row">
                             <div className="col">
@@ -94,20 +94,20 @@ const Footer = () =>{
                         
                         </div>
                     </div>
-                </div>
+                </div> */}
 
                 <footer>
 
-                    <div className="container-fluid mt-4">
+                    <div className="container-fluid">
                         <div className="row">
                             <div className="col-md-3 part1">
-                                <a href="#"><img src={logo} alt="Site logo" className="w-50" /></a>
+                                <a href="#"><img src={logo} alt="Site logo" className="footerLogo" /></a>
                                 <br /> 
-                                <p className="description">Agri-Konnect, a digital platform that connects farmers directly with buyers, ensuring fair pricing and reliable access to fresh produce.</p>
+                                <p className="">Agri-Konnect, a digital platform that connects farmers directly with buyers, ensuring fair pricing and reliable access to fresh produce.</p>
 
-                                <p className="address mt-4"><LocationOnOutlinedIcon /><strong>Address</strong>: Suakoko, bong County, Liberia</p>
+                                <p className="address mt-4"><LocationOnOutlinedIcon /><strong>Address</strong> Oldest Congo, Tubman Boulevard, Opposit NVTI</p>
                                 {/* <p><HeadphonesOutlinedIcon /><strong>Call Us</strong>: (+231) 777-989-777</p> */}
-                                <p className="address"><EmailOutlinedIcon /><strong>Email</strong>: exampleemail@gmail.com</p>
+                                <p className="address"><EmailOutlinedIcon /><strong>Email</strong>: agriKonnect231@gmail.com</p>
                                 {/* <p><AccessTimeOutlinedIcon /><strong>Hours</strong>: 10:00 - 18:00, Mon - Sat</p> */}
                             </div>
 
@@ -121,7 +121,6 @@ const Footer = () =>{
                                             <li><a href="#">Return & Refund policy</a></li>
                                             <li><a href="#">Terms &amp; Conditions</a></li>
                                             <li><a href="#">Contact Us</a></li>
-
                                         </ul>
                                     </div>
                                     <div className="col">
@@ -147,20 +146,23 @@ const Footer = () =>{
 
                             <div className="col-md-3 part3" >
                                 <h4 className="mb-3">Install App</h4>
-                                
-                                <p>From App Store or Google Play</p>
 
-                                <div className="d-flex installAppContainer mt-1">
-                                    <a href="#"><img src={googlePlay} alt="app store image" className="" /></a>
-                                    <a href="#"><img src={appStore} alt="app store image" className="mx-2"/></a>
+                                <div className="paymentContainer">
+                                    <p>From App Store or Google Play</p>
+                                    <div className="d-flex installAppContainer mt-1">
+                                        <a href="#"><img src={googlePlay} alt="app store image" className="" /></a>
+                                        <a href="#"><img src={appStore} alt="app store image" className="mx-2"/></a>
+                                    </div>
                                 </div>
-
+                             
                                 <br />
-    
-                                <p>Secure Payment Gateway</p>
-                                <div className="d-flex paymentMethodContainer">
-                                    <a href="#"><img src={mtnOrange} alt="app store image" className="w-100 h-60"/></a>
+                                <div className="paymentContainer">
+                                    <p>Secure Payment Gateway</p>
+                                    <div className="d-flex paymentMethodContainer">
+                                        <a href="#"><img src={mtnOrange} alt="app store image" className="w-100 h-60"/></a>
+                                    </div>
                                 </div>
+                              
                         
                             
                             </div>
@@ -170,7 +172,7 @@ const Footer = () =>{
 
                         <div className="row lastSection">
                             <div className="col-md-3">
-                                <p>@ 2024, AgriKonnect All rights reserved</p>
+                                <p>@ 2025, AgriKonnect All rights reserved</p>
                             </div>
 
                             <div className="col-md-6">
@@ -178,7 +180,7 @@ const Footer = () =>{
                                     <div className="phone d-flex align-items-center ml-auto mx-5"> 
                                         <span><PhoneInTalkIcon className="phoneIcon"/></span>
                                         <div className="info ml-3">
-                                            <h3 className="mb-0">+231 888 999</h3>
+                                            <h3 className="mb-0">(+231) 777-967-844</h3>
                                             <p className="mt-0 mb-0">WhatsApp Chat</p>
                                         </div>
                                     </div>
@@ -186,7 +188,7 @@ const Footer = () =>{
                                     <div className="phone d-flex align-items-center ml-auto mx-5"> 
                                         <span><PhoneInTalkIcon className="phoneIcon"/></span>
                                         <div className="info ml-3">
-                                            <h3 className="mb-0">+231 888 999</h3>
+                                            <h3 className="mb-0">(+231) 888-642-680</h3>
                                             <p className="mt-0 mb-0">24/7 Support Center</p>
                                         </div>
                                     </div>

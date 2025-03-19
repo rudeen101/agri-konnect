@@ -1,3 +1,14 @@
+:root {
+    --primary-teal: #00a99d;
+    --dark-teal: #00776e;
+    --light-teal: #66e2d6;
+    --golden-yellow: #f2a900;
+    --soft-coral: #ff6f61;
+    --charcoal: #2f2f2f;
+    --light-gray: #f4f4f4;
+    --white: #ffffff;
+}
+
 .newsletterSection {
     width: 100%;
     height: auto;
@@ -48,7 +59,8 @@
 }
 .footerContainer .footerBoxes .row{
    display: flex;
-   gap: 10px
+   gap: 10px;
+   margin-top: 50px !important
 }
 .footerContainer .footerBoxes .box{
     background-color: #fff;
@@ -80,6 +92,7 @@
 footer p, footer a{
     font-size: 14px;
     margin-bottom: 0px;
+    color: var(--white)
 
 }
 footer p.address{
@@ -91,13 +104,29 @@ footer p.address{
 
 footer{
     margin-top: 50px;
-    padding: 10px 0px;
-    background: #37475a;
-    color: white
+    padding: 30px 0px;
+    background: var(--dark-teal);
+    color: white !important;
+}
+footer .part1 .footerLogo {
+    width: 50px;
+    background-color: var(--white);
+    border-radius: 50%;
+    opacity: 1 !important
+
+}
+footer a, p {
+    opacity: 1 !important
+}
+footer .part1 {
+    color: white !important;
+    font-size: 20px;
+
 }
 footer .part1 svg{
-    color: #3bb77e !important;
-    font-size: 17px
+    color: var(--light-teal) !important;
+    font-size: 17px;
+
 }
 footer h4{
     font-weight: 700;
@@ -113,7 +142,7 @@ footer .part2 ul li{
     margin-bottom: 10px;
 }
 footer .part2 ul li a{
-    color: #000;
+    color: var(--white);
     /* opacity: 0.8; */
     font-size: 14px;
     transition: all 0.2s ease-in-out;
@@ -121,7 +150,7 @@ footer .part2 ul li a{
 
 }
 footer .part2 ul li a:hover{
-    color: #3bb77e !important;
+    color: var(--light-teal) !important;
     /* opacity: 1; */
     padding-left: 5px;
 }
@@ -137,11 +166,11 @@ footer .part2 ul li a:hover{
 .phone h3{
     font-size: 16px !important;
     line-height: 15px !important;
-    color: #3bb77e;
+    color: #ffffff;
 }
 .phone p{
     font-size: 13px !important;
-    /* opacity: 0.8; */
+    color: var(--light-teal)
 }
 
 footer .lastSection{
@@ -165,7 +194,7 @@ footer .lastSection .part3 ul li a{
     align-items: center;
     width: 25px;
     height: 25px;
-    background-color: #3bb77e;
+    background-color: var(--primary-teal);
     border-radius: 50%;
     transition: all .03s ease-in-out !important;
 }
@@ -175,15 +204,23 @@ footer .lastSection .part3 ul li a svg{
 }
 
 footer .lastSection ul li a:hover{
-    background-color: rgb(51, 51, 51);
+    background-color: var(--light-teal);
 }
 
 .installAppContainer a img{
+    margin-top: 5px;
     height: 30px 
 }
 .installAppContainer a img:hover{
     cursor: pointer;
 }
-.paymentMethodContainer a img{
+.part3 .paymentContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.part3 .paymentMethodContainer a img{
+    margin-top: 5px;
     height: 60px
 }

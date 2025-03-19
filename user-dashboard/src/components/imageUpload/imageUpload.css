@@ -1,0 +1,40 @@
+.upload-container {
+    width: 100%;
+    max-width: 600px;
+    margin: auto;
+}
+
+.dropzone {
+    border: 2px dashed #00776e;
+    padding: 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.image-preview {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+
+.image-item {
+    position: relative;
+    margin: 5px;
+}
+
+.image-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.image-item button {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+}

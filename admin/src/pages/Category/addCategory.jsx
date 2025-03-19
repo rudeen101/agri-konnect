@@ -182,7 +182,7 @@ const AddCategory = () =>{
     return (
         <>
             <div className="rightContent w-100">
-                <div className="card shadow border-0 w-100 d-flex justify-content-between flex-row p-4">
+                <div className="card dashboardHeader shadow border-0 w-100 d-flex justify-content-between flex-row">
                     <h5 className="mb-0">Add Category</h5>
 
                     <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">

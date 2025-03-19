@@ -113,7 +113,52 @@
    border: none !important;
 }
 
+.productInfo .description{
+   display: -webkit-box;
+   -webkit-line-clamp: 3; /* Limit to 3 lines */
+   -webkit-box-orient: vertical;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   margin-bottom: 0px !important
+}
 
+.productInfo .readMore{
+   font-size: 13px;
+   color: var(--primary-teal)
+}
+
+
+/**********************
+Product Specs Style
+***************************/
+
+.spec-table {
+   width: 100%;
+   max-width: 700px;
+   border-collapse: collapse;
+   background: white;
+   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+   margin-top: 10px
+}
+
+.spec-table th, .spec-table td {
+   border: 1px solid #ddd;
+   padding: 12px;
+   text-align: left;
+}
+
+.spec-table th {
+   background-color: var(--primary-teal);
+   color: white;
+}
+
+.spec-table tr:nth-child(even) {
+   background-color: #f9f9f9;
+}
+
+.spec-table tr:hover {
+   background-color: var(--light-teal);
+}
 
 
 

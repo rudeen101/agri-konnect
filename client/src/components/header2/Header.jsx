@@ -9,6 +9,8 @@ import { MdArrowDropDown } from "react-icons/md";
 import { MyContext } from "../../App";
 import { fetchDataFromApi } from "../../utils/apiCalls";
 import CircularProgress from '@mui/material/CircularProgress';
+import Cookies from "js-cookie";
+
 
 
 const Header = () => {
@@ -27,17 +29,24 @@ const Header = () => {
     const searchInput = useRef();
 
     const handleLogout = () => {
-        context.setIsLogin(false);
-        localStorage.removeItem("user");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("isLogin");
-        navigate("/");
+        context.logout();
+        navigate("/login");
     }
 
     const handleLogin = () => {
         setAnchorEl(null);
         // context.setIsLogin(true);
     }
+
+    const handleDashboardRedirect = () => {
+        const isLoggedIn = Cookies.get("accessToken");
+    
+        if (isLoggedIn) {
+            window.location.href = import.meta.env.VITE_DASHBOARD_URL;
+        } else {
+            window.location.href = "/login?redirect=dashboard"; // Redirect to login with a return URL
+        }
+    };
 
    
     const searchProducts = (e) => {
@@ -199,7 +208,7 @@ const Header = () => {
                         </button>
                         {showUserDropdown && (
                             <div className="user-dropdown">
-                                <button className="dropdown-item"> My Account</button>
+                                <button className="dropdown-item" onClick={() => handleDashboardRedirect()}> My Account</button>
                                 <Link to={`/wishList`}>
 
                                 <button className="dropdown-item">
@@ -210,7 +219,7 @@ const Header = () => {
                                 <button className="dropdown-item">Profile</button>
                                 {
                                     context.isLogin ? <Button className="btn-g signup w-100" onClick={handleLogout}>Logout</Button>
-                                    :<Button className="btn-g signup" onClick={handleLogin}><Link to={'/login'}>Login</Link></Button>
+                                    :<Button className="btn-g signup w-100" onClick={handleLogin}><Link to={'/login'}>Login</Link></Button>
                                 }
                             </div>
                         )}

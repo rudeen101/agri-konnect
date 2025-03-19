@@ -14,7 +14,7 @@ const UserSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    password: {
+    hashedPassword: {
         type: String,
     },
     contact: {
@@ -41,6 +41,13 @@ const UserSchema = new mongoose.Schema({
     ],
     
     purchaseHistory: [
+        { 
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Product' 
+        }
+    ],
+
+    salesHistory: [
         { 
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Product' 

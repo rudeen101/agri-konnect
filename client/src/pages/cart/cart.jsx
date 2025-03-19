@@ -28,17 +28,10 @@ const Cart = ({user}) => {
     const context = useContext(MyContext);
     const history = useNavigate();
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
+    useEffect(() => {
+        window.scrollTo(0, 0);
 
-        // fetchDataFromApi(`/api/cart`).then((res) => {
-        //     localStorage.setItem("cart", JSON.stringify(res.products));
-        //     const cart = JSON.parse( localStorage.getItem("cart"));
-        //     console.log("===", cart);
-
-        //     setCartData(cart);
-        // });
-    // }, []);
+    }, []);
 
 
     const handleQuantityChange = (newQuantity, productId) => {
@@ -47,6 +40,8 @@ const Cart = ({user}) => {
 
     // Calculate grand total
     const calculateTotal = () => {
+        console.log("****", context?.cart)
+
         return context?.cart?.items?.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
 
@@ -81,7 +76,7 @@ const Cart = ({user}) => {
                                 {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
                             </div>
                             {
-                                cartData?.data?.length !== 0 ? (
+                                context?.cart?.items?.length !== 0 ? (
                                     <div className="cartWrapper">
                                         <div className="table-responsive">
                                             <table className="table">
@@ -128,7 +123,7 @@ const Cart = ({user}) => {
                                                                             quantity={quantity}
                                                                         /> */}
 
-                                                                        <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
+                                                                        <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?.product?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
 
                                                                     </td>
                     
@@ -204,7 +199,7 @@ const Cart = ({user}) => {
 
                                 <br />  
                                 <Link to={"/checkout"}>
-                                    <Button className="btn-g btn-lg">Preceed To Checkkout</Button>
+                                    <Button className="btn-g btn-lg w-100">Preceed To Checkout</Button>
                                 </Link>
                             </div>
                         </div>

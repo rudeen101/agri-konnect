@@ -37,7 +37,7 @@ import ProductsSlider from "../../components/productsSlider/ProductsSlider";
 import ShareBtn from "../../components/shareBtn/ShareBtn";
 import WishlistBtn from "../../components/wishlistBtn/WishlistBtn";
 import ProductReviews from "../../components/productReviews/ProductReviews";
-
+import RelatedProductSliderContainer from "../../components/sliderContainer/RelatedSliderContainer";
 
 const ProductDetails = ({userId}) =>{
 
@@ -54,7 +54,8 @@ const ProductDetails = ({userId}) =>{
     const [isLoading, setIsLoading] = React.useState(false);
     const [addedToWishList, setAddedToWishList] = React.useState(false);
     const [quantity, setQuantity] = useState(1);
-    const [inCart, setInCart] = useState(false);
+    const [relatedProducts, setRelatedProducts] = useState([]);
+
     
         
     const [reviews, setReviews] = useState({
@@ -77,69 +78,45 @@ const ProductDetails = ({userId}) =>{
         });
 
         getReviews();
-        // checkWishList(id)
+        getRelatedProducts(id)
 
-    }, [id]);
-
-    useEffect(() => {
-        fetchDataFromApi(`/api/cart`).then((res) => {
-            // setInCart(res.products.some(item => item.productId._id === productData._id));
-        })
-    }, [context?.isLogin]);
-
-    useEffect(() => {
-        postDataToApi(`/api/product/recentlyViewed/add`, { productId: id }).then((res) => {
-            console.log("recentlyviewed",res);
-        })
     }, []);
 
-    const getReviews = () => {
+    const getRelatedProducts = async (productId) => {
 
-        fetchDataFromApi(`/api/productReviews/${id}`)
-        .then((res) =>{
-            setReviewsData(res);
-        })
-        .catch(err => console.error("Error fetching reviews:", err));
+        const data = await fetchDataFromApi(`/api/product/related/${productId}`);
+        if (data) {
+            setRelatedProducts(data);
+        }
+
+    }
+
+    const getReviews = async () => {
+
+        const data = await fetchDataFromApi(`/api/productReviews/${id}`);
+        if (data) {
+            setReviewsData(data);
+        }
     }
 
     const handleQuantityChange = (newQuantity, productId) => {
         setQuantity(newQuantity);
     };
 
-    const handleCartToggle = async () => {   
-        if (inCart) {
-            deleteDataFromApi(`/api/cart/remove/${productData?._id}`)
-            .then((res) => {
-                setInCart(false);
-            });
-
-        } else {
-        
-            const cartData= {
-                productId: productData._id,
-                quantity: quantity
-            }
-
-            postDataToApi(`/api/cart/add`, cartData)
-            .then((res) => {
-                setInCart(true);
-            });
-        }
-    };
 
     return (
         <div className="productDetails">
             <div className="breadcrumbWrapper">
-                <div className="container-fluid">
+                {/* <div className="container-fluid"> */}
                     <ul className="breadcrum breadcrumb2 mb-0">
                         <li><Link>Home</Link></li>
-                        <li><Link>Vegetabels & Tubers</Link></li>
-                        <li><Link>Seeds of Change Organic</Link></li>
+                        <li><Link>{productData?.catName}</Link></li>
+                        <li><Link>{productData?.subCat}</Link></li>
                     </ul>
-                </div>
+                {/* </div> */}
             </div>
 
-            <div className="container-fluid detailsContainer pt-4 pb-3">
+            <div className="container-fluid detailsContainer pt-3 pb-3">
                 <div className="row">
                     <div className="col-md-9 part1 card"> 
                         <div className="row">
@@ -160,16 +137,16 @@ const ProductDetails = ({userId}) =>{
                                     <span className="text-g priceLarge mr-3">USD {productData?.price}</span>
 
                                     <div className="ml-3 d-flex flex-column">
-                                        <span className="discount">{productData?.discount}% off</span>
                                         <span className="text-light oldPrice">USD {productData?.oldPrice}</span>
                                     </div>
                                
                                 </div>
 
-                                <p>
+                                <p className="description">
                                     {productData?.description}
-                                    <span className="readMore"><a href="#">Read more</a></span>
                                 </p>
+                                <span className="readMore"><a href="#productDetails">Read more</a></span>
+
 
                                 <hr></hr>
 
@@ -201,9 +178,9 @@ const ProductDetails = ({userId}) =>{
                                 </div>
 
                                 <div className="addToCart">
-                                       <Button onClick={handleCartToggle} className={`w-100 addToCartBtn ml-3  cartBtn ${inCart ? "active" : ""}`}>
+                                       <Button onClick={() => context.addToCart(productData, quantity)} className={`w-100 addToCartBtn ml-3  cartBtn ${context?.isInCart(productData?._id) ? "active" : ""}`}>
                                         <IoCartOutline className="cartIcon" /> &nbsp;
-                                        {inCart ? "Added to Cart" : "Add to Cart"}
+                                        {context?.isInCart(productData?._id) ? "In Cart" : "Add to Cart"}
                                     </Button>
                                 </div>
 
@@ -231,23 +208,47 @@ const ProductDetails = ({userId}) =>{
 
                                 {
                                     activeTabs === 0 &&
-                                    <div className="tabContent">
-                                        <p>
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore officiis, possimus alias non incidunt ullam sunt ab voluptatum? Modi, amet magnam! Consectetur eveniet incidunt aspernatur alias? Voluptas cum enim magnam.
-                                        </p>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, numquam nam fuga quia cum corporis inventore dolore corrupti accusamus soluta velit. Obcaecati quia harum assumenda dolorem placeat earum voluptatem atque.</p>
-                                    
-                                        <br />
-
-                                        <h4>Packaging & Delivery</h4>
-                                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quos doloremque minus nostrum quod accusamus fugit consequuntur iste quia soluta tenetur asperiores, laboriosam animi iusto sunt neque dolore. Error, iste?</p>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium, error. Tenetur, iste quisquam! Error, dicta? Officiis rerum fugiat necessitatibus, placeat minima quae officia vel, atque eius sed exercitationem minus modi?</p>
+                                    <div className="tabContent" id="productDetails">
+                                        <h4>Product Desctiption</h4>
+                                        <p>{productData?.description}</p>
                                         
                                         <br />
 
-                                        <h4>Packaging & Delivery</h4>
-                                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quos doloremque minus nostrum quod accusamus fugit consequuntur iste quia soluta tenetur asperiores, laboriosam animi iusto sunt neque dolore. Error, iste?</p>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium, error. Tenetur, iste quisquam! Error, dicta? Officiis rerum fugiat necessitatibus, placeat minima quae officia vel, atque eius sed exercitationem minus modi?</p>
+                                        <h4>Product Specifications</h4>
+                                        <table class="spec-table">
+                                            <tr>
+                                                <th>Product Name</th>
+                                                <td>{productData?.name}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Product Price</th>
+                                                <td>USD {productData?.price} per {productData?.productWeight} {productData?.packagingType}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Category</th>
+                                                <td>{productData?.catName}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>In Stock</th>
+                                                <td>{productData?.countInStock}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Minimum Order Quantity</th>
+                                                <td>{productData?.minOrder} {productData?.productWeight} {productData?.packagingType}</td>
+                                            </tr>
+                                            <tr>
+                                                <th>Origin</th>
+                                                <td>{productData?.location}</td>
+                                            </tr>
+                                            {/* <tr>
+                                                <th>Shelf Life</th>
+                                                <td>1 Year</td>
+                                            </tr> */}
+                                            {/* <tr>
+                                                <th>Certification</th>
+                                                <td>FDA Approved</td>
+                                            </tr> */}
+                                        </table>
                                     </div>
                                 }
 
@@ -261,22 +262,8 @@ const ProductDetails = ({userId}) =>{
                                 {
                                     activeTabs === 3 &&
                                     <div className="tabContent">
-                                        <p>
-                                            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Tempore officiis, possimus alias non incidunt ullam sunt ab voluptatum? Modi, amet magnam! Consectetur eveniet incidunt aspernatur alias? Voluptas cum enim magnam.
-                                        </p>
-                                        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit, numquam nam fuga quia cum corporis inventore dolore corrupti accusamus soluta velit. Obcaecati quia harum assumenda dolorem placeat earum voluptatem atque.</p>
-                                    
-                                        <br />          
-
-                                        <h4>Packaging & Delivery</h4>
-                                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quos doloremque minus nostrum quod accusamus fugit consequuntur iste quia soluta tenetur asperiores, laboriosam animi iusto sunt neque dolore. Error, iste?</p>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium, error. Tenetur, iste quisquam! Error, dicta? Officiis rerum fugiat necessitatibus, placeat minima quae officia vel, atque eius sed exercitationem minus modi?</p>
-                                        
-                                        <br />
-
-                                        <h4>Packaging & Delivery</h4>
-                                        <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Aliquam quos doloremque minus nostrum quod accusamus fugit consequuntur iste quia soluta tenetur asperiores, laboriosam animi iusto sunt neque dolore. Error, iste?</p>
-                                        <p>Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusantium, error. Tenetur, iste quisquam! Error, dicta? Officiis rerum fugiat necessitatibus, placeat minima quae officia vel, atque eius sed exercitationem minus modi?</p>
+                                        <h4>About Our Business</h4>
+                                        <p></p>
                                     </div>
                                 }
                             </div>
@@ -333,25 +320,14 @@ const ProductDetails = ({userId}) =>{
                 </div>
             </div>
 
-            <div className="container-fluid relatedProducts pt-5 pb-4">
-                <h4>Related products</h4>
+            <div className="relatedProducts pt-2 pb-4">
                 <br />
-                {/* <Slider {...relatedProductSlider} className="productSlider" >
-                    {
-                        selectedProductData?.length > 0 &&
-                        selectedProductData?.map((product, index) => {
-                            return (
-                                <div className="item" key={index}>
-                                    <div className="item">
-                                        <ProductCard data={product} />
-                                    </div>
-                                </div>
-                            )
-                        })
-                    }
-                </Slider> */}
-
-                <ProductsSlider subCatId={productData?.subCatId}></ProductsSlider>
+                {
+                    context?.mostPopular?.products?.length !== 0 &&
+                    <section className="homeProducts homeProductsSection2 pt-0"> 
+                        <RelatedProductSliderContainer products={relatedProducts} title={"Most Popular Items"}></RelatedProductSliderContainer>
+                    </section>
+                }
             </div>
         </div>
     )

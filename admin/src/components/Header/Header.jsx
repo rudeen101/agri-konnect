@@ -32,25 +32,6 @@ import { MdOutlineLogout } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
 import { postDataToApi } from "../../utils/apiCalls";
 
-
-
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
-// import ListItemIcon from '@mui/material/ListItemIcon';
-// import Divider from '@mui/material/Divider';
-// import IconButton from '@mui/material/IconButton';
-// import Typography from '@mui/material/Typography';
-// import Tooltip from '@mui/material/Tooltip';
-// import PersonAdd from '@mui/icons-material/PersonAdd';
-// import Settings from '@mui/icons-material/Settings';
-// import Logout from '@mui/icons-material/Logout';
-
-// import Button from '@mui/material/Button';
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
-// import Fade from '@mui/material/Fade';
-
-
 const Header = () => {
     
     const [isOpenNotificationDrop, setIsOpenNotificationDrop] = useState(false)
@@ -75,30 +56,8 @@ const Header = () => {
 
     const logout = () => {
         setAnchorEl(null);
-        // context.setIsLogin(false);
-        // localStorage.removeItem("user");
-        // localStorage.removeItem("token");
-        // history("/");
-
-
-        try {
-
-            const userId = context?.userData?.userID
-
-            postData("/api/auth/logout", {userId}).then((res) => {
-            
-                // Clear stored data
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("refreshToken");
-                localStorage.removeItem("user");
-                localStorage.removeItem("isLogin");
-
-                // Redirect to login page
-                navigate("/login");
-            });
-        } catch (error) {
-            console.error("Logout failed:", error);
-        }
+        context.logout();
+        navigate("/login")
     }
 
     
@@ -136,7 +95,7 @@ const Header = () => {
                             <Button className="rounded-circle mr-3" onClick={() => context.setIsOpenNav(!context.isOpenNav)}><MdMenu /></Button>
 
                             {
-                                context.isLogin !== true ? 
+                                context?.isAuthenticated !== true ? 
                                 <Link to="/login">
                                     <Button className="btn-blue btn-large btn-round">Sign In</Button> 
                                 </Link> 
@@ -149,21 +108,21 @@ const Header = () => {
                                         onClick={handleClick}
                                     >
                                         
+                                        <div className="userInfo res-hide">
+                                            <h4>{context?.userData?.username}</h4>
+                                        </div>
                                         {/* <UserAvatarImg img={Avatar} />   */}
                                         <div className="userImage">
                                             <span className="rounded-circle">
                                                 { 
-                                                    !context?.userData?.image ? 
+                                                    context?.userData?.image ? 
                                                     <img src={userAvatar} className="w-100" alt="user profile picture" />
-                                                    : context?.userData?.name.charAt(0)
+                                                    : context?.userData?.username.charAt(0)
                                                 }
                                             </span>
                                         </div>   
 
-                                        <div className="userInfo res-hide">
-                                            <h4>{context?.userData?.username}</h4>
-                                            <p className="mb-0">{context?.userData?.contact}</p>
-                                        </div>
+                                        
                                     </Button>
                                     <Menu
                                         keepMounted

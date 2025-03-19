@@ -15,8 +15,7 @@
     padding: 16px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: 0.3s;
-    /* text-align: center; */
-    max-width: 300px; /* Adjust as needed */
+    width: 100%;
     margin: auto;
 }
 

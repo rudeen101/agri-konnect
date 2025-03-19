@@ -2,6 +2,7 @@ import './App.css';
 import './responsive.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
+
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/dashboard';
 import SearchBox from './components/searchbox/SearchBox';
@@ -20,7 +21,6 @@ import AddCategory from './pages/Category/addCategory';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import PrivateRoute from './components/privateRoute/privateRoute';
-
 
 import EditCategory from './pages/Category/editCategory';
 import SubCategory from './pages/Category/SubCategory';
@@ -53,8 +53,11 @@ import EditAdmin from './pages/AdminAccount/editAdmin';
 import AddAdmin from './pages/AdminAccount/addAdmin';
 
 import OrderListing from './pages/Orders/orderListing';
+import MyOrders from './pages/Orders/MyOrders';
 import OrderDetails from './pages/Orders/orderDetails';
 
+import SalesDetails from './pages/Sales/salesDetails';
+import SalesHistory from './pages/Sales/SalesHistory';
 
 const MyContext = createContext();
 
@@ -64,20 +67,83 @@ const App = () => {
 	const [isToggleSidebar, setIsToggleSidebar] = useState(false);
 	const [isOpenNav, setIsOpenNav] = useState(false);
 	const [isLogin, setIsLogin] = useState(false);
-	const [userData, setUserData] = useState("");
 	const [isHiddenSidebarAndHeader, setIsHiddenSidebarAndHeader] = useState(false);
 	const [themeMode, setThemeMode] = useState(true);
 	const [windowwidth, setWindowwidth] = useState(window.innerWidth);
 	const [categoryData, setCategoryData] = useState([]);
 	const [bannerData, setBannerData] = useState([]);
 	const [progress, setProgress] = useState(0);
-
+	const [dashboardStats, setDashboardStats] = useState({});
+	const [salesTrendsData, setSalesTrendsData] = useState([]);
+	const [revenueByCategory, setRevenueByCategory] = useState([]);
+	const [recentOrders, setRecentOrders] = useState([]);
+    const [isAuthenticated, setIsAuthenticated] = useState(null); // Null means loading state
+	const [isLoading, setIsLoading] = useState(true); 
+	const [userData, setUserData] = useState(null);
 	const [alertBox, setAlertBox] = useState({
 		open: false,
 		error: false,
 		msg: ''
 	});
 
+	useEffect(() => {
+		const checkAuth = async () => {
+			const res = await fetchDataFromApi('/api/auth/me');
+
+			if (res.userId) {
+				const storedUser = localStorage.getItem("user");
+				
+				if (storedUser) {
+					setIsAuthenticated(true);
+					setUserData(JSON.parse(storedUser));
+				}
+			
+			} else {
+				setIsAuthenticated(false);
+				setUserData(null);
+			} 
+		};
+
+		checkAuth();
+	}, []);
+
+	const login = (userData) => {
+        localStorage.setItem("isLogin", "true");
+        localStorage.setItem("user", JSON.stringify(userData));
+
+        setIsAuthenticated(true);
+        setUserData(userData);
+    };
+
+	const logout = async () => {
+		try {
+			await postDataToApi('/api/auth/logout', {});
+			localStorage.removeItem("isLogin");
+			localStorage.removeItem("user");
+			setIsAuthenticated(false);
+
+		} catch (error) {
+			setIsAuthenticated(false);
+			setUserData(null);
+		}
+    };
+
+
+	// get dashboard cards stats
+	useEffect(() => {
+		fetchDataFromApi('/api/dashboard/stats').then((res) => {
+			setDashboardStats(res)
+		})
+	}, []);
+
+	//Get sales data 
+	useEffect(() => {
+		fetchDataFromApi('/api/sales/salesTrends').then((res) => {
+			setSalesTrendsData(res)
+		})
+	}, []);
+
+	//Set app theme
 	useEffect(() => {
 		if (themeMode === true) {
 			document.body.classList.remove('dark');
@@ -91,36 +157,24 @@ const App = () => {
 		}
 	}, [themeMode]);
 
+
+	// Resize
 	useEffect(() => {
-		const accessToken = localStorage.getItem("accessToken");
+		// const handleResize = () =>{
+		// 	setWindowwidth(window.innerWidth);
+		// }
 
-		if (accessToken !== "" && accessToken !== undefined && accessToken !== null) {
-			setIsLogin(true);
-
-			const userData = JSON.parse(localStorage.getItem("user"));
-
-			setUserData(userData);
-		}else {
-			setIsLogin(false);
-		}
-	}, [isLogin]);
-
-
-	useEffect(() => {
-		const handleResize = () =>{
-			setWindowwidth(window.innerWidth);
-		}
-
-		window.addEventListener('resize', handleResize);
+		// window.addEventListener('resize', handleResize);
 
 		fetchCategory();
 		fetchBanner()
 
-		return () => {
-			window.removeEventListener('resize', handleResize)
-		}
+		// return () => {
+		// 	window.removeEventListener('resize', handleResize)
+		// }
 	}, []);
 
+	// Get category
 	const fetchCategory = () => {
 		fetchDataFromApi('/api/category').then((res) => {
 			setProgress(30);
@@ -132,7 +186,7 @@ const App = () => {
 	const fetchTag = () => {
 		fetchDataFromApi('/api/tag').then((res) => {
 			setProgress(30);
-			setCategoryData(res);
+			// setCategoryData(res);
 			setProgress(100);
 		})
 	}
@@ -155,11 +209,17 @@ const App = () => {
 		})
 	}
 
-
-
 	const values = {
+		setIsAuthenticated,
+		isAuthenticated,
+		setUserData,
+		userData,
 		isToggleSidebar,
 		setIsToggleSidebar,
+		isLogin,
+		login,
+		logout,
+		isLoading,
 		isLogin,
 		setIsLogin,
 		isHiddenSidebarAndHeader,
@@ -177,9 +237,15 @@ const App = () => {
 		fetchTag,
 		categoryData,
 		setCategoryData,
-		userData,
-		setUserData,
-		fetchBanner
+		fetchBanner,
+		dashboardStats,
+		setDashboardStats,
+		setSalesTrendsData,
+		salesTrendsData,
+		setRevenueByCategory,
+		revenueByCategory,
+		setRecentOrders,
+		recentOrders
 		
 	}
 
@@ -191,7 +257,7 @@ const App = () => {
 		<BrowserRouter>
 			<MyContext.Provider value={values}>
 				<LoadingBar
-					color='#f11946'
+					color='#00a99d'
 					progress={progress}
 					onLoaderFinished={() => setProgress(0)}
 					className="topLoadingBar"
@@ -208,13 +274,15 @@ const App = () => {
 						{alertBox.msg}
 					</Alert>
 				</Snackbar>
+
 				{
-					isHiddenSidebarAndHeader !== true &&
-					<Header />
+					isAuthenticated && (
+						<Header />
+					)
 				}
 				<div className="main d-flex">
 					{
-						isHiddenSidebarAndHeader !== true &&
+						isAuthenticated && (
 						<>
 							<div className={`sidebarOverlay d-none ${isOpenNav === true && 'show'}`} onClick={() => setIsOpenNav(false)}></div>
 							<div className={`sidebarContainer ${isToggleSidebar === true ? 'toggle' : ""}
@@ -222,11 +290,12 @@ const App = () => {
 								<Sidebar />
 							</div>
 						</>
+						)
 					
 					}
 				
 
-					<div className={`content ${isHiddenSidebarAndHeader === true && 'full'} ${isToggleSidebar === true ? 'toggle' : ""}`}>
+					<div className={`container-fluid content login ${isToggleSidebar === true ? 'toggle' : ""}`}>
 						<Routes>
 							<Route exact={true} path="/" element={
 								<PrivateRoute>
@@ -234,7 +303,7 @@ const App = () => {
 								</PrivateRoute>
 							} />
 							<Route exact={true} path="/login" element={<Login />} />
-							<Route exact={true} path="/signup" element={<Signup />} />
+							{/* <Route exact={true} path="/signup" element={<Signup />} /> */}
 
 							<Route exact={true} path="/product/details/:id" element={
 								<PrivateRoute>
@@ -260,12 +329,7 @@ const App = () => {
 								</PrivateRoute>
 							} />
 
-							{/* <Route exact={true} path="/productSize/add" element={<AddProductSize />} />
-							<Route exact={true} path="/productSize/edit/:id" element={<EditProductWeight />} />
-
-							<Route exact={true} path="/productWeight" element={<ProductWeight />} />
-							<Route exact={true} path="/productWeight/add" element={<AddProductWeight />} />
-							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} /> */}
+							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} /> 
 
 							<Route exact={true} path="/category" element={
 								<PrivateRoute>
@@ -372,7 +436,12 @@ const App = () => {
 								</PrivateRoute>
 							} />
 
-							<Route exact={true} path="/admin/order/listing/" element={
+							<Route exact={true} path="/admin/myOrders/listing/" element={
+								<PrivateRoute>
+									<MyOrders />
+								</PrivateRoute>
+							} />
+							<Route exact={true} path="/admin/orders/listing/" element={
 								<PrivateRoute>
 									<OrderListing />
 								</PrivateRoute>
@@ -380,6 +449,18 @@ const App = () => {
 							<Route exact={true} path="/admin/order/details/:id" element={
 								<PrivateRoute>
 									<OrderDetails />
+								</PrivateRoute>
+							} />
+
+							<Route exact={true} path="/admin/sales/listing/" element={
+								<PrivateRoute>
+									<SalesHistory />
+								</PrivateRoute>
+							} />
+
+							<Route exact={true} path="/admin/sales/details/:id" element={
+								<PrivateRoute>
+									<SalesDetails />
 								</PrivateRoute>
 							} />
 						</Routes>

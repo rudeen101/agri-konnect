@@ -1,0 +1,193 @@
+@media only screen and (min-width: 320px) and (max-width: 992px){
+    .res-hide{
+        display: none !important
+    }
+    .rightContent .res-coln{
+        flex-direction: column !important;
+    }
+
+    body, html{
+        overflow-x: hidden !important;
+    }
+
+    header{
+        padding: 15px 0px;
+        height: auto;
+    }
+
+    header .part1, header .part3{
+        padding: 0px !important
+    }
+    header .part1{
+        max-width: 40% !important;
+        flex: 0 0 40% !important
+    }
+    /* header .logo img{
+        width:35px !important;
+    } */
+    
+    header .part3{
+        max-width: 60% !important;
+        flex: 0 0 60% !important;
+    }
+
+    .main .sidebarContainer {
+        width: 80% !important;
+        height: 100vh !important;
+        position: fixed;
+        top: 0px;
+        left: -100% ;
+        opacity: 0;
+        z-index: 10000;
+        transition: all 0.3s ease-in-out;
+        /* background-color: red; */
+    }
+    .main .sidebarContainer .sidebar{
+        width: 100% !important;
+        position: relative !important;
+        top: 0px !important;
+        max-height: inherit !important
+    }
+
+    .sidebarContainer.open{
+        left: 0px !important;
+        opacity: 1 !important;
+    }
+
+    .sidebarOverlay{
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        background: rgba(0,0,0,0.7);
+        z-index: 1000;
+        width: 100%;
+        height: 100% !important
+    }
+    .sidebarOverlay.show{
+        display: block !important
+    }
+    .main .content{
+        width: 100% !important
+    }
+    .rightContent {
+        padding: 90px 20px !important
+    }
+
+    .dashboardBoxContainer{
+        /* white-space: nowrap !important;
+        overflow-x: scroll !important;
+        overflow-y: hidden !important;
+        flex-wrap: nowrap !important;
+        display: block !important; */
+
+        margin-bottom: 20px !important;
+
+    }
+
+    /* .dashboardBoxContainer .dashboardBox{
+        display: inline-block !important;
+        width: 300px !important;
+        height: 160px !important;
+        margin-right: 10px !important;
+        background: red !important
+    } */
+
+    .topPart2{
+        padding-left:  15px !important
+    }
+
+    .tableFooter{
+        flex-direction: column;
+    }
+    .tableFooter nav{
+        margin-top: 25px;
+    }
+    .tableFooter nav ul{
+        white-space: nowrap !important;
+        overflow-x: scroll !important;
+        overflow-y: hidden !important;
+        display: block !important;
+        margin-bottom: 20px;
+    }
+    .tableFooter nav ul li{
+        display: inline-block;
+        width: max-content !important;
+        height: auto !important;
+        margin-right: 10px !important;
+    }
+
+    .card.shadow.border-0.w-100.flex-row{
+        padding-top: 0px !important
+    }
+    .card.shadow.border-0.p-3.mt-4{
+        margin-top: 0px !important
+    }
+
+    .MuiBreadcrumbs-root{
+        margin-top: 15px !important;
+    }
+
+    .productInfo .col-sm-3{
+        max-width: 200px !important;
+        flex:  0 0  200px !important;
+    }
+    .productInfo .col-sm-9{
+        max-width: 100% !important;
+        flex:  0 0 100%!important;
+        padding-left: 36px !important
+    }
+
+     .loginSection{
+        height: auto !important
+     }
+
+     .signupSection .col-md-8{
+        display: none !important
+     }
+
+    .productDetailsSection .row .wrapper{
+        margin: 0px !important;
+        /* display: flex; */
+        /* flex-direction: column; */
+        /* justify-content: center; */
+
+    }
+}
+
+@media only screen and (min-width: 320px) and (max-width: 575px){
+    header .row{
+        margin: auto !important;
+
+    }
+    header button.rounded-circle{
+        width: 40px !important;
+        min-width: 40px !important;
+        height: 40px !important;
+        margin-right: 5px !important;
+    }
+    header .btn-blue{
+        font-size: 12px !important;
+        padding: 5px 10px !important;
+    }
+
+    .useImg{
+       width: 35px !important;
+       height: 35px !important
+    }
+
+    .myAccountContainer{
+        padding: 0px !important;
+        min-width: 35px !important;
+        width: 35px !important;
+    }
+
+}
+
+@media only screen and (min-width: 320px) and (max-width: 767px){
+    
+    .form .col{
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        /* display: none */
+    }
+}

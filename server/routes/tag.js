@@ -54,7 +54,6 @@ router.get("/category/:catId", async (req, res) => {
 router.post("/add", async (req, res) => {
     try {
         const { name, category, description } = req.body;
-        console.log("data", category);
 
         const newTag = new Tag({ name, category, description });
         await newTag.save();

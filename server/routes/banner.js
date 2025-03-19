@@ -48,9 +48,7 @@ router.post('/banner', upload.array("images"), async (req, res) => {
                 req.files[i].path,
                 options,
                 function (error, result) {
-                    console.log(result)
                     imagesArr.push(result.secure_url);
-                    console.log(`uploads/${req.files[i].filename}`)
                     fs.unlinkSync(`uploads/${req.files[i].filename}`);
                 }
             );
@@ -86,9 +84,9 @@ router.get('/', async (req, res) => {
 });
 
 router.get('/:id', async (req, res) => {
-    const homeBannerId = req.params.id;
+    const bannerId = req.params.id;
 
-    const banner = await Banner.findById(homeBannerId);
+    const banner = await Banner.findById(bannerId);
     if (!banner) {
         res.status(500).json({success: false, msg: "Banner with given id not found!"});
     }
@@ -140,7 +138,6 @@ router.delete('/deleteImage', async (req, res) => {
 
 router.delete('/:id', async (req, res) => {
     const banner = await Banner.findById(req.params.id);
-    console.log(banner);
 
     const images = banner.images;
 
@@ -168,14 +165,13 @@ router.delete('/:id', async (req, res) => {
         msg: "Banner deleted successfully",
         success: false
     });
-    
-
 });
 
 
 router.put('/:id', async (req, res) => {
 
-    const banner = await Banner.findByIdAndUpdate(req.params.id, 
+    const banner = await Banner.findByIdAndUpdate(
+        req.params.id, 
         {
             images: req.body.images,
             catId: req.body.catId,
@@ -194,7 +190,6 @@ router.put('/:id', async (req, res) => {
     }
   
     imagesArr = [];
-
     res.status(200).send(banner);
 });
 

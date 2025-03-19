@@ -6,6 +6,8 @@ const connectDB = require('./config/db');
 const rateLimiter = require('./config/rateLimit');
 const errorHandler = require('./middleware/errorHandler');
 const cors = require('cors');
+const cookieParser = require("cookie-parser");
+
 
 const app = express();
 PORT = process.env.PORT || 3000;
@@ -22,14 +24,24 @@ app.use(helmet());
 //     credentials: true,
 // }));
 
-app.use(cors());
-app.options('*', cors());
+// app.use(cors());
+// app.options('*', cors());
 
 // Logging middleware
 // app.use(morgan('combined'));
 
 // Rate limiting
 // app.use(rateLimiter);
+
+// Enable CORS for frontend and dashboard
+app.use(
+    cors({
+        origin: ["http://localhost:5173", "http://localhost:5175", "http://localhost:5174"], 
+        credentials: true, // Allow cookies
+    })
+);
+
+app.use(cookieParser());
 
 // Body parsers
 app.use(express.json());
@@ -62,6 +74,8 @@ const tagRoutes = require("./routes/tag.js");
 const authRoutes = require("./routes/auth.js");
 const adminRoutes = require("./routes/admin.js");
 const orderRoutes = require("./routes/order.js")
+const dashboardStatsRoutes = require("./routes/dashboardStats.js")
+const salesRoutes = require("./routes/sales.js")
 
 app.use("/upoads", express.static("uploads"));
 app.use(`/api/category`, categoryRoutes);
@@ -78,6 +92,8 @@ app.use(`/api/tag`, tagRoutes);
 app.use(`/api/auth`, authRoutes);
 app.use(`/api/admin`, adminRoutes);
 app.use(`/api/order`, orderRoutes);
+app.use(`/api/dashboard`, dashboardStatsRoutes);
+app.use(`/api/sales`, salesRoutes);
 // app.use(`/api/productWeight`, prouductWeightRoutes);
 // app.use(`/api/productSize`, prouductSizeRoutes);
 

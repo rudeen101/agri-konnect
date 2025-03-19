@@ -141,8 +141,8 @@ h1, h2, h4, h2, h5, h6{
 }
 
 .hd{
-    font-size: 22px;
-    font-weight: 600;
+    font-size: 22px !important;
+    font-weight: 600 !important;
 }
 
 .row{

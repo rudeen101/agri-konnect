@@ -63,7 +63,7 @@ const BannerList = () =>{
     return(
         <>
             <div className="rightContent w-100">
-                <div className=" categoryHeaderContainer card shadow border-0 w-100 d-flex justify-content-between flex-row p-4">
+                <div className=" categoryHeaderContainer card  dashboardHeader shadow border-0 w-100 d-flex justify-content-between flex-row">
                         <h5 className="mb-0">Banner List</h5>
                         <div className="d-flex align-items-center">
                             <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">

@@ -56,7 +56,9 @@ router.post("/signin", async (req, res) => {
         }
 
         // Compare passwords
-        const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.hashedPassword);
+        console.log("bcrypt", isMatch)
+
         if (!isMatch) {
             return res.status(401).json({ message: "Invalid credentials" });
         }
@@ -67,8 +69,25 @@ router.post("/signin", async (req, res) => {
 
 		user.refreshToken = refreshToken;
 		await user.save();
+
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+            sameSite: "lax", //Required for cross-origin cookies
+            domain: "localhost", // Ensures the cookie is scoped correctly
+            path: '/', // Accessible across all paths
+
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+            sameSite: "lax", //Required for cross-origin cookies
+            domain: "localhost", // Ensures the cookie is scoped correctly
+            path: '/', // Accessible across all paths
+        });
 	
-		res.json({ message: 'Logged in successfully', accessToken, refreshToken, user: { username: user.name, contact: user.contact, userId: user._id } });
+		res.json({ message: 'Logged in successfully', user: { username: user.name, contact: user.contact, userId: user._id }});
 
     } catch (error) {
 		console.log(error)
@@ -115,7 +134,6 @@ router.post("/signin", async (req, res) => {
 router.put("/updateRole/:userId", verifyToken, authorize(["superAdmin"]), async (req, res) => {
     const { role } = req.body;
     const { userId } = req.params;
-    console.log(userId)
 
     if (!Array.isArray(role)) {
         return res.status(400).json({ message: "Invalid roles format" });
@@ -157,7 +175,6 @@ router.put("/removeRole/:userId", verifyToken, authorize(["superAdmin"]), async 
         const {roleToRemove} = req.body;
         const userId = req.params.userId;
         // const updateUserId = req.params.updateUserId;
-        console.log(roleToRemove)
 		
         // Check if user exists
         const user = await User.findById(userId);

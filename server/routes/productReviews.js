@@ -48,7 +48,6 @@ router.post("/add", verifyToken, verifyBuyer, async (req, res) => {
 router.get("/:id", async (req, res) => {
     try {
         const {id} = req.params;
-        console.log(id)
 
         const reviews = await Review.find({product: id})
             .populate("user", "name");

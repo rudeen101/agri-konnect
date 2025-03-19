@@ -15,7 +15,7 @@ import backgroundPattern from "../../assets/images/background-pattern.jpg"
 // import User from "../../../../server/models/users";
 
 const Login = () =>{
-
+    const { login, setAlertBox } = useContext(MyContext);
     const [inputIndex, setInputIndex] = useState(0);
     const [isShowPassword, setIsShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -27,87 +27,53 @@ const Login = () =>{
     const context = useContext(MyContext);
     const navigate = useNavigate();
 
+    const changeInput = (e) => {
+        setFormFields(() => ({
+            ...formFields,
+            [e.target.name]: e.target.value
 
-       const changeInput = (e) => {
-            setFormFields(() => ({
-                ...formFields,
-                [e.target.name]: e.target.value
+        }));
+    }
+    
+    const signIn = async (e) => {
+        e.preventDefault();
 
-            }));
+        if (!formFields.contact || !formFields.password) {
+            setAlertBox({ open: true, error: true, msg: "Please enter all fields" });
+            return;
         }
-    
-        const signIn = (e) => {
-            e.preventDefault()
-            console.log(formFields)
-    
-            try {
-                if (formFields.contact === "") {
-                    context.setAlertBox({
-                        open: true,
-                        error: true,
-                        msg: "Enter email or phone number"
-                    });
-        
-                    return false;
-                }
-        
-                if (formFields.password === "") {
-                    context.setAlertBox({
-                        open: true,
-                        error: true,
-                        msg: "Enter password"
-                    });
-        
-                    return false;
-                }
-    
-                setIsLoading(true);
-                postDataToApi("/api/admin/signin", formFields).then((res) => {
-                    console.log("data--",res)
-                    
-                    localStorage.removeItem('user');
+  
+        setIsLoading(true);
 
-                    localStorage.setItem("accessToken", res?.accessToken);
-                    localStorage.setItem("refreshToken", res?.refreshToken);
-                    localStorage.setItem("isLogin", true);
-                    context.setIsLogin(true);
+        try {
+            const res = await postDataToApi("/api/auth/signin", formFields);
 
-                    const user = {
-                        username: res?.user?.username,
-                        contact: res?.user?.contact,
-                        // image: res?.user?.length > 0 ? res?.user?.image[0] : "",
-                        userId: res?.user?.userId
-                    }
+            const userData = {
+                username: res?.user?.username,
+                contact: res?.user?.contact,
+                userId: res?.user?.userId
+            };
 
-                    localStorage.setItem("user", JSON.stringify(user));
-                    
-                    if (!res.error) {
-                        context.setAlertBox({
-                            open: true,
-                            error: false,
-                            msg: "Login successful"
-                        });
-    
-                        setTimeout(() => {
-                            setInputIndex(true);
-                            setIsLoading(false)
-                            navigate("/");
-                        }, 2000);
-                    }
-                
-                })
-            } catch (error) {
-                console.error("Login failed:", error.response.data);
-            }
+            context.login(userData)
+
+            setTimeout(() => {
+                setInputIndex(true);
+                setIsLoading(false);
+                navigate("/");
+            }, 200);
+
+        } catch (error) {
+            console.error("Login failed:", error.response?.data?.error || error.message);
         }
+
+        setIsLoading(false);
+
+    };
 
     const focusInput = (index) => {
         setInputIndex(index);
     }
 
-    useEffect(()=> {
-        context.setIsHiddenSidebarAndHeader(true);
-    }, [])
     return(
         <>
             <img src={backgroundPattern} className="loginBackgroundPattern" alt="Bacground cover image" />
@@ -155,11 +121,11 @@ const Login = () =>{
                         </form>
                     </div>
 
-                    <div className="wrapper mt-3 card border footer p-3 d-flex">
+                    {/* <div className="wrapper mt-3 card border footer p-3 d-flex">
                         <span className="text-center">Don't have an acount?
                             <Link to={'/signup'} className="link color ml-3">Register</Link>
                         </span>
-                    </div>
+                    </div> */}
 
                 </div>
             </section>

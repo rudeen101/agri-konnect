@@ -33,14 +33,34 @@ const WishList = ({userId}) => {
                         <div className="listWrapper">
                             <div className="d-flex align-items-center justify-content-between w-100">
                                 <div className="left">
-                                <p>You have <span className="text-g"><b>{context.wishlist?.items?.length}</b></span> item(s) in your wishlist</p>
+                                <p>You have <span className="text-g"><b>{context.wishlist?.items?.length ? context.wishlist?.items?.length : "0" }</b></span> item(s) in your wishlist</p>
                                     <h4 className="hd mb-0">Your Wishlist</h4>
                                 </div>
 
                                 {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
                             </div>
                             {
-                                context?.wishlist?.items?.length !== 0 ? (
+                                !context?.wishlist?.items ? (
+                                    
+                                    <div className="emptyCart mt-5 d-flex align-items-center justify-content-center flex-column">
+                                        <img
+                                            src={wishListImg}
+                                            alt="cart image"
+                                            width="150"
+                                            hight="150px"
+                                        />
+                                        <h3>Your List is currently empty</h3>
+                                        <br />
+
+                                        <Link to={"/"}>
+                                            <Button className="btn-g bg-g btn-lg btn-round">
+                                                <FaHome /> &nbsp; Continue Shopping
+                                            </Button>
+                                        </Link>
+                                    </div>
+                                )
+                                
+                                : (
                                     <div className="cartWrapper">
                                         <div className="table-responsive">
                                             <table className="table">
@@ -52,8 +72,8 @@ const WishList = ({userId}) => {
                                                         <th>Remove</th>
                                                     </tr>
                                                 </thead>
-        
                                                 <tbody>
+
                                                     {
                                                         context?.wishlist?.items?.length !== 0 && context?.wishlist?.items?.map((item, index) => {
                                                             return(
@@ -83,7 +103,7 @@ const WishList = ({userId}) => {
                                                                         <span className="">${item?.product?.price}</span>
                                                                     </td>
                                                                                       
-                                                                    <td width="10%"><span className="cursor" onClick={() => context?.removeFromWishlist(item?._id)}><DeleteOutlineOutlinedIcon /></span></td>
+                                                                    <td width="10%"><span className="cursor" onClick={() => context?.removeFromWishlist(item?.product?._id)}><DeleteOutlineOutlinedIcon /></span></td>
                                                                 </tr>
                                                             )
                                                         })
@@ -93,25 +113,7 @@ const WishList = ({userId}) => {
                                         </div>
                                     </div>
                                 )
-                                :(
-                                    
-                                    <div className="emptyCart mt-5 d-flex align-items-center justify-content-center flex-column">
-                                        <img
-                                            src={wishListImg}
-                                            alt="cart image"
-                                            width="150"
-                                            hight="150px"
-                                        />
-                                        <h3>Your List is currently empty</h3>
-                                        <br />
-
-                                        <Link to={"/"}>
-                                            <Button className="btn-g bg-g btn-lg btn-round">
-                                                <FaHome /> &nbsp; Continue Shopping
-                                            </Button>
-                                        </Link>
-                                    </div>
-                                )
+                              
 
                             }
                          

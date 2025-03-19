@@ -1,0 +1,75 @@
+:root {
+    --primary-teal: #00a99d;
+    --dark-teal: #00776e;
+    --light-teal: #66e2d6;
+    --golden-yellow: #f2a900;
+    --soft-coral: #ff6f61;
+    --charcoal: #2f2f2f;
+    --light-gray: #f4f4f4;
+    --white: #ffffff;
+    --green: #4CAF50;
+    --red: #F44336
+}
+
+/* Container for the text box */
+.text-card {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    background: #ffffff;
+    margin: 20px auto;
+    font-family: "Arial", sans-serif;
+  }
+  
+  /* Card Header */
+  .card-header {
+    background: var(--primary-teal);
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    font-weight: bold;
+  }
+  
+  /* Card Body */
+  .card-body {
+    padding: 15px;
+  }
+  
+  /* Text Content */
+  .text-content {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: normal;
+    transition: max-height 0.3s ease-in-out;
+  }
+  
+  /* Read More / Read Less Button */
+  .toggle-button {
+    background: none;
+    border: none;
+    color: var(--primary-teal);
+    cursor: pointer;
+    font-size: 14px;
+    margin-top: 8px;
+  }
+
+.productContainer p{
+    margin: 0px;
+    font-size: 13px;
+    line-height: 20px;
+}
+.productContainer strong{
+    color: var(--dark-teal);
+}
+.productContainer .imageContainer{
+    width: 80px;
+    
+}
+.productContainer .imageContainer img{
+    width: 100%;
+
+}
+  

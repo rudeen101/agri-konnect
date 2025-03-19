@@ -106,14 +106,35 @@ const Sidebar = () => {
                      }`}>
                         <ul className="submenu">
                             <li>
-                                <Link to={"/admin/order/listing"}>Order Listing</Link>
+                                <Link to={"/admin/myOrders/listing"}>My Orders</Link>
+                            </li>
+                            <li>
+                                <Link to={"/admin/orders/listing"}>Orders</Link>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+                    <Button className={`w-100 ${activeTab === 12 && isToggleSubmenu ? 'active' : ''}`}
+                        onClick={()=> isOpenSubmenu(12)}>                        
+                            <span className="icon"><FaCartArrowDown /></span>
+                            Sales
+                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
+                    </Button>
+                    <div className={`submenuContainer ${activeTab === 12 && isToggleSubmenu === true ?
+                        'openMenu' : 'closeMenu'
+                     }`}>
+                        <ul className="submenu">
+                            <li>
+                                <Link to={"/admin/sales/listing"}>Sales Listing</Link>
                             </li>
                         </ul>
                     </div>
                 </li>
 
 
-                <li>
+                {/* <li>
                     <Link to={"/"}>
                         <Button className={`w-100 ${activeTab === 3 ? 'active' : ''}`}
                             onClick={()=> isOpenSubmenu(3)}> 
@@ -122,8 +143,8 @@ const Sidebar = () => {
                                 <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                         </Button>
                     </Link>
-                </li>
-                <li>
+                </li> */}
+                {/* <li>
                      <Link to={"/"}>
                         <Button className={`w-100 ${activeTab === 4 ? 'active' : ''}`}
                             onClick={()=> isOpenSubmenu(4)}> 
@@ -132,7 +153,7 @@ const Sidebar = () => {
                             <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                         </Button>
                     </Link>
-                </li>
+                </li> */}
 
                 <li>
                     <Button className={`w-100 ${activeTab === 7 && isToggleSubmenu ? 'active' : ''}`}
@@ -148,7 +169,7 @@ const Sidebar = () => {
                             <li>
                                 <Link to={"/homeBannerSlide/list"}>Slide listing</Link>
                                 <Link to={"/homeBannerSlide/add"}>Add Slide</Link>
-                                <Link to={"/homeBannerSlide/edit/:id"}>Edit Slide</Link>
+                                {/* <Link to={"/homeBannerSlide/edit/:id"}>Edit Slide</Link> */}
                             </li>
                         </ul>
                     </div>
@@ -188,7 +209,6 @@ const Sidebar = () => {
                             <li>
                                 <Link to={"/admin/list"}>All Users</Link>
                                 <Link to={"/admin/add"}>Update Admin Role</Link>
-                                <Link to={"/admin/deletedUsers"}>Deleted Users</Link>
                             </li>
                         </ul>
                     </div>
@@ -206,11 +226,11 @@ const Sidebar = () => {
 
             <br />
 
-            <div className="logoutContainer">
+            {/* <div className="logoutContainer">
                 <div className="logoutBox">
                     <Button variant="contained"><IoMdLogOut />Logout</Button>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

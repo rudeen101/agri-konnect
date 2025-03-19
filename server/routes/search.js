@@ -8,7 +8,6 @@ const { error } = require('console');
 router.get('/', async (req, res) => {
     try {
         const query =  req.query.q;
-        console.log(query)
 
         if (!query) {
             res.status(400).json({msg: "Query needed!"})

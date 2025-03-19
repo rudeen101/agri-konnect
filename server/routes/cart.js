@@ -69,12 +69,13 @@ router.post("/add", verifyToken, async (req, res) => {
  */
 router.put("/update/:itemId", verifyToken, async (req, res) => {
     try {
+        console.log(req.user.id)
         const { quantity } = req.body;
         const cart = await Cart.findOne({ user: req.user.id });
 
         if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-        const item = cart.items.find(item => item._id.toString() === req.params.itemId);
+        const item = cart.items.find(item => item.product.toString() === req.params.itemId);
         if (!item) return res.status(404).json({ message: "Item not found" });
 
         item.quantity = quantity;

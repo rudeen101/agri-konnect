@@ -1,17 +1,16 @@
-const {
-    Schema,
-    model
-  } = require("mongoose");
+const mongoose = require("mongoose");
 
-const bannerSchema = new Schema({
+const BannerSchema = new mongoose.Schema({
     images: [
         {
             type: String,
             required: true
         }
     ],
-    catId: {
-        type: String,
+    catId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Category", 
+        required: true 
     },
     catName: {
         type: String,
@@ -21,23 +20,20 @@ const bannerSchema = new Schema({
     },
     subCatName: {
         type: String,
-    },
-    catId: {
-        type: String,
-    },
-
-
-
+    }
 }, {timestamp:true});
 
-bannerSchema.virtual('id').get(function () {
-    return this._id.toHexString();
-}); 
-
-bannerSchema.set('toJOSN', {
-    virtual: true,
-})
+module.exports = mongoose.model("Banner", BannerSchema);
 
 
-const BannerSchema = model('banner', bannerSchema);
-module.exports = BannerSchema;
+// bannerSchema.virtual('id').get(function () {
+//     return this._id.toHexString();
+// }); 
+
+// bannerSchema.set('toJOSN', {
+//     virtual: true,
+// })
+
+
+// const BannerSchema = model('banner', bannerSchema);
+// module.exports = BannerSchema;

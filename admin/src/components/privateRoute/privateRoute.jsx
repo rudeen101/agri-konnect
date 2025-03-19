@@ -1,13 +1,43 @@
 // src/components/PrivateRoute.jsx
-import React, {useContext} from 'react';
-import { Navigate } from 'react-router-dom';
-import { MyContext } from '../../App';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from "react-router-dom";
+import { fetchDataFromApi } from '../../utils/apiCalls';
 
 const PrivateRoute = ({ children }) => {
-	const isLogin = JSON.parse(localStorage.getItem("isLogin"));
-	console.log(isLogin)
+ 	 const [isAuthenticated, setIsAuthenticated] = useState(null);
+	const [loading, setLoading] = useState(true);
 
-	return isLogin ? children : <Navigate to="/login" />;
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		const checkAuth = async () => {
+			try {
+				const res = await fetchDataFromApi('/api/auth/me');
+
+				if (res.userId) {
+					setIsAuthenticated(true);
+				} else {
+					setIsAuthenticated(false);
+				}
+			} catch (error) {
+				console.log("error", error)
+				setIsAuthenticated(false);
+			} finally {
+				setLoading(false);
+			}
+		};
+
+		checkAuth();
+	}, []);
+
+	if (loading) return <p>Loading...</p>;
+
+    if (!isAuthenticated) {
+        navigate("/login");
+        return null;
+    }
+
+    return children;
 };
 
 export default PrivateRoute;

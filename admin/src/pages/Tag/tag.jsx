@@ -8,6 +8,7 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from "react-router-dom";
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { Button } from "@mui/material";
 // import { deleteData } from "../../utils/api";
 
 
@@ -45,7 +46,8 @@ const TagList = () =>{
     return(
         <>
             <div className="rightContent w-100">
-                <div className=" categoryHeaderContainer card shadow border-0 w-100 d-flex justify-content-between flex-row p-4">
+
+                <div className=" categoryHeaderContainer   card dashboardHeader shadow border-0 w-100 d-flex justify-content-between flex-row">
                 <h3 className="hd">Tag List</h3>
                 <div className="d-flex align-items-center">
                             <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">
@@ -63,7 +65,6 @@ const TagList = () =>{
                             />
 
                             </Breadcrumbs>
-
                             <Link to={'/tag/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Tag</Button></Link>
 
                         </div>

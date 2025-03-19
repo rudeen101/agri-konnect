@@ -38,8 +38,7 @@ const Home = () => {
 
 
     const productRow = useRef();
-
-
+    
     const handleChange = (event, newValue) => {
         setValue(newValue);
     }
@@ -62,45 +61,9 @@ const Home = () => {
         }
     }, [context.categoryData]);
 
-    // useEffect(() => {
-    //     const user = JSON.parse(localStorage.getItem("user"));
-
-    //     fetchDataFromApi(`/api/product/homepage`)
-    //     .then((res) => {
-
-    //         setMostPopular(res.combinedProducts.find(p => p.category === "mostPopular"));
-    //         setNewArrival(res.combinedProducts.find(p => p.category === "newlyReleased"));
-    //         setRecentlyViewed(res.combinedProducts.find(p => p.category === "recentlyViewed"));
-
-    //         setIsLoading(false);
-    //     });
-    // }, []);
-
-    // useEffect(() => {
-
-    //     // if (selectedCat !== undefined) {
-    //         setIsLoading(true);
-    //         // // const location = localStorage.getItem("location");
-    //         // console.log("cat-",context.categoryData?.categoryList)
-
-    //         fetchDataFromApi(`/api/product?catId=${context.categoryData?.categoryList?.[0]?._id}`)
-    //         .then((res) => {
-    //             console.log("--*",res)
-                // setFilterData(res.products);
-    //             setIsLoading(false);
-    //         });
-    //     // }
-    // }, [context.categoryData]);
-
     useEffect(() => {
         window.scrollTo(0, 0);
-
-        // fetchDataFromApi(`/api/product/filter?isFearured=${true}`)
-        // .then((res) => {
-        //     setFeaturedProducts(res);
-        // });
-
-      
+     
         fetchDataFromApi("/api/homeSliderBanner/")
         .then((res) => {
             console.log("HomeBanner", res);
@@ -164,20 +127,21 @@ const Home = () => {
                     <ProductSliderContainer products={context?.newArrivals?.products} title={"New Arrivals"}></ProductSliderContainer>
                 </section>
             }                     
-      
+
+
+            {/* display: grid;
+            grid-template-columns: repeat(4, 1fr) !important */}
 
             {/* Category section */}                       
             <div className="categories">
                 <div className="container-fluid">
-                    
-                    <div className="categoryRow ">
+                    <div className="categoryRow mt-4">
                         { 
-                            context.categoryData?.categoryList?.map((category, index) => {
-
-                                return (
-                                    <Category catData={category} key={index} />
-                                );
-                            })
+                            context.categoryData?.categoryList?.map((category, index) => (
+                                <div className="d-flex">
+                                    <Category catData={category} key={index}/>
+                                </div>
+                            ))
                         }
                     </div>
                 </div>
@@ -222,10 +186,10 @@ const Home = () => {
 
 
             {/*  products inspiration */}                       
-            <section className="homeProducts homeProductsSection2 pt-0">
+            <section className=" pt-0">
                 {
                     context?.recommendedCollaborative?.length !== 0 &&
-                    <section className="homeProducts homeProductsSection2 pt-0">
+                    <section className=" pt-0">
                         <ProductInspirations products={context?.recommendedCollaborative}></ProductInspirations>
                     </section>
                 }     

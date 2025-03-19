@@ -8,173 +8,177 @@ const { generateAccessToken, generateRefreshToken } = require("../utils/jwtHelpe
 const jwt = require("jsonwebtoken");
 
 
-
 // router.post('/signup', async (req, res) => {
-//     const {name, email, phone, password, isAdmin} = req.body;
-//     console.log(req.body);
-
-//     try{
-//         const existingUserByEmail = await User.findOne({"email": email});
-//         const existingUserByPhone = await User.findOne({"phone": phone});
-
-//         if (existingUserByEmail || existingUserByPhone) {
-//             res.status(400).json({error: true, msg: "user already exist!"});
+//     try {
+//         const { name, contact, password, role } = req.body;
+//         if (!contact || !password) {
+//             return res.status(400).json({ error: 'Contact and password are required' });
 //         }
-//         else {
-//             const hashPassword = await bcrypt.hash(password, 20);
-//             const result = await User.create({
-//                 name: name,
-//                 email: email,
-//                 phone: phone,
-//                 password: hashPassword,
-//                 isAdmin:  isAdmin
-//             });
 
-//             const token = jwt.sign({
-//                 email: result.email,
-//                 id: result.id
-//             }, process.env.JSON_WEB_TOKEN_SECRET_KEY);
-
-//             res.status(200).json({
-//                 user: result,
-//                 token: token
-//             })
-//         }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({error: "ture", msg: "Something went wrong"});
+//         const hashedPassword = await bcrypt.hash(password, 10);
+//         const newUser = new User({ name, contact, hashedPassword, role: role || 'buyer' });
+//         await newUser.save();
+//         res.status(201).json({ message: 'User registered successfully' });
+//     } catch (err) {
+//         console.error(err);
+//         res.status(500).json({ error: 'Registration failed' });
 //     }
 // });
 
-// Registration Endpoint
-
-router.post('/signup', async (req, res) => {
-    const { name, email, phone, password, role } = req.body;
-    if (!email || !password) {
-        return res.status(400).json({ error: 'Email and password are required' });
-    }
+// Signup Route
+router.post("/signup", async (req, res) => {
     try {
-        const hashedPassword = await bcrypt.hash(password, 10);
-        const newUser = new User({ name, email, password: hashedPassword, role: role || 'buyer' });
-        await newUser.save();
-        res.status(201).json({ message: 'User registered successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ error: 'Registration failed' });
+        const { name, contact, password, role } = req.body;
+        if (!contact || !password) {
+            return res.status(400).json({ error: 'Contact and password are required' });
+        }
+
+        // Check if user already exists
+        const existingUser = await User.findOne({ contact });
+        if (existingUser) {
+            return res.status(400).json({ error: "User already exists" });
+        }
+
+        // Hash Password
+        const salt = await bcrypt.genSalt(19);
+        const hashedPassword = await bcrypt.hash(password, salt);
+
+        // Create new user
+        const newUser = new User({ name, contact, hashedPassword, role: role || 'buyer' });
+        const user = await newUser.save();
+
+        const accessToken = generateAccessToken(user);
+
+        // Set Token as HTTP-Only Cookie
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+            sameSite: "lax", //Required for cross-origin cookies
+            domain: "localhost", // Ensures the cookie is scoped correctly
+            path: '/', // Accessible across all paths
+
+        });
+
+        res.status(201).json({ message: "User registered successfully", user: newUser });
+    } catch (error) {
+        console.error("Signup Error:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
 });
 
-// router.post('/signin', async (req, res) => {
-//     const {email, password} = req.body;
-
-//     try{
-//         const existingUser = await User.findOne({"email": email});
- 
-//         if (!existingUser) {
-//             res.status(404).json({error: true, msg: "user not found"});
-//         } else{
-//             const matchPassword = await bcrypt.compare(password, existingUser.password);
-
-//             if (!matchPassword) {
-//                 return res.status(400).json({error: true, msg: "password wrong"});
-//             }
-    
-//             const token = jwt.sign({
-//                 email: existingUser.email,
-//                 id: existingUser.id
-//             }, process.env.JSON_WEB_TOKEN_SECRET_KEY); 
-    
-//             return res.status(200).send({
-//                 user: existingUser,
-//                 token: token,
-//                 msg: "user login successfully!"
-//             });
-//         }
-
-
-
-//         // else {
-//         //     const hashPassword = await bcrypt.hash(password, 20);
-//         //     const result = await User.create({
-//         //         name: name,
-//         //         email: email,
-//         //         password: hashPassword,
-//         //         isAdmin: isAdmin
-//         //     });
-
-//             // const token = jwt.sign({
-//             //     email: result.email,
-//             //     id: result.id
-//             // }, process.env.JSON_WEB_TOKEN_SECRET_KEY);
-
-//             // res.status(200).json({
-//             //     user: result,
-//             //     token: token
-//             // })
-//         // }
-//     } catch (error) {
-//         console.log(error);
-//         res.status(500).json({error: "ture", msg: "Something went wrong"});
-//     }
-// });
-
-// Logout Endpoint
 
 // Login Endpoint: Issues JWT token on successful login
 router.post('/signin', async (req, res) => {
     const { contact, password } = req.body;
-    console.log("password",password)
     
     try {
 		const user = await User.findOne({ contact });
 		if (!user) return res.status(400).json({ error: 'Invalid credentials' });
 
-        console.log("user pass", user.password);
+        console.log(password)
+        console.log(user)
         
-		const isMatch = bcrypt.compare(password, user.password);
+        const isMatch = await bcrypt.compare(password, user.hashedPassword);
 		if (!isMatch) return res.status(400).json({ error: 'Invalid credentials' });
 		
-		// Create JWT payload
-		// const payload = { userId: user._id, role: user.role };
-		// Sign token with expiration (e.g., 1 day)
-		// const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: '1d' });
-
 		const accessToken = generateAccessToken(user);
 		const refreshToken = generateRefreshToken(user);
 
 		user.token = refreshToken;
 		await user.save();
 
-		// res.json({ accessToken, refreshToken });
+        res.cookie("accessToken", accessToken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+            sameSite: "lax", //Required for cross-origin cookies
+            domain: "localhost", // Ensures the cookie is scoped correctly
+            path: '/', // Accessible across all paths
+
+        });
+
+        res.cookie("refreshToken", refreshToken, {
+            httpOnly: true,  
+            secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+            sameSite: "lax", //Required for cross-origin cookies
+            domain: "localhost", // Ensures the cookie is scoped correctly
+            path: '/', // Accessible across all paths
+
+        });
 		
-		res.json({ message: 'Logged in successfully', accessToken, refreshToken, user: { username: user.name, contact: user.contact, userId: user._id } });
+		res.json({ message: 'Logged in successfully', user: { username: user.name, contact: user.contact, userId: user._id } });
     } catch (err) {
 		console.error(err);
 		res.status(500).json({ error: 'Login failed' });
     }
 });
 
-// Token Refresh
-router.post("/refresh", async (req, res) => {
-    const { refreshToken } = req.body;
+// Verify token and return user data
+router.get("/me", async (req, res) => {
+    try {
+        const token = req.cookies.accessToken;
+        if (!token) return res.status(401).json({ message: "Unauthorized" });
 
-    if (!refreshToken) return res.status(401).json({ error: "Unauthorized: No refresh token" });
+        const verifiedUser = jwt.verify(token, process.env.JWT_SECRET);
+        if (!verifiedUser) return res.status(401).json({ message: "Invalid token" });
 
-    const user = await User.findOne({ refreshToken });
-    if (!user) return res.status(403).json({ error: "Invalid refresh token" });
 
-    jwt.verify(refreshToken, process.env.REFRESH_SECRET, (err, decoded) => {
-        if (err) return res.status(403).json({ error: "Invalid refresh token" });
+        const user = await User.findById(verifiedUser.id);
 
-        const newAccessToken = generateAccessToken(user);
-        res.json({ accessToken: newAccessToken });
-    });
+        res.json({ username: user.name, contact: user.contact, userId: user._id });
+
+    } catch (error) {
+        res.status(401).json({ message: "Invalid token" });
+    }
 });
-// Logout (Invalidate Refresh Token)
-router.post("/logout", async (req, res) => {
-	const { userId } = req.body;
 
-	await User.findByIdAndUpdate(userId, { refreshToken: null });
+// Refresh Token Route
+router.get("/refresh", async (req, res) => {
+    try {
+        const refreshToken = req.cookies.refreshToken; // Get refresh token from cookies
+
+        if (!refreshToken) {
+            return res.status(401).json({ error: "Unauthorized. No refresh token." });
+        }
+
+        const user = await User.findOne({ refreshToken });
+        if (!user) return res.status(401).json({ error: "Invalid refresh token" });
+
+        // Verify Refresh Token
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
+            if (err) {
+                return res.status(401).json({ error: "Invalid or expired refresh token." });
+            }
+
+            // Generate new access token
+            const newAccessToken = generateAccessToken(user);
+
+            res.cookie("accessToken", newAccessToken, {
+                httpOnly: true,  
+                secure: process.env.NODE_ENV === "production" ? true : false, //Secure must be true in production
+                sameSite: "lax", //Required for cross-origin cookies
+                domain: "localhost", // Ensures the cookie is scoped correctly
+                path: '/', // Accessible across all paths
+    
+            });
+
+            // Send the new access token
+            res.json({ accessToken: newAccessToken });
+        });
+
+    } catch (error) {
+        console.error("Refresh token error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+});
+
+
+// Logout (Invalidate Refresh Token)
+router.post("/logout", verifyToken, async (req, res) => {
+
+    res.clearCookie("accessToken");
+    res.clearCookie("refreshToken");
+    res.clearCookie("user");
+	await User.findByIdAndUpdate(req.user.id, { refreshToken: null });
 
 	res.json({ message: "Logged out successfully" });
 });

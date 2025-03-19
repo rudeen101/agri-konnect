@@ -22,7 +22,7 @@ const ProductListingCard = ({ productData }) => {
 
     const context = useContext(MyContext);
 
-    function getEstimatedDeliveryDate(days) {
+    const getEstimatedDeliveryDate = (days) => {
         const today = new Date();
         const deliveryDate = new Date(today);
         deliveryDate.setDate(today.getDate() + days); // Add delivery days

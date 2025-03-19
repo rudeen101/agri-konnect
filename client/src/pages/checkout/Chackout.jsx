@@ -235,14 +235,16 @@ const Checkout = ({user}) => {
 
         //Restructure order data
         let orderItems = [];
-        cartData?.map((item, index) =>{
+        context?.cart?.items?.map((item, index) =>{
             orderItems.push({
                 product: item.product._id,
                 name: item.product.name,
+                category: item.product.catName,
                 price: item.product.price,
                 quantity: item.quantity,
                 images: item.product.images,
-                seller: item.product.seller
+                seller: item.product.seller,
+                estimatedDeliveryDate: item.product.estimatedDeliveryDate
             })
         })
 
@@ -264,7 +266,6 @@ const Checkout = ({user}) => {
                 });
                 
                 setIsCheckoutLoading(false);
-                alert()
                 setShowPaymentModal(true);
            }else {
                 context.setAlertBox({

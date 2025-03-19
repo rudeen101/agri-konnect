@@ -97,7 +97,7 @@ const Signup = () =>{
             }
 
             setIsLoading(true);
-            postData("/api/user/signup", formFields).then((res) => {
+            postDataToApi("/api/user/signup", formFields).then((res) => {
                 console.log(res)
                 if (res.error !== true) {
                     context.setAlertBox({
