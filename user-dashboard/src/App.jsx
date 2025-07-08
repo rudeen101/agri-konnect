@@ -4,31 +4,24 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { BrowserRouter, Routes, Route} from "react-router-dom";
 import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/dashboard';
-import SearchBox from './components/searchbox/SearchBox';
 import Login from './pages/Login/login';
 import ProductListing from './pages/Products/products';
 import ProductDetails from './pages/Products/productDetails';
 import ProductUpload from './pages/Products/addProducts';
 import { createContext, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar/sidebar';
-import { FaSignHanging } from 'react-icons/fa6';
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "./utils/apiCalls";
 import LoadingBar from 'react-top-loading-bar';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import DashboardAuth from './components/dasboardAuth/DashboardAuth';
 import EditProduct from './pages/Products/editProduct';
-
-
-
-import OrderListing from './pages/Orders/orderListing';
 import MyOrders from './pages/Orders/MyOrders';
 import OrderDetails from './pages/Orders/orderDetails';
-
 import SalesDetails from './pages/Sales/salesDetails';
 import SalesHistory from './pages/Sales/SalesHistory';
-
 import BusinessRegistration from './pages/businessRegistration/BusinessRegistration';
+import MyWishlist from './pages/wishlist/MyWishlist';
 
 
 const MyContext = createContext();
@@ -43,8 +36,8 @@ const App = () => {
 	const [windowwidth, setWindowwidth] = useState(window.innerWidth);
 	const [categoryData, setCategoryData] = useState([]);
 	const [progress, setProgress] = useState(0);
-	const [dashboardStats, setDashboardStats] = useState({});
 	const [salesTrendsData, setSalesTrendsData] = useState([]);
+	const [ordersTrendsData, setOrdersTrendsData] = useState([]);
 	const [revenueByCategory, setRevenueByCategory] = useState([]);
 	const [recentOrders, setRecentOrders] = useState([]);
     const [isAuthenticated, setIsAuthenticated] = useState(true); // Null means loading state
@@ -55,34 +48,77 @@ const App = () => {
 		error: false,
 		msg: ''
 	});
+	const [buyerStats, setBuyerStats] = useState({});
+	const [sellerStats, setSellerStats] = useState(null);
+	const [placedOrders, setPlacedOrders] = useState([]);
+	const [receivedOrders, setReceivedOrders] = useState([]);
+	const [isSeller, setIsSeller] = useState(false);
 
-		useEffect(() => {
-			const checkAuth = async () => {
-				const res = await fetchDataFromApi('/api/auth/me');
 
-				if (res.userId) {
-					setIsLogin(true);
-					setUserData(res);
-				} else {
-					isLogin(false);
-					setUserData(null);
-				} 
-			};
-	
-			checkAuth();
-		}, []);
-
-	// get dashboard cards stats
 	useEffect(() => {
-		fetchDataFromApi('/api/dashboard/stats').then((res) => {
-			setDashboardStats(res)
+
+
+		checkAuth();
+		checkSellerAuth()
+	}, []);
+
+	const checkAuth = async () => {
+		const res = await fetchDataFromApi('/api/auth/me');
+
+		if (res.userId) {
+			setIsLogin(true);
+			setUserData(res);
+		} else {
+			isLogin(false);
+			setUserData(null);
+		} 
+	};
+
+	const checkSellerAuth = async () => {
+		const res = await fetchDataFromApi('/api/auth/seller');
+
+		if (res) {
+			setIsSeller(true);
+		} 
+	};
+
+	// get buyer cards stats
+	useEffect(() => {
+		fetchDataFromApi('/api/dashboard/user/buyer/stats').then((res) => {
+			setBuyerStats(res)
 		})
 	}, []);
 
-	// Get sales data 
+	// get seller cards stats
 	useEffect(() => {
-		fetchDataFromApi('/api/sales/salesTrends').then((res) => {
+		fetchDataFromApi('/api/dashboard/user/seller/stats').then((res) => {
+			setSellerStats(res)
+		})
+	}, []);
+
+	// Get sales trends data 
+	useEffect(() => {
+		fetchDataFromApi('/api/sales/user/salesTrends').then((res) => {
 			setSalesTrendsData(res)
+		})
+	}, []);
+
+	// Get orders trends data 
+	useEffect(() => {
+		fetchDataFromApi('/api/sales/user/orderTrends').then((res) => {
+			setOrdersTrendsData(res)
+		})
+	}, []);
+
+	useEffect(() => {
+		fetchDataFromApi('/api/order/user/orderPlaced').then((res) => {
+			setPlacedOrders(res?.orders);
+		})
+	}, []);
+
+	useEffect(() => {
+		fetchDataFromApi('/api/order/user/orderReceived').then((res) => {
+			setReceivedOrders(res?.orders);
 		})
 	}, []);
 
@@ -99,22 +135,6 @@ const App = () => {
 			localStorage.setItem('themeMode', 'dark');
 		}
 	}, [themeMode]);
-
-	// Resize
-	useEffect(() => {
-		// const handleResize = () =>{
-		// 	setWindowwidth(window.innerWidth);
-		// }
-
-		// window.addEventListener('resize', handleResize);
-
-		// fetchCategory();
-		// fetchBanner()
-
-		// return () => {
-		// 	window.removeEventListener('resize', handleResize)
-		// }
-	}, []);
 
 	// Get category
 	const fetchCategory = () => {
@@ -171,10 +191,8 @@ const App = () => {
 		isToggleSidebar,
 		setIsToggleSidebar,
 		isLogin,
-		// login,
 		logout,
 		isLoading,
-		// isLogin,
 		setIsLogin,
 		isHiddenSidebarAndHeader,
 		setIsHiddenSidebarAndHeader,
@@ -192,17 +210,22 @@ const App = () => {
 		categoryData,
 		setCategoryData,
 		fetchBanner,
-		dashboardStats,
-		setDashboardStats,
 		setSalesTrendsData,
 		salesTrendsData,
+		ordersTrendsData,
 		setRevenueByCategory,
 		revenueByCategory,
 		setRecentOrders,
-		recentOrders
+		recentOrders,
+		buyerStats,
+		setBuyerStats,
+		sellerStats,
+		setSellerStats,
+		placedOrders,
+		receivedOrders,
+		isSeller,
 		
 	}
-
 
 	return (
 		<BrowserRouter>
@@ -276,6 +299,13 @@ const App = () => {
 
 							} />
 
+							<Route exact={true} path="/product/wishlist" element={
+								<DashboardAuth>
+									<MyWishlist />
+								</DashboardAuth>
+
+							} />
+
 							<Route exact={true} path="/product/edit/:id" element={
 								<DashboardAuth>
 									<EditProduct />
@@ -288,11 +318,11 @@ const App = () => {
 								</DashboardAuth>
 							} />
 
-							<Route exact={true} path="/admin/orders/listing/" element={
+							{/* <Route exact={true} path="/admin/orders/listing/" element={
 								<DashboardAuth>
 									<OrderListing />
 								</DashboardAuth>
-							} />
+							} /> */}
 
 							<Route exact={true} path="/admin/order/details/:id" element={
 								<DashboardAuth>

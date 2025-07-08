@@ -5,12 +5,11 @@ import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import { Link } from "react-router-dom";
 
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, postDataToApi, updateDataToApi } from "../../utils/apiCalls";
 import { IoMdCloseCircle } from "react-icons/io";
 import { useNavigate } from "react-router-dom";
 
@@ -38,7 +37,6 @@ const DeletedUsers = () =>{
             setAllUsers(filteredUsers);
             context.setProgress(100)
         });
-
 
     }, []);
 
@@ -68,7 +66,6 @@ const DeletedUsers = () =>{
         context.setProgress(40)
 
         postDataToApi(`/api/auth/user/restore/${userId}`).then((res) => {
-            console.log("restored", res);
             context.setProgress(100)
 
             setTimeout(() => {
@@ -106,7 +103,6 @@ const DeletedUsers = () =>{
                 </div>
 
                 <div className="card shadow border-0 p-3 mt-4">
-                    {/* <h3 className="hd">Product List</h3> */}
 
                     <div className="row cardFilters mt-3">
                         <div className="col-md-6">
@@ -205,15 +201,7 @@ const DeletedUsers = () =>{
 
                                                 <td>
                                                     <div className="actions d-flex align-items-center">
-                                                        {/* <Link to={`/product/details/${product._id}`}>
-                                                            <Button className="secondary" color="secondary"><FaEye /></Button>
-                                                        </Link>          */}
-
-
-                                                        {/* <Link to={`/admin/edit/${user?._id}`}>
-                                                            <Button className="success" color="sucess"><FaPencilAlt /></Button>
-                                                        </Link> */}
-                                                        
+                                                                                                  
                                                         <Button className="success restore" color="success" bg="success" onClick={() => restoreUser(user._id)}>
                                                         <MdOutlineRestore></MdOutlineRestore>
                                                         </Button> 

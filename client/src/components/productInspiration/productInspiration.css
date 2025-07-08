@@ -1,30 +1,70 @@
-.productListing {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); 
-    gap: 15px;
-    padding: 10px 0px;
+/* Base styles for all devices */
+.inspirations-section {
+  padding: 20px 0;
+  width: 100%;
 }
 
-@media (min-width: 1200px) {
-    .productListing {
-        grid-template-columns: repeat(5 , 1fr); /* 6 items per row */
-    }
+.inspiration-container {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 15px;
 }
 
-@media (max-width: 1199px) {
-    .productListing {
-        grid-template-columns: repeat(4, 1fr); /* 4 per row for medium screens */
-    }
+.inspiration-header {
+  /* text-align: center; */
+  margin-top: 30px;
+  margin-bottom: 20px;
 }
 
+.inspiration-title {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.inspiration-subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+.product-listing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+  /* padding: 0 10px; */
+}
+
+.product-card {
+  width: 100%;
+}
+
+/* Mobile responsiveness */
 @media (max-width: 768px) {
-    .productListing {
-        grid-template-columns: repeat(2, 1fr); /* 2 per row for tablets */
-    }
+  .inspiration-title {
+    font-size: 1.5rem;
+  }
+  
+  .inspiration-subtitle {
+    font-size: 1rem;
+  }
+  
+  .product-listing-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 15px;
+  }
 }
 
 @media (max-width: 480px) {
-    .productListing {
-        grid-template-columns: repeat(1, 1fr); /* 1 per row for mobile */
-    }
+  .inspirations-section {
+    padding: 15px 0;
+  }
+  
+  .inspiration-title {
+    font-size: 1.3rem;
+  }
+  
+  .product-listing-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
 }

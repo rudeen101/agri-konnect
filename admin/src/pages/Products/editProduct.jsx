@@ -137,7 +137,7 @@ const EditProduct = () =>{
         fetchDataFromApi('/api/imageUpload').then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/category/deleteImage?img=${img}`).then((res => {
+                    deleteImages(`/api/imageUpload/deleteImage?img=${img}`).then((res => {
                         deleteData('/api/imageUpload/deleteAllImages');
                     }));
                 })

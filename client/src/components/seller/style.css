@@ -65,7 +65,8 @@
   .hero-btn {
     display: inline-block;
     padding: 12px 20px;
-    font-size: 1rem;
+    font-size: 1.2rem;
+	font-weight: 600;
     color: var(--charcoal) !important;
     background-color: var(--light-teal);
     text-decoration: none;
@@ -137,9 +138,9 @@
   }
   
   .why-choose-text h2 {
-	font-size: 2.2rem;
+	font-size: 2rem;
 	color: #2c3e50;
-	margin-bottom: 15px;
+	margin-bottom: 25px !important;
   }
   
   .why-choose-text ul {
@@ -156,7 +157,7 @@
   }
   
   .why-choose-text li strong {
-	color: #28a745;
+	color: var(--primary-teal);
   }
   
   /* Responsive Design */
@@ -203,7 +204,7 @@
   }
   
   .how-it-works-text h2 {
-	font-size: 2.2rem;
+	font-size: 2rem;
 	color: #2c3e50;
 	margin-bottom: 15px;
   }
@@ -218,7 +219,13 @@
   .steps {
 	display: flex;
 	flex-direction: column;
-	gap: 15px;
+	gap: 5px;
+  }
+  .steps .btn {
+	width:max-content;
+	padding: 10px 20px !important;
+	font-size: 18px;
+	font-weight: 600;
   }
   
   .step {
@@ -228,14 +235,14 @@
   }
   
   .step-number {
-	width: 40px;
+	width: 45px;
 	height: 40px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	background-color: #28a745;
+	background-color: var(--dark-teal);
 	color: #fff;
-	font-size: 1.5rem;
+	font-size: 1.2rem;
 	font-weight: bold;
 	border-radius: 50%;
   }
@@ -279,11 +286,12 @@
   /* Services Section */
 .services {
 	width: 100%;
-	background-color: #f8f9fa;
+	/* background-color: #f8f9fa; */
 	padding: 60px 20px;
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	margin-top: 20px
   }
   
   .services-container {
@@ -325,8 +333,8 @@
   }
   
   .service-card h3 {
-	font-size: 1.4rem;
-	color: #28a745;
+	font-size: 1.2rem;
+	color: var(--primary-teal);
 	margin-bottom: 10px;
   }
   
@@ -363,7 +371,7 @@
   /* Newsletter Section */
 .newsletter {
 	width: 100%;
-	background-color: #f8f9fa;
+	background-color: white;
 	padding: 50px 20px;
 	display: flex;
 	justify-content: center;
@@ -407,7 +415,7 @@
   }
   
   .newsletter-form button {
-	background-color: #28a745;
+	background-color: var(--dark-teal);
 	color: white;
 	padding: 12px 20px;
 	border: none;
@@ -418,7 +426,7 @@
   }
   
   .newsletter-form button:hover {
-	background-color: #218838;
+	background-color: var(--primary-teal);
   }
   
   /* Responsive Design */

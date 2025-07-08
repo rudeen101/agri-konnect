@@ -1,17 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import { Button, Pagination } from "@mui/material";
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import food from "../../assets/images/food.jpg"
 import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from "react-router-dom";
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
-// import { deleteData } from "../../utils/api";
-
+import DataTable from "../../components/listingTable/DataTable";
 
 const HomeBannerSlideList = () =>{
     const [homeSliderBannerData, setHomeSliderBannerData] = useState([]);
@@ -31,7 +26,6 @@ const HomeBannerSlideList = () =>{
 
 
     const deleteHomeBannerSlide = (id) => {
-        console.log(id)
         deleteDataFromApi(`/api/homeSliderBanner/${id}`).then((res) => {
             context.setProgress(40);
             fetchDataFromApi('/api/homeSliderBanner').then((res) => {
@@ -70,67 +64,16 @@ const HomeBannerSlideList = () =>{
                             />
                             </Breadcrumbs>
 
-                            <Link to={'/homeBannerSlide/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Home Banner Slide</Button></Link>
+                            <Link to={'/homeBannerSlide/add'}><Button className="addCategory Btn btn-g ml-3 pl-3 pr-3">Add Slide</Button></Link>
 
                         </div>
                      
 
                 </div>
 
-                <div className="card shadow border-0 p-3 mt-4">
-                    <div className="table-responsive mt-3">
-                        <table className="table table-striped table-bordered">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th style={{width: '100px'}}>IMAGE</th>
-                                    <th style={{width: '100px'}}>Title</th>
-                                    <th style={{width: '100px'}}>Sub Title</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                               
-                            <tbody>
-                                {
-                                    homeSliderBannerData?.length !== 0 && homeSliderBannerData?.map((slide, index) => {
-                                        return (
-                                            <tr key={index}>
-                                                <td>
-                                                    <div className="d-flex align-items-center" style={{width: '100px', flex: '0 0 50px'}}>
-                                                        <div className="img card shadow m-0">
-                                                            <LazyLoadImage
-                                                                alt={"image"}
-                                                                effect="blur"
-                                                                className="w-100"
-                                                                src={slide?.imageUrl}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </td>
-                     
-                                                <td>
-                                                   <div>{slide?.title}</div>
-                                                </td>
-                                                <td>
-                                                   <div>{slide?.subtitle}</div>
-                                                </td>
-
-                                                                      
-                                                <td>
-                                                    <div className="actions d-flex align-items-center">
-                                                        <Link to={`/homeBannerSlide/edit/${slide?._id}`}>
-                                                            <Button className="success" color="success"><FaPencilAlt /></Button>
-                                                        </Link>
-
-                                                        
-                                                        <Button className="error" color="error" onClick={() => deleteHomeBannerSlide(slide._id)}><MdDelete /></Button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
+                <div className="card shadow border-0 p-3 ">
+                    <div className="table-responsive homeSliderBanner">
+                        <DataTable thData={["IMAGE", "TITLE", "SUB TITLE"]} tableData={homeSliderBannerData} searchPlaceholder="Search by Title" filterData={[]} filterHeader="Category" action={true} isEditable={true} onDelete={deleteHomeBannerSlide}></DataTable>
                     </div>
                 </div>
             </div>

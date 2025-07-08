@@ -13,6 +13,7 @@ const PrivateRoute = ({ children }) => {
 		const checkAuth = async () => {
 			try {
 				const res = await fetchDataFromApi('/api/auth/me');
+				console.log(res);
 
 				if (res.userId) {
 					setIsAuthenticated(true);
@@ -20,7 +21,6 @@ const PrivateRoute = ({ children }) => {
 					setIsAuthenticated(false);
 				}
 			} catch (error) {
-				console.log("error", error)
 				setIsAuthenticated(false);
 			} finally {
 				setLoading(false);
@@ -30,7 +30,7 @@ const PrivateRoute = ({ children }) => {
 		checkAuth();
 	}, []);
 
-	if (loading) return <p>Loading...</p>;
+	if (loading) return <p style={{ "backgroundColor": 'blue' }}>Loading...</p>;
 
     if (!isAuthenticated) {
         navigate("/login");

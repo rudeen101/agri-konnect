@@ -5,10 +5,8 @@ import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { IoMdCloseCircle } from "react-icons/io";
 import { Link } from "react-router-dom";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, deleteDataFromApi } from "../../utils/apiCalls";
 import SubCategoryListingTable from "../../components/listingTable/SubCategoryListingTable";
 
 
@@ -71,7 +69,7 @@ const SubCategory = () =>{
                             />
                             </Breadcrumbs>
 
-                            <Link to={'/subCategory/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Sub Category</Button></Link>
+                            <Link to={'/subCategory/add'}><Button className="addCategory btn btn-g ml-3 pl-3 pr-3">Add Sub Category</Button></Link>
 
                         </div>
                      

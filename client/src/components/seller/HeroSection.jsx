@@ -1,6 +1,7 @@
 import React from "react";
 import "./style.css"; // External CSS file
 import heroImage from "../../assets/images/banner-img.jpg"
+import { Link } from "react-router-dom";
 
 const HeroSection = ({headline, subHeadline, btnText}) => {
   return (
@@ -15,9 +16,11 @@ const HeroSection = ({headline, subHeadline, btnText}) => {
         <div className="hero-text">
           <h1>{headline}</h1>
           <p> {subHeadline} </p>
-          <a href="/register" className="hero-btn">
+          <Link className="hero-btn" to={"/business/signup"}>Start Selling Today</Link> &nbsp;
+          <Link className="hero-btn" to={"/seller/guide"}>Seller Guide</Link>
+          {/* <a href="/register" >
             {btnText}
-          </a>
+          </a> */}
         </div>
       </div>
     </section>

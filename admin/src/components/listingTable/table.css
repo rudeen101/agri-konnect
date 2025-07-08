@@ -1,0 +1,9 @@
+.homeSliderBanner .recent-orders {
+    margin-top: 0px !important;
+}
+
+.subCatContainer .card {
+    padding: 3px 5px;
+    overflow: hidden;
+    margin: 2px
+}

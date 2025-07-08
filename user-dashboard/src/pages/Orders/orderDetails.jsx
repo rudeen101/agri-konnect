@@ -41,7 +41,6 @@ const OrderDetails = () => {
     const fetchOrder = () => {
         fetchDataFromApi(`/api/order/details/${orderId}`).then((res) =>{
             setOrder(res.order);
-            console.log("order",res)
         });
     }
     
@@ -71,7 +70,6 @@ const OrderDetails = () => {
     const updatePayment = () => {
         setIsLoading(true)
         updateDataToApi(`/api/order/paymentConfirmation`, {orderId}).then((res) => {
-           console.log("Payment", res);
            fetchOrder()
            setIsLoading(false)
         });

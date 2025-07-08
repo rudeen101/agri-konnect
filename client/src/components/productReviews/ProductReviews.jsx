@@ -2,6 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import "./productReviews.css";
 import { fetchDataFromApi, postDataToApi, deleteDataFromApi, updateDataToApi } from "../../utils/apiCalls";
 import { MyContext } from "../../App";
+import { Rating } from "@mui/material";
 
 
 const ProductReviews = ({ productId, user }) => {
@@ -19,6 +20,7 @@ const ProductReviews = ({ productId, user }) => {
 
         fetchDataFromApi(`/api/productReviews/${productId}`)
         .then((res) =>{
+			console.log(res)
             setReviews(res);
         })
         .catch(err => console.error("Error fetching reviews:", err));
@@ -42,6 +44,7 @@ const ProductReviews = ({ productId, user }) => {
 
             postDataToApi(`/api/productReviews/add`, postReviews)
             .then((res) => {
+				console.log("***",res)
                 if(res.error) {
                     setRating(1);
                     setComment("");
@@ -97,46 +100,129 @@ const ProductReviews = ({ productId, user }) => {
     };
 
     return (
-        <div className="review-section">
-            <h4 className="hd mb-3">Customer Reviews</h4> <span>(Only verified buyer can add review.)</span>
-            {reviews.length === 0 ? <p>No reviews yet.</p> : (
-                reviews.map((review, index) => (
-                    <div key={index} className="review">
-                        <strong>{review?.user.name}</strong>
-                        <p>Rating: {review?.rating} ⭐</p>
-                        <p>{review?.comment}</p>
+		<div className="reviews-container">
+			<div className="reviews-header">
+				<h3 className="reviews-title">Customer Reviews</h3>
+				<span className="verified-buyer-note">(Only verified buyers can leave reviews)</span>
+				
+				{reviews.length > 0 && (
+				<div className="reviews-summary">
+					<div className="average-rating">
+					<span className="rating-value">
+						{reviews?.rating}
+					</span>
+					<Rating 
+						value={reviews?.rating} 
+						precision={0.1} 
+						readOnly 
+						size="large"
+					/>
+					</div>
+					<div className="total-reviews">{reviews.length} reviews</div>
+				</div>
+				)}
+			</div>
 
-                        {user && user.userId === review?.user._id && (
-                            <div>
-                                <button className="btn-g" onClick={() => {
-                                    setEditingReview(review);
-                                    setRating(review?.rating);
-                                    setComment(review?.comment);
-                                }}>Edit</button> &nbsp;
-                                <button className="btn-g" onClick={() => deleteReview(review?._id)}>Delete</button>
-                            </div>
-                        )}
-                    </div>
-                ))
-            )}
+			{reviews.length === 0 ? (
+				<div className="no-reviews">
+					<div className="no-reviews-icon">⭐</div>
+					<p>No reviews yet. Be the first to review this product!</p>
+				</div>
+			) : (
+				<div className="reviews-list">
+					{reviews.map((review, index) => (
+						<div key={index} className="review-card">
+							<div className="review-header">
+								<div className="reviewer-info">
+									<div className="reviewer-avatar">
+										{review?.user?.name.charAt(0).toUpperCase()}
+									</div>
+									<div>
+										<div className="reviewer-name">{review?.user?.name}</div>
+										<div className="review-date">
+											{new Date(review?.createdAt).toLocaleDateString()}
+										</div>
+									</div>
+								</div>
+								<div className="review-rating">
+									<Rating value={review?.rating} readOnly size="medium" />
+								</div>
+							</div>
+						
+							<div className="review-content">
+								<p>{review?.comment}</p>
+							</div>
+						
+							{user && user?.userId === review?.user._id && (
+								<div className="review-actions">
+									<button 
+										className="action-btn edit-btn"
+										onClick={() => {
+										setEditingReview(review);
+										setRating(review?.rating);
+										setComment(review?.comment);
+										}}
+									>
+										Edit
+									</button>
+									<button 
+										className="action-btn delete-btn"
+										onClick={() => deleteReview(review?._id)}
+									>
+										Delete
+									</button>
+								</div>
+							)}
+						</div>
+					))}
+				</div>
+			)}
 
-            {user && (
-                <form onSubmit={editingReview ? updateReview : submitReview}>
-                    <h4 className="hd mb-3 mt-3">{editingReview ? "Edit Your Review" : "Write a Review"}</h4>
-                    {error && <p style={{ color: "red" }}>{error}</p>}
-                    <select value={rating} onChange={(e) => setRating(e.target.value)}>
-                        <option value="0">Select Rating</option>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </select>
-                    <textarea value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Write your review"></textarea>
-                    <button className="btn-g btn-large" type="submit">{editingReview ? "Update Review" : "Submit Review"}</button>
-                </form>
-            )}
-        </div>
+			{user && (
+				<div className="review-form-container">
+					<form onSubmit={editingReview ? updateReview : submitReview} className="review-form">
+						<h4 className="form-title">
+							{editingReview ? "Edit Your Review" : "Write a Review"}
+						</h4>
+						
+						{error && <div className="error-message">{error}</div>}
+						
+						<div className="form-group">
+						<label htmlFor="rating-select">Your Rating</label>
+						<select
+							id="rating-select"
+							value={rating}
+							onChange={(e) => setRating(e.target.value)}
+							className="rating-select"
+						>
+							<option value="0">Select Rating</option>
+							<option value="1">1 - Poor</option>
+							<option value="2">2 - Fair</option>
+							<option value="3">3 - Good</option>
+							<option value="4">4 - Very Good</option>
+							<option value="5">5 - Excellent</option>
+						</select>
+						</div>
+						
+						<div className="form-group">
+						<label htmlFor="review-text">Your Review</label>
+						<textarea
+							id="review-text"
+							value={comment}
+							onChange={(e) => setComment(e.target.value)}
+							placeholder="Share your experience with this product..."
+							rows="5"
+							className="review-textarea"
+						></textarea>
+						</div>
+						
+						<button type="submit" className="submit-btn">
+						{editingReview ? "Update Review" : "Submit Review"}
+						</button>
+					</form>
+				</div>
+			)}
+		</div>
     );
 };
 

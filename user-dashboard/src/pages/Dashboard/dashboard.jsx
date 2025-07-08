@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 import { Paper, Typography } from '@mui/material';
 import DashboardCard from '../../components/dashboardBox/DashboardCard';
 import SalesTrendChart from '../../components/charts/SalesTrandChart';
-import RevenueBreakdownChart from '../../components/charts/RevenueBreakdownChart';
+import OrdersTrendsChart from '../../components/charts/OrdersTrandChart';
 import RecentOrders from '../../components/orders/RecentOrders';
 import { MyContext } from '../../App';
 
@@ -12,74 +12,96 @@ const StrategicDashboard = () => {
   return (
     <div>
 
-    {/* <div className="card adminDashboardHeader shadow border-0 w-100 d-flex justify-content-between flex-row">
-        <h5 className="mb-0">Admin Dashboard</h5>
-
-        <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Home"
-            icon={<HomeIcon fontSize="small" />}
-            />
-
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Products"
-            />
-
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Product View"
-            />
-        </Breadcrumbs>
-    </div> */}
-
-
-      {/* Key Metrics */}
+     {/* Key Metrics */}
       <div className="metrics-container">
         <DashboardCard
-          metric= {`$${context?.dashboardStats?.totalRevenue}`}
-          label="Total Revenue"
+          metric= {`${context?.buyerStats?.ordersPlaced}`}
+          label="Order Placed"
           trend="up"
-          trendValue="(last 30 days)"
+          trendValue="(This Month)"
         />
         <DashboardCard
-          metric={`${context?.dashboardStats?.newCustomers}`}
-          label="New Customers"
+          metric={`${context?.buyerStats?.totalSpent}`}
+          label="Total Spent"
           trend="up"
-          trendValue="(last 30 days)"
+          trendValue="(All Expenditure)"
         />
         <DashboardCard
-          metric={`${context?.dashboardStats?.customerRetention}`}
-          label="Customer Retention"
+          metric={`${context?.buyerStats?.wishlistItems}`}
+          label="Wishlist Items"
           trend="up"
-          trendValue="(last 30 days)"
+          trendValue="(All Items in List)"
         />
         <DashboardCard
-          metric={`${context?.dashboardStats?.newProducts}`}
-          label="New Prpducts"
+          metric={`${context?.buyerStats?.reviewsGiven}`}
+          label="Review Given"
           trend="up"
-          trendValue="(last 30 days)"
+          trendValue="(All Products Commented)"
         />
+
+        {
+			context?.isSeller &&
+			<>
+				<DashboardCard
+					metric={`${context?.sellerStats?.totalOrders}`}
+					label="Orders Reveived"
+					trend="up"
+					trendValue="(Total Orders)"
+				/>
+				<DashboardCard
+					metric={`${context?.sellerStats?.totalRevenue}`}
+					label="Total Revenue"
+					trend="up"
+					trendValue="(Revenue Generated)"
+				/>
+				<DashboardCard
+					metric={`${context?.sellerStats?.pendingOrders}`}
+					label="Pending Orders"
+					trend="up"
+					trendValue="(Orders Requested)"
+				/>
+				<DashboardCard
+					metric={`${context?.sellerStats?.averageRating}`}
+					label="Average Rating"
+					trend="up"
+					trendValue="(Buyers Ratings)"
+				/>
+			</>
+        }
+
       </div>
 
       {/* Charts */}
       <div className="charts-container">
+		{
+			context?.isSeller  &&
+			<Paper className="chart-container">
+				<SalesTrendChart />
+		  	</Paper>
+		}
+
         <Paper className="chart-container">
-          <SalesTrendChart />
-        </Paper>
-        <Paper className="chart-container">
-          <RevenueBreakdownChart />
+        	<OrdersTrendsChart />
         </Paper>
       </div>
 
-      {/* Recent Orders */}
+      {/* Recent Orders Placed */}
       <div className="orders-container">
-        <RecentOrders />
+		{
+			context?.placedOrders.length !== 0 &&
+			<RecentOrders orders={context?.placedOrders} title="Recent Orders Placed" />
+
+		}
       </div>
+
+      {/* Recent Orders Received */}
+		<div className="orders-container">
+			{
+				context?.isSeller &&
+				<RecentOrders orders={context?.receivedOrders} title="Recent Orders Placed" />
+			}
+		</div>
+
     </div>
   );
 };

@@ -19,10 +19,38 @@
 }
 
 body{
-    font-family: "Roboto", "sans-serif" !important;
     background-color: #ebe9e9 !important;
     overflow-x: hidden;
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 400;
+    /* color: #333 !important; */
 }
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Poppins', sans-serif !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.5px !important;
+}
+
+button, .cta {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 600 !important;
+    letter-spacing: 1px !important;
+    text-transform: uppercase !important;
+}
+
+nav a {
+    font-family: 'Open Sans', sans-serif !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.3px !important;
+    
+}
+
+.formElem:focus {
+    border-color: var(--primary-teal) !important;
+    outline: none !important;
+}
+
 body.dark {
     background-color: var(--primary-teal) !important;
 }
@@ -329,7 +357,7 @@ body.dark .main .sidebarContainer .sidebar {
     background-color: transparent !important;
 }
 .main .sidebarContainer:hover .sidebar::-webkit-scrollbar {
-    background-color: var(--light-teal) !important;
+    background-color: var(--primary-teal) !important;
 }
 .main .sidebarContainer .sidebar ul{
     margin-bottom: 0px;
@@ -1438,7 +1466,7 @@ body.dark .form .form-group input, body.dark .form .form-group textarea{
   }
   
   .trend.up {
-    color: #4CAF50;
+    color: var(--primary-teal);
     
   }
   
@@ -1555,6 +1583,51 @@ body.dark .form .form-group input, body.dark .form .form-group textarea{
       display: block;
       overflow-x: auto;
     }
+  }
+
+
+/* Base styles for the search container */
+
+  
+  /* Styles for the outlined input */
+  .MuiOutlinedInput-root {
+    /* border-radius: 20px; */
+    background-color: #fff;
+  }
+  
+  /* Border styles */
+  .MuiOutlinedInput-notchedOutline {
+    border-color: #ccc; /* Default border color */
+    border-width: 1px;
+    /* transition: border-color 0.2s ease; */
+  }
+  
+  /* Hover state */
+  .MuiOutlinedInput-notchedOutline {
+    border-color: #ccc !important; /* Darker border on hover */
+  }
+  
+  /* Focus state */
+  .Mui-focused .MuiOutlinedInput-notchedOutline {
+    border-color: var(--primary-teal) !important; /* MUI primary color */
+    border-width: 2px;
+    box-shadow: none !important;
+  }
+  
+  /* Search icon styles */
+  .search-icon {
+    color: #999;
+    margin-right: 8px;
+  }
+  
+  /* Input text styles */
+  .MuiInputBase-input {
+    padding: 10px 14px;
+    color: #333;
+  }
+
+  .css-15k6ek6-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-15k6ek6-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input.css-15k6ek6-MuiSelect-select-MuiInputBase-input-MuiOutlinedInput-input{
+    padding: 8px !important
   }
 
 

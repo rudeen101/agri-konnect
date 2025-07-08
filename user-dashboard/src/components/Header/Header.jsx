@@ -4,9 +4,6 @@ import logo from "../../assets/images/logo.png";
 import { Button } from "@mui/material";
 import MenuOpenIcon from '@mui/icons-material/MenuOpen';
 import SearchBox from "../searchbox/SearchBox";
-import LightModeOutlinedIcon from '@mui/icons-material/LightModeOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import userAvatar from "../../assets/images/rudeen.jpg";
 import NotificationsOutlinedIcon from '@mui/icons-material/NotificationsOutlined';
 import { MdMenu } from "react-icons/md";
@@ -15,46 +12,14 @@ import MenuDropdown from "../menuDropdown/menuDropdown";
 import Menu from '@mui/material/Menu';
 import MenuItem from '@mui/material/MenuItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
-import Divider from '@mui/material/Divider';
-import IconButton from '@mui/material/IconButton';
-import Typography from '@mui/material/Typography';
-import Tooltip from '@mui/material/Tooltip';
-import PersonAdd from '@mui/icons-material/PersonAdd';
-import Settings from '@mui/icons-material/Settings';
-import Logout from '@mui/icons-material/Logout';
 import { MyContext } from "../../App";
-import UserAvatarImg from "../userAvatarImg/userAvatarImg";
-
-import Box from '@mui/material/Box';
-import Avatar from '@mui/material/Avatar';
 import { IoShieldHalfSharp } from "react-icons/io5";
 import { MdOutlineLogout } from "react-icons/md";
 import { Link, useNavigate } from "react-router-dom";
-import { postDataToApi } from "../../utils/apiCalls";
-
-
-
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
-// import ListItemIcon from '@mui/material/ListItemIcon';
-// import Divider from '@mui/material/Divider';
-// import IconButton from '@mui/material/IconButton';
-// import Typography from '@mui/material/Typography';
-// import Tooltip from '@mui/material/Tooltip';
-// import PersonAdd from '@mui/icons-material/PersonAdd';
-// import Settings from '@mui/icons-material/Settings';
-// import Logout from '@mui/icons-material/Logout';
-
-// import Button from '@mui/material/Button';
-// import Menu from '@mui/material/Menu';
-// import MenuItem from '@mui/material/MenuItem';
-// import Fade from '@mui/material/Fade';
 
 
 const Header = () => {
     
-    const [isOpenNotificationDrop, setIsOpenNotificationDrop] = useState(false)
-    const openNotifications = Boolean(isOpenNotificationDrop);
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const context = useContext(MyContext);
@@ -116,10 +81,7 @@ const Header = () => {
                         }
                        
                         <div className="col-sm-7 d-flex align-items-center justify-content-end part3">
-                            <Button className="rounded-circle mr-3" onClick={() => context.setThemeMode(!context.themeMode)}><LightModeOutlinedIcon /></Button>
-                            {/* <Button className="rounded-circle mr-3 res-hide" ><ShoppingCartOutlinedIcon /></Button> */}
-                            {/* <MenuDropdown icon={<ShoppingCartOutlinedIcon />}></MenuDropdown> */}
-                            {/* <MenuDropdown icon={<MailOutlinedIcon />}></MenuDropdown> */}
+                      
                             <MenuDropdown icon={<NotificationsOutlinedIcon />}></MenuDropdown>
                             <Button className="rounded-circle mr-3" onClick={() => context.setIsOpenNav(!context.isOpenNav)}><MdMenu /></Button>
 
@@ -136,7 +98,6 @@ const Header = () => {
                                         aria-haspopup="true"
                                         onClick={handleClick}
                                     >
-                                        
                                         <div className="userInfo res-hide">
                                             <h4>{context?.userData?.username.trim().split(" ")[0]}</h4>
                                         </div>

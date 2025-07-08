@@ -12,20 +12,10 @@ import MenuItem from '@mui/material/MenuItem';
 
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-
-
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { deleteImages, uploadImage, deleteData, postData } from "../../utils/api";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
-
-
-
+import { fetchDataFromApi, postDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
 
 
 const AddSubCategory = () =>{

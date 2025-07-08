@@ -34,7 +34,7 @@ const ProductSliderContainer = ({ products, title }) => {
     
        // Slider settings
        const sliderSettings = {
-        dots: true,
+        dots: false,
         infinite: false,
         speed: 500,
         slidesToShow: Math.min(6, products.length), // Adjust slides dynamically
@@ -81,16 +81,6 @@ const ProductSliderContainer = ({ products, title }) => {
         </div>    
     );
 };
-
-// Example Usage
-// const products = [
-//     { name: "Product 1", image: "https://via.placeholder.com/500" },
-//     // Add more products here if needed
-// ];
-
-// export default function App() {
-//     return <ProductSlider products={products} />;
-// }
 
 export default ProductSliderContainer;
 

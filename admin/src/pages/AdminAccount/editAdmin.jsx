@@ -6,29 +6,17 @@ import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
 
-
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-
-import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-
-
-import { IoMdClose } from "react-icons/io";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { FaCloudUploadAlt } from "react-icons/fa";
 import { MyContext } from "../../App";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, postDataToApi } from "../../utils/apiCalls";
 
 
 const AddAdmin = () =>{
 
     const [isLoading, setIsLoading] = useState(false);
-    const [uploading, setUploading] = useState(false);
-    const [categoryValue, setCategoryValue] = useState('');
     const [catData, setCatData] = useState([]);
     const [role, setRole] = useState("");
 
@@ -40,13 +28,8 @@ const AddAdmin = () =>{
         role: "",
     });
 
-    const [previews, setPreviews] = useState([])
 
     const context = useContext(MyContext);
-
-    const formData = new FormData();
-
-    const navigate = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);

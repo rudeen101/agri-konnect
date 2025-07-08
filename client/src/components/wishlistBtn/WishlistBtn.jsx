@@ -20,7 +20,7 @@ const WishlistBtn = ({ productData }) => {
             <IconButton className="tooltipIcon">
                 
                 {
-                    context?.isInWishlist(productData._id) ? 
+                    context?.isInWishlist(productData?._id) ? 
                     <MdOutlineFavorite className='icon' onClick={() => handleWishlistToggle(productData)} />
                     : <FavoriteBorderIcon className='icon' onClick={() => handleWishlistToggle(productData)} />
                 }

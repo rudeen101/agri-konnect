@@ -63,40 +63,68 @@ const ProductListingCard = ({ productData }) => {
     // };
 
     return (
-        <Card className="productListingCard product-card">
-            <Link to={`/product/${productData?._id}`}>
-                <CardMedia className="product-media" image={productData?.images[0]} />
-            </Link>
-            <div className="product-icons">
-                <WishlistBtn productData={productData}></WishlistBtn>
-                <ShareBtn productData={productData}></ShareBtn>
-            </div>
+        // <Card className="productListingCard product-card">
+        //     <Link to={`/product/${productData?._id}`}>
+        //         <CardMedia className="product-media" image={productData?.images[0]} />
+        //     </Link>
+        //     <div className="product-icons">
+        //         <WishlistBtn productData={productData}></WishlistBtn>
+        //         <ShareBtn productData={productData}></ShareBtn>
+        //     </div>
 
-            <CardContent>
-            <div class="product-title">{productData?.name}</div>
-            <div class="product-description">{productData?.description}</div>
-            {/* <div class="product-specs">Specifications: 1 lb per bag, Non-GMO, Freshly packed</div> */}
-            <div class="product-supplier">Supplier: {productData?.seller?.name} (<span>Verified</span>)</div>
-            {/* <div class="product-category">Category: Fresh Fruits</div> */}
-            <div class="product-min-order">Minimum Order: {productData?.minOrder} {productData?.packagingType}(s)</div>
-            <div class="product-price"><span>${productData?.oldPrice}</span> {productData?.price} / {productData?.packagingType}</div>
-            {/* <div class="product-discount">Discount: 10% Off</div> */}
-            <div class="product-rating">
-                <Rating className="rating" name="half-rating-read" value={parseFloat(productData?.rating)} precesion={0.5} readOnly /> 
-                <span className='review'>({productData?.rating ? productData?.rating : 0}/5)</span>
+        //     <CardContent>
+        //     <div class="product-title">{productData?.name}</div>
+        //     <div class="product-description">{productData?.description}</div>
+        //     <div class="product-min-order">Minimum Order: {productData?.minOrder} {productData?.packagingType}(s)</div>
+        //     <div class="product-price"><span>${productData?.oldPrice}</span> {productData?.price} / {productData?.packagingType}</div>
+        //     <div class="product-rating">
+        //         <Rating className="rating" name="half-rating-read" value={parseFloat(productData?.rating)} precesion={0.5} readOnly /> 
+        //         <span className='review'>({productData?.rating ? productData?.rating : 0}/5)</span>
+        //     </div>
+        //     <div class="product-delivery">Delivery: Get it <strong>{getEstimatedDeliveryDate(productData?.estimatedDeliveryDate)}</strong></div>
+        //     <div class="cardAtions">
+        //         <div className="btnWrapper">
+        //             <button className='actionBtn w-100'  onClick={() => context?.addToCart(productData)}>
+                        // {context?.isInCart(productData._id) ? "In Cart" : "Add to Cart"}
+        //             </button>
+        //         </div>
+        //     </div>
+        //     </CardContent>
+        // </Card>
+
+        <div className="product-card" key={productData._id}>
+            <Link to={`/product/${productData._id}`} className="product-link">
+            <div className="product-image-container">
+                <img 
+                src={productData?.images[0]} 
+                alt={productData?.name} 
+                className="product-image"
+                loading="lazy"
+                />
+                {productData?.rating >= 4 && (
+                <span className="product-badge">Popular</span>
+                )}
             </div>
-            <div class="product-delivery">Delivery: Get it <strong>{getEstimatedDeliveryDate(productData?.estimatedDeliveryDate)}</strong></div>
-            {/* <div class="product-delivery">Deliver to: <strong>Monrovia, Liberia</strong></div> */}
-            <div class="cardAtions">
-                <div className="btnWrapper">
-                    <button className='actionBtn'>Buy Now</button>
-                    <button className='actionBtn'  onClick={() => context?.addToCart(productData)}>
-                        {context?.isInCart(productData._id) ? "In Cart" : "Add to Cart"}
-                    </button>
+            <div className="product-info">
+                <h3 className="product-title">{productData.name}</h3>
+                <div className="product-rating">
+                {[...Array(5)].map((_, i) => (
+                    <span 
+                    key={i} 
+                    className={`star ${i < productData?.rating ? 'filled' : ''}`}
+                    >
+                    {i < productData?.rating ? '★' : '☆'}
+                    </span>
+                ))}
+                <span className="rating-count">({Math.floor(Math.random() * 100)})</span>
                 </div>
+                <p className="product-price">${productData?.price.toFixed(2)}</p>
             </div>
-            </CardContent>
-        </Card>
+            </Link>
+            <button className="add-to-cart-btn" onClick={() => context?.addToCart(productData)}>
+                {context?.isInCart(productData._id) ? "In Cart" : "Add to Cart"}
+            </button>
+        </div>
     );
 };
 

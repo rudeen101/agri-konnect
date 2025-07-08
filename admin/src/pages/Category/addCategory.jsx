@@ -8,10 +8,8 @@ import { Button, CircularProgress } from "@mui/material";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
 import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteImages, deleteDataFromApi, uploadImage } from "../../utils/apiCalls";
+import { updateDataToApi, deleteImages, deleteDataFromApi, uploadImage } from "../../utils/apiCalls";
 import StyledSelect2 from "../../components/styledSelect/StyledSelect2";
 
 import { IoMdClose } from "react-icons/io";

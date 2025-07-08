@@ -35,7 +35,7 @@
 }
 
 .selectElem:focus {
-    border-color: var(--dark-teal) !important;
+    border-color: var(--primary-teal) !important;
     outline: none;
 }
 

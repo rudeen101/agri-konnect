@@ -8,23 +8,13 @@ import { Button, CircularProgress } from "@mui/material";
 import StyledSelect2 from "../../components/styledSelect/StyledSelect2";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
-
-
+import { fetchDataFromApi, updateDataToApi, deleteDataFromApi, deleteImages, uploadImage } from "../../utils/apiCalls";
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
 
-
-
-
 const EditSubCategory = () =>{
 
-    const [category, setCategory] = useState([  ]);
     const [isLoading, setIsLoading] = useState(false);
     const [uploading, setUploading] = useState(false);
     const [formFields, setFormFields] = useState({
@@ -38,17 +28,10 @@ const EditSubCategory = () =>{
     });
 
     const [previews, setPreviews] = useState([])
-
     const context = useContext(MyContext);
-
     const { id } = useParams();
-    // const id = "672dc6170993f8d550111cd2";
-    console.log("cat-id",id)
-
     const formData = new FormData();
-
     const navigate = useNavigate();
-
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -56,7 +39,7 @@ const EditSubCategory = () =>{
         fetchDataFromApi("/api/imageUpload").then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+                    deleteImages(`/api/imageUpload/deleteImage?img=${img}`).then((res) => {
                         deleteDataFromApi('/api/imageUpload/deleteAllImages');
                     });
                 });
@@ -66,7 +49,6 @@ const EditSubCategory = () =>{
 
         fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
            context.setProgress(20); 
-           console.log(res) 
             setCategory(res);
             setPreviews(res.images);
             setFormFields({
@@ -158,7 +140,6 @@ const EditSubCategory = () =>{
     }
 
     const removeImage = async (index, imgUrl) => {
-        console.log(imgUrl);
         const imgIndex = previews.indexOf(imgUrl);
         deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({

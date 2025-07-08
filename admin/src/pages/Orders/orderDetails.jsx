@@ -22,10 +22,8 @@ import {
   } from '@mui/material';
 
 const OrderDetails = () => {
-    const [progress, setProgress] = useState(80);
     const [isLoading, setIsLoading] = useState(false);
     const [order, setOrder] = useState([]);
-    const [subOrder, setSubOrder] = useState([]);
     const [statusList, setStatusList] = useState(["Pending Confirmation","Accept", "Reject", "completed"]);
     const [trackingList, setTrackingList] = useState(["pending Tracking","Processing", "In-route", "Delivered", "Received"]);
     const context = useContext(MyContext);
@@ -41,7 +39,6 @@ const OrderDetails = () => {
     const fetchOrder = () => {
         fetchDataFromApi(`/api/order/details/${orderId}`).then((res) =>{
             setOrder(res.order);
-            console.log("order",res)
         });
     }
     
@@ -71,7 +68,6 @@ const OrderDetails = () => {
     const updatePayment = () => {
         setIsLoading(true)
         updateDataToApi(`/api/order/paymentConfirmation`, {orderId}).then((res) => {
-           console.log("Payment", res);
            fetchOrder()
            setIsLoading(false)
         });
@@ -85,7 +81,6 @@ const OrderDetails = () => {
         const options = { weekday: 'long', month: 'short', day: 'numeric' };
         const formattedDate = deliveryDate.toLocaleDateString('en-US', options);
     
-        const currentWeekday = today.toLocaleDateString('en-US', { weekday: 'long' });
     
         // If delivery day is the same week, use "This Monday"
         if (deliveryDate.getDate() - today.getDate() <= 6) {

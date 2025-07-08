@@ -1,7 +1,6 @@
 import React, { createContext, useEffect, useState } from 'react';
 import './App.css';
 import Button from 'react-bootstrap/Button';
-import Header from './components/header/header';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Home from './pages/home/home';
 import Login from './pages/login/login';
@@ -16,18 +15,16 @@ import LoadingBar from 'react-top-loading-bar';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import SearchPage from './pages/search/search';
-import Header2 from './components/header2/Header';
+import Header2 from './components/header/Header';
 import PrivateRoute from './components/privateRoute/privateRoute';
 import WishList from './pages/wishList/wishList';
-import Profile from './pages/profile/profile';
-import Orders from './pages/orders/orders';
-import Transactions from './pages/transsactions/transactions';
 import Checkout from './pages/checkout/Chackout';
 import ThankYouPage from './pages/thankYou/ThankYouPage';
 import { deleteDataFromApi, fetchDataFromApi, postDataToApi, updateDataToApi } from './utils/apiCalls';
 import Seller from './pages/seller/Seller';
 import SellerGuide from './pages/sellerGuide/SellerGuide';
 import BusinessSignup from './pages/businessRegistration/BusinessSignup';
+import FilterListing from './pages/productListing/filterListing';
 
 const MyContext = createContext();
 
@@ -36,11 +33,7 @@ const App = () => {
 	const [categoryData, setCategoryData] = useState([]);
 	const [subCategoryData, setSubCategoryData] = useState([]);
 	const [progress, setProgress] = useState(0);
-	const [cartItems, setCartItems] = useState([]);
-	const [windowWidth, setWindowWidth] = useState(window.innerWidth)
 	const [isLogin, setIsLogin] = useState(false);
-	const [isOpenFilters, setIsOpenFilters] = useState()
-	const [cartTotalAmount, setCartTotalAmount] = useState();
 	const [selectedCounty, setSelectedCounty] = useState("");
 	const [userData, setUserData] = useState("");
 	const [headerFooterDisplay, setHeaderFooterDisplay] = useState(true);
@@ -56,6 +49,8 @@ const App = () => {
 	const [recommendedCollaborative, setRecommendedCollaborative] = useState([]);
 	const [mostPopular, setMostPopular] = useState([]);
 	const [newArrivals, setNewArrival] = useState([]);
+	const [featured, setFeatured] = useState([]);
+	const [topSelling, setTopSelling] = useState([]);
 	const [catProducts, setCatProducts] = useState([]);
 	const [wishlist, setWishlist] = useState({ items: [] });
 	const [cart, setCart] = useState({ items: [] });
@@ -64,7 +59,6 @@ const App = () => {
 	useEffect(() => {
 		const checkAuth = async () => {
 			const res = await fetchDataFromApi('/api/auth/me');
-			console.log(res)
 
 			if (res.userId) {
 				const storedUser = localStorage.getItem("user");
@@ -109,6 +103,8 @@ const App = () => {
 		
         if (data) {
             setMostPopular(data.combinedProducts.find(p => p.category === "mostPopular"));
+            setTopSelling(data.combinedProducts.find(p => p.category === "topSelling"));
+            setFeatured(data.combinedProducts.find(p => p.category === "featured"));
 			setNewArrival(data.combinedProducts.find(p => p.category === "newlyReleased"));
 			setCatProducts(data.combinedProducts.find(p => p.category === "catProducts"));
         } 
@@ -173,13 +169,14 @@ const App = () => {
 
 		} else {
 			const storedWishlistItem = JSON.parse(localStorage.getItem("wishlist")) || [];
-			console.log("storedWishlistItem", storedWishlistItem);
 			setWishlist(storedWishlistItem);
 		}
 	}
 
 	const addToWishlist = async (product) => {
 		try {
+			const data = await postDataToApi(`/api/wishlist/add`, { productId: product._id})
+
 			setWishlist(data.wishlist);
 			setAlertBox({
 				open: true,
@@ -259,7 +256,6 @@ const App = () => {
 
 		} else {
 			const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-			console.log("storedCart", storedCart)
 			setCart(storedCart);
 		}
 	}
@@ -331,7 +327,6 @@ const App = () => {
 		updateDataToApi(`/api/cart/update/${itemId}`, { quantity }).then((res) => {
 			if (res.error) {
 				setCart(prevCart => {
-					console.log("Previous Cart:", prevCart);
 					
 					if (!prevCart || !prevCart.items) return prevCart;
 					
@@ -344,7 +339,6 @@ const App = () => {
 						)
 					};
 				
-					console.log("Updated Cart:", updatedCart);
 					return updatedCart;
 				});
 				// getCartData()
@@ -386,15 +380,14 @@ const App = () => {
 		}
 	};
 
-	const signup = async (userData) => {
-		try {
-			const response = await postDataToApi.post("/api/auth/signup", userData);
-			console.log("Signup Success:", response.data);
-			window.location.href = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5175/dashboard"; // Redirect after signup
-		} catch (error) {
-			console.error("Signup failed:", error.response?.data?.error || error.message);
-		}
-	};
+	// const signup = async (userData) => {
+	// 	try {
+	// 		await postDataToApi.post("/api/auth/signup", userData);
+	// 		// window.location.href = import.meta.env.VITE_DASHBOARD_URL || "http://localhost:5175/dashboard"; // Redirect after signup
+	// 	} catch (error) {
+	// 		console.error("Signup failed:", error.response?.data?.error || error.message);
+	// 	}
+	// };
 
 	// Close alert box
 	const handleClose = (event, reason) => {
@@ -409,7 +402,7 @@ const App = () => {
 
 	const values = {
 		login,
-		signup,
+		// signup,
 		logout,
 		categoryData,
 		setCategoryData,
@@ -436,6 +429,8 @@ const App = () => {
 		recentlyViewed,
 		newArrivals,
 		mostPopular,
+		topSelling,
+		featured,
 		setCatProducts,
 		catProducts,
 		setRecommendedProducts,
@@ -487,6 +482,7 @@ const App = () => {
 					<Route exact={true} path="/seller/guide" element={<SellerGuide />} />
 					<Route exact={true} path="/product/category/:id" element={<ProductListing />} />
 					<Route exact={true} path="/product/subCat/:id" element={<ProductListing />} />
+					<Route exact={true} path="/product/filter" element={<FilterListing />} />
 					<Route exact={true} path="/product/:id" element={<ProductDetails user={user}  />} />
 					<Route exact={true} path="*" element={<NotFound />} />
 					{/* <Route exact={true} path="/product-details" element={<ProductDetails />} /> */}
@@ -494,13 +490,6 @@ const App = () => {
 					<Route exact={true} path="/login" element={<Login />} />
 					<Route exact={true} path="/signup" element={<Signup />} />
 					<Route exact={true} path="/search/:query" element={<SearchPage />} />
-
-					{/* Protected Routes */}
-					<Route path="/profile" element={
-						<PrivateRoute>
-							<Profile />
-						</PrivateRoute>
-					} />
 
 					<Route path="/cart" element={
 						// <PrivateRoute>
@@ -520,22 +509,10 @@ const App = () => {
 						// </PrivateRoute>
 					} />
 
-					<Route path="/orders" element={
-						<PrivateRoute>
-							<Orders user={user} />
-						</PrivateRoute>
-					} />
-
 					<Route path="/wishlist" element={
 						// <PrivateRoute>
 							<WishList user={user} />
 						// </PrivateRoute>
-					} />
-					
-					<Route path="/transactions" element={
-						<PrivateRoute>
-							<Transactions user={user} />
-						</PrivateRoute>
 					} />
 
 					<Route path="/business/signup" element={

@@ -57,21 +57,6 @@ const ShareBtn = ({ productData }) => {
                 </div>
 
             )}
-
-        
-    
-
-            {/* <Tooltip title="Share on LinkedIn" arrow>
-                <LinkedinShareButton 
-                url={productUrl} 
-                title={productTitle} 
-                summary={productDescription} 
-                source="YourSiteName"
-                >
-                <LinkedinIcon size={40} round />
-                </LinkedinShareButton>
-            </Tooltip> */}
-
         
         </div>
     );

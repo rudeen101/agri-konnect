@@ -2,7 +2,6 @@ import React from "react";
 import MenuItem from "@mui/material/MenuItem";
 import Button from "@mui/material/Button";
 import Menu from "@mui/material/Menu";
-import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import "./menuDropdown.css";
 
 
@@ -19,14 +18,7 @@ const MenuDropdown = (props) => {
 
     return (
         <>
-   
-            {/* <Button
-                aria-controls="simple-menu"
-                aria-haspopup="true"
-                onClick={handleClick}>
-                Open Menu List
-            </Button> */}
-            <Button 
+              <Button 
                 className="rounded-circle res-hide mr-3 res-hide"
                 aria-controls="simple-menu"
                 aria-haspopup="true"

@@ -12,7 +12,6 @@ import { Link, useNavigate } from "react-router-dom";
 
 
 import backgroundPattern from "../../assets/images/background-pattern.jpg"
-// import User from "../../../../server/models/users";
 
 const Login = () =>{
     const { login, setAlertBox } = useContext(MyContext);
@@ -46,7 +45,9 @@ const Login = () =>{
         setIsLoading(true);
 
         try {
-            const res = await postDataToApi("/api/auth/signin", formFields);
+            const res = await postDataToApi("/api/admin/signin", formFields);
+            console.log(res)
+            return
 
             const userData = {
                 username: res?.user?.username,
@@ -59,7 +60,7 @@ const Login = () =>{
             setTimeout(() => {
                 setInputIndex(true);
                 setIsLoading(false);
-                navigate("/");
+                window.location.href = "/"; // Redirect to login on failure
             }, 200);
 
         } catch (error) {
@@ -120,12 +121,6 @@ const Login = () =>{
                             </div>
                         </form>
                     </div>
-
-                    {/* <div className="wrapper mt-3 card border footer p-3 d-flex">
-                        <span className="text-center">Don't have an acount?
-                            <Link to={'/signup'} className="link color ml-3">Register</Link>
-                        </span>
-                    </div> */}
 
                 </div>
             </section>

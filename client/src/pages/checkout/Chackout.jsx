@@ -33,11 +33,10 @@ const Checkout = ({user}) => {
     })
 
     const pickupStations = [
-        "Downtown Hub",
-        "City Center Mall",
-        "Westside Pickup Point",
-        "Airport Express Station",
-        "Suburban Warehouse",
+        "Omega Market, Redlight",
+        "Old Road Market",
+        "Rally Town Market",
+        "Dwalla Market",
     ];
 
     // User Addresses & Payment States
@@ -280,13 +279,6 @@ const Checkout = ({user}) => {
         }).catch((error)=>{
             console.log(error)
         });
-
-        // const response = await placeOrder(orderData);
-        // if (response.error) {
-        //     alert("Order Failed!");
-        // } else {
-        //     alert("Order Placed Successfully!");
-        // }
     };
  
     const handleConfirmPayment = () => {
@@ -315,206 +307,198 @@ const Checkout = ({user}) => {
             <section className="checkout cartSection  mb-5">
                 <div className="container-fluid">
                     <div className="row">
-                        <div className="col-md-8">
+                        <div className="col-12 col-lg-8 order-lg-1 order-2">
                             <div className="checkout-container">
-                                {/* Left Section */}
-                                <div className="checkout-left">
-                                    {/* Address Section */}
-                                    <div className="checkout-card">
-                                        <h4>Shipping Address</h4>
-                                        <div className="address-selection">
-                                            {addresses?.length !== 0 && addresses?.map((addr, index) => (
-                                                <label key={index} className="address-option">
-                                                    <input
-                                                        type="radio"
-                                                        name="address"
-                                                        value={addr}
-                                                        checked={selectedAddress === addr}
-                                                        onChange={() => setSelectedAddress(addr)}
-                                                    />
-                                                    {/* {addr} */}
-                                                    <ul className="deliveryDetails">
-                                                        <li>Recipient Name: <span>{addr.fullName}</span></li>
-                                                        <li>Phone Number: <span>{addr.phone}</span></li>
-                                                        <li>Address: <span>{addr.address}</span></li>
-                                                        <li>City: <span>{addr.city}</span></li>
-                                                    </ul>
-                                                </label>
-                                            ))}
-                                            <Button onClick={() => setShowAddressModal(true)} className="btn-border mt-2 add-address-btn">
-                                                + Add New Address
-                                            </Button>
-                                        </div>
+                            {/* Left Section */}
+                            <div className="checkout-left">
+                                {/* Address Section */}
+                                <div className="checkout-card">
+                                <h4>Shipping Address</h4>
+                                <div className="address-selection">
+                                    {addresses?.length !== 0 && addresses?.map((addr, index) => (
+                                    <label key={index} className="address-option">
+                                        <input
+                                        type="radio"
+                                        name="address"
+                                        value={addr}
+                                        checked={selectedAddress === addr}
+                                        onChange={() => setSelectedAddress(addr)}
+                                        />
+                                        <ul className="deliveryDetails">
+                                        <li>Recipient Name: <span>{addr.fullName}</span></li>
+                                        <li>Phone Number: <span>{addr.phone}</span></li>
+                                        <li>Address: <span>{addr.address}</span></li>
+                                        <li>City: <span>{addr.city}</span></li>
+                                        </ul>
+                                    </label>
+                                    ))}
+                                    <Button onClick={() => setShowAddressModal(true)} className="btn-border mt-2 add-address-btn w-100">
+                                    + Add New Address
+                                    </Button>
+                                </div>
 
-                                        {/* Pickup Station */}
-                                        <h5 className="mt-3">Pickup Station</h5>
-                                        <StyledSelect onSelectChange={handlePickupStationChange} selectData={pickupStations}></StyledSelect>
+                                {/* Pickup Station */}
+                                <h5 className="mt-3">Pickup Station</h5>
+                                <StyledSelect onSelectChange={handlePickupStationChange} selectData={pickupStations}></StyledSelect>
+                                </div>
+
+                                {/* Payment Section */}
+                                <div className="checkout-card">
+                                <h4>Payment Method</h4>
+                                <div className="payment-options">
+                                    {["MoMo", "OrangeMoney", "Cash"].map((method) => (
+                                    <label key={method} className="payment-option">
+                                        <input
+                                        type="radio"
+                                        name="payment"
+                                        className="formElem"
+                                        value={method}
+                                        checked={paymentMethod === method}
+                                        onChange={() => setPaymentMethod(method)}
+                                        />
+                                        {method}
+                                    </label>
+                                    ))}
+                                </div>
+
+                                {/* Dynamic Payment Form */}
+                                {paymentMethod && paymentMethod !== "Cash" && (
+                                    <div className="payment-form">
+                                    <h5>Enter {paymentMethod} Details</h5>
+                                    <input
+                                        type="text"
+                                        name="accountName"
+                                        className="formElem mb-2"
+                                        placeholder="Enter account name"
+                                        value={formFields.accountName}
+                                        onChange={inputChange}
+                                    /> 
+                                    <input
+                                        type="text"
+                                        name="accountPhone"
+                                        className="formElem"
+                                        placeholder="Enter account phone number"
+                                        value={formFields.accountPhone}
+                                        onChange={inputChange}
+                                    /> 
                                     </div>
+                                )}
+                                </div>
 
-                                    {/* Payment Section */}
-                                    <div className="checkout-card">
-                                        <h4>Payment Method</h4>
-                                        <div className="payment-options">
-                                            {["MoMo", "OrangeMoney", "Cash"].map((method) => (
-                                                <label key={method} className="payment-option">
-                                                    <input
-                                                        type="radio"
-                                                        name="payment"
-                                                        value={method}
-                                                        checked={paymentMethod === method}
-                                                        onChange={() => setPaymentMethod(method)}
-                                                    />
-                                                    {method}
-                                                </label>
-                                            ))}
-                                        </div>
-
-                                        {/* Dynamic Payment Form */}
-                                        {paymentMethod && paymentMethod !== "Cash" && (
-                                            <div className="payment-form">
-                                                <h5>Enter {paymentMethod} Details</h5>
-                                                <input
-                                                    type="text"
-                                                    name="accountName"
-                                                    placeholder="Enter account name"
-                                                    value={formFields.accountName}
-                                                    onChange={inputChange}
-                                                /> 
-                                                <input
-                                                    type="text"
-                                                    name="accountPhone"
-                                                    placeholder="Enter account phone number"
-                                                    value={formFields.accountPhone}
-                                                    onChange={inputChange}
-                                                /> 
-                                            </div>
-                                        )}
-                                    </div>
-
-                                    {/* Order Review & Checkout */}
-                                    <div className="checkout-card" id="orderReview">
-                                        <h4>Review & Place Order</h4>
-                                        <div className="cartWrapper">
-                                            <div className="table-responsive">
-                                                <table className="table">
-                                                    <thead className="table-gray">
-                                                        
-                                                        <tr>
-                                                            <th>Product</th>
-                                                            <th>Unit Price</th>
-                                                            <th>Quantity</th>
-                                                            <th>Subtotal</th>
-                                                            <th>Remove</th>
-                                                        </tr>
-                                                    </thead>
-            
-                                                    <tbody>
-                                                        {
-                                                            context?.cart?.items?.length !== 0 && context?.cart?.items?.map((item, index) => {
-                                                                return(
-                                                                    <tr key={index}>
-                                                                        <td>
-                                                                            <div className="d-flex align-items-center">
-                                                                                <div className="img">
-                                                                                    <Link to={`/product/${item?.product?._id}`}>
-                                                                                        <img src={item?.product?.images[0]} alt="" className="w-100" />
-                                                                                    </Link>
-                                                                                </div>
-                        
-                                                                                <div className="info pl-4">
-                                                                                    <Link to={`/product/${item?._id}`}>
-                                                                                        <h6>{item?.product?.name?.substr(0,100) + "..."}</h6>
-                                                                                    </Link>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                        
-                                                                        <td>  
-                                                                            <span className="">${item?.product?.price}</span>
-                                                                        </td>
-                                                                        <td>
-                                                                            {/* <QuantityBox 
-                                                                                value={item?.quantity}
-                                                                                item={item} 
-                                                                                selectedItem={selectedItem}
-                                                                                quantity={quantity}
-                                                                            /> */}
-
-                                                                            <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
-
-                                                                        </td>
-                        
-                                                                        <td>
-                                                                            <span className="text-g">${(item?.product?.price * item?.quantity).toFixed(2)}</span>
-                                                                        </td>
-                        
-                                                                        <td>
-                                                                            {
-                                                                                isLoading === true ? 
-                                                                                
-                                                                                <button className="deleteLoader">
-                                                                                    <CircularProgress className="loading" />
-                                                                                </button>
-                                                                                :
-                                                                                <span className="cursor" onClick={() =>  context?.removeFromCart(item?._id)}><DeleteOutlineOutlinedIcon /></span>
-
-                                                        
-                                                                            }
-                                                                            
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            })
-                                                        }
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div className="d-flex align-items-center justify-content-between  mb-3">
-                                            <span className="mb-0 ">Total</span>
-                                            <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
-                                        </div>
-
-                                        <button className="checkout-btn" onClick={handlePlaceOrder}>
-                                           
-                                            {
-                                                isCheckoutLoading === true ? 
-                                                
-                                                    <span>Place Order <CircularProgress className="checkoutLoader" /></span> 
-                                                :
-                                                " Place Order"
-                                            }
-                                        </button>
+                                {/* Order Review & Checkout */}
+                                <div className="checkout-card" id="orderReview">
+                                <h4>Review & Place Order</h4>
+                                <div className="cartWrapper">
+                                    <div className="table-responsive">
+                                    <table className="table">
+                                        <thead className="table-gray">
+                                        <tr>
+                                            <th>Product</th>
+                                            <th className="hide-on-mobile">Unit Price</th>
+                                            <th>Quantity</th>
+                                            <th className="hide-on-mobile">Subtotal</th>
+                                            <th>Remove</th>
+                                        </tr>
+                                        </thead>
+                            
+                                        <tbody>
+                                        {
+                                            context?.cart?.items?.length !== 0 && context?.cart?.items?.map((item, index) => {
+                                            return(
+                                                <tr key={index}>
+                                                <td>
+                                                    <div className="d-flex align-items-center product-info-mobile">
+                                                    <div className="img">
+                                                        <Link to={`/product/${item?.product?._id}`}>
+                                                        <img src={item?.product?.images[0]} alt="" className="w-100" />
+                                                        </Link>
+                                                    </div>
+                            
+                                                    <div className="info pl-2 pl-md-4">
+                                                        <Link to={`/product/${item?._id}`}>
+                                                        <h6>{item?.product?.name?.substr(0,100) + "..."}</h6>
+                                                        </Link>
+                                                        <div className="show-on-mobile">
+                                                        <span>${item?.product?.price}</span>
+                                                        <span className="text-g ml-2">${(item?.product?.price * item?.quantity).toFixed(2)}</span>
+                                                        </div>
+                                                    </div>
+                                                    </div>
+                                                </td>
+                            
+                                                <td className="hide-on-mobile">  
+                                                    <span className="">${item?.product?.price}</span>
+                                                </td>
+                                                <td>
+                                                    <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
+                                                </td>
+                            
+                                                <td className="hide-on-mobile">
+                                                    <span className="text-g">${(item?.product?.price * item?.quantity).toFixed(2)}</span>
+                                                </td>
+                            
+                                                <td>
+                                                    {
+                                                    isLoading === true ? 
+                                                    
+                                                    <button className="deleteLoader">
+                                                        <CircularProgress className="loading" />
+                                                    </button>
+                                                    :
+                                                    <span className="cursor" onClick={() =>  context?.removeFromCart(item?._id)}><DeleteOutlineOutlinedIcon /></span>
+                                                    }
+                                                </td>
+                                                </tr>
+                                            )
+                                            })
+                                        }
+                                        </tbody>
+                                    </table>
                                     </div>
                                 </div>
+
+                                <div className="d-flex align-items-center justify-content-between mb-3">
+                                    <span className="mb-0">Total</span>
+                                    <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
+                                </div>
+
+                                <button className="checkout-btn w-100" onClick={handlePlaceOrder}>
+                                    {
+                                    isCheckoutLoading === true ? 
+                                        <span>Place Order <CircularProgress className="checkoutLoader" /></span> 
+                                    :
+                                    "Place Order"
+                                    }
+                                </button>
+                                </div>
+                            </div>
                             </div> 
                         </div>
 
-                   
-                        <div className="col-md-4 pl-9 checkoutBox">
-                            <div className="checkoutCard p-4">
-                                <div className="d-flex align-items-center justify-content-between mb-3">
-                                    <span className="mb-0 ">Subtotal</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Shipping</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold">Free</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Estimate for</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold">Monrovia</h6>
-                                </div>
-                                <div className="d-flex align-items-center justify-content-between  mb-3">
-                                    <span className="mb-0 ">Total</span>
-                                    <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
-                                </div>
+                        {/* Right Section - Order Summary */}
+                        <div className="col-12 col-lg-4 order-lg-2 order-1 mb-4 mb-lg-0">
+                            <div className="checkoutCard p-3 p-md-4">
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <span className="mb-0">Subtotal</span>
+                                <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <span className="mb-0">Shipping</span>
+                                <h6 className="ml-auto mb-0 font-weight-bold">Free</h6>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <span className="mb-0">Estimate for</span>
+                                <h6 className="ml-auto mb-0 font-weight-bold">Monrovia</h6>
+                            </div>
+                            <div className="d-flex align-items-center justify-content-between mb-3">
+                                <span className="mb-0">Total</span>
+                                <h6 className="ml-auto mb-0 font-weight-bold text-g">${calculateTotal()}</h6>
+                            </div>
 
-                                <br />  
-                                <a href="#orderReview">
-                                    <Button className="btn-g btn-lg">Review & Place Order</Button>
-                                </a>
+                            <br />  
+                            <a href="#orderReview">
+                                <Button className="btn-g btn-lg w-100">Review & Place Order</Button>
+                            </a>
                             </div>
                         </div>
                     </div>
@@ -529,7 +513,7 @@ const Checkout = ({user}) => {
                 >
                     <input 
                         type="text" 
-                        className="form-control mb-2" 
+                        className="form-control mb-2 formElem" 
                         name="fullName"
                         placeholder="Enter new address recipient fullname"
                         value={formFields.fullName}
@@ -537,7 +521,7 @@ const Checkout = ({user}) => {
                     />
                     <input 
                         type="text" 
-                        className="form-control mb-2" 
+                        className="form-control mb-2 formElem" 
                         name="phone"
                         placeholder="Enter recipient phone number"
                         value={formFields.phone}
@@ -545,7 +529,7 @@ const Checkout = ({user}) => {
                     />
                     <input 
                         type="text" 
-                        className="form-control mb-2" 
+                        className="form-control mb-2 formElem" 
                         name="address"
                         placeholder="Enter delivery address"
                         value={formFields.address}
@@ -553,7 +537,7 @@ const Checkout = ({user}) => {
                     />
                     <input 
                         type="text" 
-                        className="form-control mb-2" 
+                        className="form-control mb-2 formElem" 
                         name="city"
                         placeholder="Enter city"
                         value={formFields.city}

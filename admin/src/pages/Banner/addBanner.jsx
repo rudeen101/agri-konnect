@@ -7,22 +7,14 @@ import { Button, CircularProgress } from "@mui/material";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
+import { fetchDataFromApi, postDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
-
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, postData } from "../../utils/api";
-
 
 
 const AddBanner = () =>{
@@ -31,6 +23,7 @@ const AddBanner = () =>{
     const [uploading, setUploading] = useState(false);
     const [formFields, setFormFields] = useState({
         images: [],
+        name: "",
         catId: "",
         catName: "",
         subCatId: "",
@@ -40,25 +33,12 @@ const AddBanner = () =>{
     const [previews, setPreviews] = useState([]);
     const [bannerValue, setBannerValue] = useState();
     const [subCategoryData, setSubCategoryData] = useState([]);
-    const [categoryValue, setCategoryValue] = useState("");
-    const [subCategoryValue, setSubCategoryValue] = useState("");
 
     const context = useContext(MyContext);
 
     const formData = new FormData();
 
     const navigate = useNavigate();
-
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-
-    //     fetchDataFromApi("/api/category").then((res) => {
-    //         context.setProgress(20);
-    //         setCatData(res);
-    //         context.setProgress(100);
-    //     });
-
-    // }, []);
 
     useEffect(() => {
         const subCatArray = [];
@@ -88,12 +68,12 @@ const AddBanner = () =>{
         });
     }, []);
 
-    // const changeInput = (e) => {
-    //     setFormFields({
-    //         ...formFields,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
+    const changeInput = (e) => {
+        setFormFields({
+            ...formFields,
+            [e.target.name]: e.target.value
+        })
+    }
 
     const handleChangeCategory = (event) => {
         setCategoryValue(event.target.value);
@@ -180,7 +160,7 @@ const AddBanner = () =>{
 
     const removeImage = async (index, imgUrl) => {
         const imgIndex = previews.indexOf(imgUrl);
-        deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
+        deleteImages(`/api/imageUpload/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({
                 open: true,
                 error: false,
@@ -203,8 +183,9 @@ const AddBanner = () =>{
         formFields.images = appendedArray;
 
 
-        if (formFields.catName !== "" && formFields.subCatName !== "" && previews.length !== 0){
+        if (formFields.catName !== "" && formFields.subCatName !== "" && formFields.name !== "" && previews.length !== 0){
             setIsLoading(true);
+
             postDataToApi(`/api/banner/create`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchBanner();
@@ -331,6 +312,17 @@ const AddBanner = () =>{
                                                     }
                                                 </Select>
                                             </div>
+                                        </div>
+
+                                        <div className="form-group">
+                                            <h6>Banner Name</h6>
+                                            <input 
+                                                type="text" 
+                                                name="name"
+                                                value={formFields.name}
+                                                onChange={changeInput} 
+                                            />
+                                            
                                         </div>
                                     </div>
 

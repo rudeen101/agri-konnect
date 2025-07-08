@@ -1,16 +1,13 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./tag.css";
-import { MdDelete } from "react-icons/md";
-import food from "../../assets/images/food.jpg"
 import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Link } from "react-router-dom";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, deleteDataFromApi } from "../../utils/apiCalls";
 import { Button } from "@mui/material";
-// import { deleteData } from "../../utils/api";
-
+import DataTable from "../../components/listingTable/DataTable";
 
 const TagList = () =>{
     const [tagData, setTagData] = useState([]);
@@ -26,7 +23,6 @@ const TagList = () =>{
     
     const fetchTags = () => {
 		fetchDataFromApi('/api/tag').then((res) => {
-            console.log("Tags",res)
 			context.setProgress(30)
 			setTagData(res);
 			context.setProgress(100)
@@ -65,7 +61,7 @@ const TagList = () =>{
                             />
 
                             </Breadcrumbs>
-                            <Link to={'/tag/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Tag</Button></Link>
+                            <Link to={'/tag/add'}><Button className="addCategory btn btn-g ml-3 pl-3 pr-3">Add Tag</Button></Link>
 
                         </div>
                 </div>
@@ -73,47 +69,9 @@ const TagList = () =>{
                 <div className="card shadow border-0 p-3 mt-4">
                     
                     <div className="table-responsive mt-3">
-                        <table className="table table-striped table-bordered">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th>TAG</th>
-                                    <th>Category</th>
-                                    <th>Description</th>
-                                    <th>ACTION</th>
-                                </tr>
-                            </thead>
-                               
-                            <tbody>
-                                {
-                                    tagData?.tagData?.length !== 0 && tagData?.map((tag, index) => {
-                                        return (
-                                            <tr key={index}>
-                                        
-                                                <td>
-                                                    {tag?.name}
-                                                </td>
-                                                <td>
-                                                    {tag?.category.name}
-                                                </td>
-                                                <td>
-                                                    {tag?.description}
-                                                </td>
-                                                <td>
-                                                    <div className="actions d-flex align-items-center">
-                                                        {/* <Link to={`/category/edit/${tagData?._id}`}>
-                                                            <Button className="success" color="success"><FaPencilAlt /></Button>
-                                                        </Link> */}
-
-                                                        
-                                                        <Button className="error" color="error" onClick={() => deleteTag(tag._id)}><MdDelete /></Button>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
+                        <div className="table-responsive homeSliderBanner">
+                            <DataTable thData={["TAG", "CATEGORY", "DESCRIPTION"]} tableData={tagData} searchPlaceholder="Search by tag name" filterData={[]} filterHeader="Category" action={true} isEditable={false} onDelete={deleteTag}></DataTable>
+                        </div>
                     </div>
                 </div>
             </div>

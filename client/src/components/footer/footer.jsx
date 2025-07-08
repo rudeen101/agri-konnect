@@ -16,8 +16,9 @@ import InstagramIcon from '@mui/icons-material/Instagram';
 import PhoneInTalkIcon from '@mui/icons-material/PhoneInTalk';
 import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import AccessTimeOutlinedIcon from '@mui/icons-material/AccessTimeOutlined';
-import Newsletter from "../newsletter/newsletter";
 import image from "../../assets/images/fruits-vegetables .png"
+import Newsletter from "../seller/NewsLetter";
+Newsletter
 
 
 
@@ -25,197 +26,134 @@ import image from "../../assets/images/fruits-vegetables .png"
 const Footer = () =>{
     return (
         <>
-            {/* <div className="newsletterSection mt-5">
-                <div className="container-fluid">
-                    <div className="box d-flex align-items-center">
-                        <div className="info">
-                            <h3>Stay home and get daily <br/> needs from our shop</h3>
-                            <p>Start your daily Shopping wth Nest Mart</p>
-                            <br />
-                            <Newsletter />
-                        </div>
-
-                        <div className="img">
-                            <img src={image}/>
-                        </div>
-                    </div>
-                </div>
-            </div> */}
-
             <div className="footerContainer">
-                {/* <div className="footerBoxes">
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col">
-                                <div className="box d-flex align-items-center w-100">
-                                    <img src={icon} alt="box icon" />
-                                    <div className="info">
-                                        <h5>Best prices & offer</h5>
-                                        <p>Order %50 or more</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col">
-                                <div className="box d-flex align-items-center w-100">
-                                    <img src={icon} alt="box icon" />
-                                    <div className="info">
-                                        <h5>Free delivery</h5>
-                                        <p>Order %50 or more</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col">
-                                <div className="box d-flex align-items-center w-100">
-                                    <img src={icon} alt="box icon" />
-                                    <div className="info">
-                                        <h5>Get daily deal</h5>
-                                        <p>Order %50 or more</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col">
-                                <div className="box d-flex align-items-center w-100">
-                                    <img src={icon} alt="box icon" />
-                                    <div className="info">
-                                        <h5>Wide assortmentr</h5>
-                                        <p>Order %50 or more</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col">
-                                <div className="box d-flex align-items-center w-100">
-                                    <img src={icon} alt="box icon" />
-                                    <div className="info">
-                                        <h5>easy returns</h5>
-                                        <p>Order %50 or more</p>
-                                    </div>
-                                </div>
-                            </div>
-                        
-                        </div>
-                    </div>
-                </div> */}
+                {/* <Newsletter></Newsletter> */}
 
                 <footer>
+                    <div className="footer-container">
+                        <div className="container-fluid">
+                            <div className="row footer-main">
+                            {/* Part 1 - Logo and Info */}
+                            <div className="col-lg-3 col-md-6 col-sm-12 footer-part footer-part1">
+                                <div className="footer-brand">
+                                    <a href="#"><img src={logo} alt="Site logo" className="footer-logo" /></a>
+                                </div>
+                                <p className="footer-description">
+                                    Agri-Konnect, a digital platform that connects farmers directly with buyers, ensuring fair pricing and reliable access to fresh produce.
+                                </p>
 
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-md-3 part1">
-                                <a href="#"><img src={logo} alt="Site logo" className="footerLogo" /></a>
-                                <br /> 
-                                <p className="">Agri-Konnect, a digital platform that connects farmers directly with buyers, ensuring fair pricing and reliable access to fresh produce.</p>
-
-                                <p className="address mt-4"><LocationOnOutlinedIcon /><strong>Address</strong> Oldest Congo, Tubman Boulevard, Opposit NVTI</p>
-                                {/* <p><HeadphonesOutlinedIcon /><strong>Call Us</strong>: (+231) 777-989-777</p> */}
-                                <p className="address"><EmailOutlinedIcon /><strong>Email</strong>: agriKonnect231@gmail.com</p>
-                                {/* <p><AccessTimeOutlinedIcon /><strong>Hours</strong>: 10:00 - 18:00, Mon - Sat</p> */}
+                                <div className="footer-contact-info">
+                                    <p className="address">
+                                        <LocationOnOutlinedIcon className="footer-icon" />
+                                        <span className="contact-text"><strong>Address</strong>: Oldest Congo, Tubman Boulevard, Opposite NVTI</span>
+                                    </p>
+                                    <p className="address">
+                                        <EmailOutlinedIcon className="footer-icon" />
+                                        <span className="contact-text"><strong>Email</strong>: agriKonnect231@gmail.com</span>
+                                    </p>
+                                </div>
                             </div>
 
-                            <div className="col-md-6 part2" >
+                            {/* Part 2 - Navigation Links */}
+                            <div className="col-lg-6 col-md-12 col-sm-12 footer-part footer-part2">
                                 <div className="row">
-                                    <div className="col">
-                                        <h4>Company</h4>
-                                        <ul className="footer-list mb-sm-5 mb-md-0 p-0">
-                                            <li><a href="#">About us</a></li>
-                                            <li><a href="#">Career & Learnings</a></li>
-                                            <li><a href="#">Return & Refund policy</a></li>
-                                            <li><a href="#">Terms &amp; Conditions</a></li>
-                                            <li><a href="#">Contact Us</a></li>
+                                    <div className="col-md-4 col-sm-6 col-6 footer-links">
+                                        <h4 className="footer-heading">Company</h4>
+                                        <ul className="footer-list">
+                                        <li><a href="#" className="footer-link">About us</a></li>
+                                        <li><a href="#" className="footer-link">Career & Learnings</a></li>
+                                        <li><a href="#" className="footer-link">Return & Refund policy</a></li>
+                                        <li><a href="#" className="footer-link">Terms & Conditions</a></li>
+                                        <li><a href="#" className="footer-link">Contact Us</a></li>
                                         </ul>
                                     </div>
-                                    <div className="col">
-                                        <h4>Make money with us</h4>
-                                        <ul className="footer-list mb-sm-5 mb-md-0 p-0">
-                                            <li><a href="#">Start selling</a></li>
-                                            <li><a href="#">Become a verified supplier</a></li>
-                                            <li><a href="#">Become a sales agent</a></li>
-                                            <li><a href="#">Advertise your products</a></li>
+                                    <div className="col-md-4 col-sm-6 col-6 footer-links">
+                                        <h4 className="footer-heading">Make money with us</h4>
+                                        <ul className="footer-list">
+                                        <li><a href="#" className="footer-link">Start selling</a></li>
+                                        <li><a href="#" className="footer-link">Become a verified supplier</a></li>
+                                        <li><a href="#" className="footer-link">Become a sales agent</a></li>
+                                        <li><a href="#" className="footer-link">Advertise your products</a></li>
                                         </ul>
                                     </div>
-                                    <div className="col">
-                                        <h4>Get support</h4>
-                                        <ul className="footer-list mb-sm-5 mb-md-0 p-0">
-                                            <li><a href="#">Chat with us</a></li>
-                                            <li><a href="#">Help Center</a></li>
-                                            <li><a href="#">Privacy Policy</a></li>
-                                            <li><a href="#">FAQ</a></li>
+                                    <div className="col-md-4 col-sm-6 col-6 footer-links">
+                                        <h4 className="footer-heading">Get support</h4>
+                                        <ul className="footer-list">
+                                        <li><a href="#" className="footer-link">Chat with us</a></li>
+                                        <li><a href="#" className="footer-link">Help Center</a></li>
+                                        <li><a href="#" className="footer-link">Privacy Policy</a></li>
+                                        <li><a href="#" className="footer-link">FAQ</a></li>
                                         </ul>
                                     </div>
                                 </div>
                             </div>
 
-                            <div className="col-md-3 part3" >
-                                <h4 className="mb-3">Install App</h4>
-
-                                <div className="paymentContainer">
-                                    <p>From App Store or Google Play</p>
-                                    <div className="d-flex installAppContainer mt-1">
-                                        <a href="#"><img src={googlePlay} alt="app store image" className="" /></a>
-                                        <a href="#"><img src={appStore} alt="app store image" className="mx-2"/></a>
-                                    </div>
+                            {/* Part 3 - App and Payment */}
+                            <div className="col-lg-3 col-md-6 col-sm-12 footer-part footer-part3">
+                                <div className="footer-app-section">
+                                <h4 className="footer-heading">Install App</h4>
+                                <p className="footer-subtext">From App Store or Google Play</p>
+                                <div className="footer-app-buttons">
+                                    <a href="#" className="app-button-link">
+                                    <img src={googlePlay} alt="Google Play" className="app-button-img" />
+                                    </a>
+                                    <a href="#" className="app-button-link">
+                                    <img src={appStore} alt="App Store" className="app-button-img" />
+                                    </a>
                                 </div>
-                             
-                                <br />
-                                <div className="paymentContainer">
-                                    <p>Secure Payment Gateway</p>
-                                    <div className="d-flex paymentMethodContainer">
-                                        <a href="#"><img src={mtnOrange} alt="app store image" className="w-100 h-60"/></a>
-                                    </div>
                                 </div>
-                              
-                        
-                            
-                            </div>
-                        </div>
 
-                        <hr />
-
-                        <div className="row lastSection">
-                            <div className="col-md-3">
-                                <p>@ 2025, AgriKonnect All rights reserved</p>
-                            </div>
-
-                            <div className="col-md-6">
-                                <div className="m-auto d-flex align-items-center">
-                                    <div className="phone d-flex align-items-center ml-auto mx-5"> 
-                                        <span><PhoneInTalkIcon className="phoneIcon"/></span>
-                                        <div className="info ml-3">
-                                            <h3 className="mb-0">(+231) 777-967-844</h3>
-                                            <p className="mt-0 mb-0">WhatsApp Chat</p>
-                                        </div>
-                                    </div>
-
-                                    <div className="phone d-flex align-items-center ml-auto mx-5"> 
-                                        <span><PhoneInTalkIcon className="phoneIcon"/></span>
-                                        <div className="info ml-3">
-                                            <h3 className="mb-0">(+231) 888-642-680</h3>
-                                            <p className="mt-0 mb-0">24/7 Support Center</p>
-                                        </div>
-                                    </div>
+                                <div className="footer-payment-section">
+                                <p className="footer-subtext">Secure Payment Gateway</p>
+                                <div className="footer-payment-methods">
+                                    <img src={mtnOrange} alt="Payment methods" className="payment-method-img" />
+                                </div>
                                 </div>
                             </div>
+                            </div>
 
-                            <div className="col-md-3 part3">
-                                <div className="d-flex align-items-center">
-                                    <h5>Follow us:</h5>
-                                    <ul className="list list-inline">
-                                        <li className="list-inline-item">
-                                            <a href="#"><FacebookOutlinedIcon /></a>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <a href="#"><TwitterIcon /></a>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <a href="#"><InstagramIcon /></a>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <a href="#"><YouTubeIcon /></a>
-                                        </li>
-                                    </ul>
+                            <div className="footer-divider"></div>
+
+                            <div className="row footer-bottom">
+                                <div className="col-lg-3 col-md-12 col-12 footer-copyright">
+                                    <p>© 2025, AgriKonnect All rights reserved</p>
                                 </div>
+
+                            <div className="col-lg-6 col-md-8 col-12 footer-contact">
+                                <div className="footer-phone-container">
+                                <div className="footer-phone-item">
+                                    <PhoneInTalkIcon className="footer-phone-icon" />
+                                    <div className="footer-phone-info">
+                                    <h5 className="footer-phone-number">(+231) 777-967-844</h5>
+                                    <p className="footer-phone-label">WhatsApp Chat</p>
+                                    </div>
+                                </div>
+                                <div className="footer-phone-item">
+                                    <PhoneInTalkIcon className="footer-phone-icon" />
+                                    <div className="footer-phone-info">
+                                    <h5 className="footer-phone-number">(+231) 888-642-680</h5>
+                                    <p className="footer-phone-label">24/7 Support Center</p>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+
+                            <div className="col-lg-3 col-md-4 col-12 footer-social">
+                                <div className="footer-social-container">
+                                <h5 className="footer-social-heading">Follow us:</h5>
+                                <div className="footer-social-icons">
+                                    <a href="#" className="social-icon-link"><FacebookOutlinedIcon className="social-icon" /></a>
+                                    <a href="#" className="social-icon-link"><TwitterIcon className="social-icon" /></a>
+                                    <a href="#" className="social-icon-link"><InstagramIcon className="social-icon" /></a>
+                                    <a href="#" className="social-icon-link"><YouTubeIcon className="social-icon" /></a>
+                                </div>
+                                </div>
+                            </div>
                             </div>
                         </div>
                     </div>
+
+             
                 </footer>
             </div>
         </>

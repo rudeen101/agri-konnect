@@ -6,7 +6,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 const ProductImageSlider = ({ images }) => {
-    console.log(images)
   const [navSlider, setNavSlider] = useState(null);
   const [mainSlider, setMainSlider] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);

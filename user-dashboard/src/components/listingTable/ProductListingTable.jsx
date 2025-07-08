@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Table,
   TableBody,
@@ -50,20 +50,32 @@ const ListingTable = ({thData, tableData, searchPlaceholder, filterData, headerT
     };
 
     const handleStatusFilterChange = (event) => {
-        console.log("testing..", event.target.value)
         setStatusFilter(event.target.value);
         setPage(0); // Reset to the first page when filtering
     };
 
-
     // Filter orders based on search query and status filter
     const filteredTableData = tableData?.filter((data) => {
 
-        const matchesSearch = data?.name.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesStatus = statusFilter === 'all' ||  data?.catName === statusFilter;
+        const matchesSearch = data?.product?.name.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchesStatus = statusFilter === 'all' ||  data?.product?.catName === statusFilter;
         
         return matchesSearch && matchesStatus;
     });
+
+    const dateFormatter = (dateCreated) => {
+        const date = new Date(dateCreated);
+        const readableDate = date.toLocaleDateString("en-US", {
+            year: "numeric",
+            month: "long",
+            day: "numeric",
+            // hour: "2-digit",
+            // minute: "2-digit",
+            // second: "2-digit",
+            // timeZoneName: "short",
+        })
+        return readableDate;
+    };
 
 
     return (
@@ -86,26 +98,6 @@ const ListingTable = ({thData, tableData, searchPlaceholder, filterData, headerT
                     ),
                     }}
                 />
-
-                <FormControl variant="outlined" size="small" style={{ minWidth: '120px' }}>
-                    <InputLabel>{filterHeader}</InputLabel>
-                    <Select
-                        value={statusFilter}
-                        onChange={handleStatusFilterChange}
-                        label="Status"
-                    >
-                        <MenuItem value="all">All</MenuItem>
-
-                        {
-                            filterData?.length !== 0 &&
-                            filterData?.map((category, index) => (
-                                <MenuItem key={index} value={category?.name}>{category?.name}</MenuItem>
-
-                            ))
-                        }
-                    
-                    </Select>
-                </FormControl>
             </div>
 
             {/* Orders Table */}
@@ -129,25 +121,18 @@ const ListingTable = ({thData, tableData, searchPlaceholder, filterData, headerT
                         {/* <TableCell>{data?._id}</TableCell> */}
                         <TableCell>
                             <div className='d-flex '>
-                                <div className='card' style={{overflow: "hidden", width: "50px", height: "50px", marginRight: "5px"}}> <img style={{width: "100%", height: "100%", objectFit:"cover"}} src={data?.images[0]} alt={data?.name} /> </div>
-                                <div>{data?.name}</div>
+                                <div className='card' style={{overflow: "hidden", width: "50px", height: "50px", marginRight: "5px"}}> <img style={{width: "100%", height: "100%", objectFit:"cover"}} src={data?.product?.images[0]} alt={data?.name} /> </div>
+                                <div>{data?.product?.name}</div>
                             </div>
                             
                         </TableCell>
-                        <TableCell>{data?.catName}</TableCell>
-                        <TableCell>{data?.brand}</TableCell>
-                        <TableCell>${data?.price}</TableCell>
-                        <TableCell>{data?.countInStock}</TableCell>
-                        <TableCell>{data?.salesCount}</TableCell>
+                        <TableCell>{data?.product?.catName}</TableCell>
+                        <TableCell>${data?.product?.price}</TableCell>
+                        <TableCell>{data?.product?.countInStock}</TableCell>
+                        <TableCell>{ dateFormatter(data?.product?.dateCreated)}</TableCell>
                         <TableCell>
                             <div className="actions d-flex align-items-center">
-                                <Link to={`/product/details/${data?._id}`}>
-                                    <Button className="secondary" color="secondary"><FaEye /></Button>
-                                </Link> 
-                                <Link to={`/product/edit/${data?._id}`}>
-                                    <Button className="success" color="sucess"><FaPencilAlt /></Button>
-                                </Link>
-                                <Button className="error" color="error" onClick={() => onDelete(data?._id)}><MdDelete /></Button>
+                                <Button className="error" color="error" onClick={() => onDelete(data?.product?._id)}><MdDelete /></Button>
                             </div>
                         </TableCell>
                     </TableRow>

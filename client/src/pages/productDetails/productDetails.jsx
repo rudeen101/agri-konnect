@@ -44,7 +44,8 @@ const ProductDetails = ({userId}) =>{
     const [zoomImage, setZoomImage] = useState("");
     // const [addToCart, setAddToCart] = useState(0);
     const [minusFromCart, setMinusFromCart] = useState(0);
-    const [activeTabs, setActiveTabs] = useState(0)
+    // const [activeTabs, setActiveTabs] = useState(0)
+    const [activeTab, setActiveTab] = useState(0)
     const [modalShow, setModalShow] = React.useState(false);
     const [productData, setProductData] = React.useState([]);
     const [selectedProductData, setSelectedProductData] = React.useState([]);
@@ -52,7 +53,8 @@ const ProductDetails = ({userId}) =>{
     const [cartFields, setCartFields] = React.useState({});
     const [reviewsData, setReviewsData] = React.useState([]);
     const [isLoading, setIsLoading] = React.useState(false);
-    const [addedToWishList, setAddedToWishList] = React.useState(false);
+    // const [addedToWishList, setAddedToWishList] = React.useState(false);
+    const [isWishlisted, setIsWishlisted] = useState("");
     const [quantity, setQuantity] = useState(1);
     const [relatedProducts, setRelatedProducts] = useState([]);
 
@@ -74,7 +76,7 @@ const ProductDetails = ({userId}) =>{
         window.scrollTo(0,0);
         fetchDataFromApi(`/api/product/details/${id}`).then((res) =>{
             setProductData(res);
-            setZoomImage(res.images[0])
+            setZoomImage(res?.images[0])
         });
 
         getReviews();
@@ -105,7 +107,8 @@ const ProductDetails = ({userId}) =>{
 
 
     return (
-        <div className="productDetails">
+        <>
+             <div className="productDetails">
             <div className="breadcrumbWrapper">
                 {/* <div className="container-fluid"> */}
                     <ul className="breadcrum breadcrumb2 mb-0">
@@ -118,218 +121,235 @@ const ProductDetails = ({userId}) =>{
 
             <div className="container-fluid detailsContainer pt-3 pb-3">
                 <div className="row">
-                    <div className="col-md-9 part1 card"> 
-                        <div className="row">
-                            <div className="col-md-6 ">
-                                <ProductImageSlider images={productData?.images}></ProductImageSlider>
-                            </div>                       
-
-                            <div className="col-md-6 productInfo">
-                                <h1>{productData?.name}</h1>
-                                <div className="d-flex align-items-center ratingContainer">
-                                    <Rating className="rating" name="half-rating-read" value={parseInt(reviewsData[0]?.rating)} precission={0.4} readOnly />
-                                    <div className="reviewNumber">({reviewsData?.length !== 0 ? reviewsData?.length : 0} review(s))</div>
+                   <div className="product-detail-container">
+                        {/* Product Main Section */}
+                        <div className="product-main card">
+                            <div className="row g-4">
+                            {/* Product Images */}
+                            <div className="col-lg-6">
+                                <div className="product-gallery">
+                                    <ProductImageSlider 
+                                        images={productData?.images} 
+                                        showThumbnails={true}
+                                        zoomEnabled={true}
+                                    />
+                                    {productData?.discount > 0 && (
+                                        <div className="discount-badge">
+                                        -{productData.discount}% OFF
+                                        </div>
+                                    )}
                                 </div>
-                                <div className="brand">Business Name: <span >{productData?.brand}</span></div>
-                                <hr></hr>
-
-                                <div className="priceContainer d-flex align-items-center mb-3">
-                                    <span className="text-g priceLarge mr-3">USD {productData?.price}</span>
-
-                                    <div className="ml-3 d-flex flex-column">
-                                        <span className="text-light oldPrice">USD {productData?.oldPrice}</span>
-                                    </div>
-                               
-                                </div>
-
-                                <p className="description">
-                                    {productData?.description}
-                                </p>
-                                <span className="readMore"><a href="#productDetails">Read more</a></span>
-
-
-                                <hr></hr>
-
-                                
-                                <div className="additionalInfo">
-                                  
-                                    <div className="col2">
-                                        <ul>
-                                            <li><span className="name">Size/Weight: </span><span className="size value">{productData?.productWeight}</span></li>
-                                            <li>In stock: <span className="value"><span>{productData?.countInStock}</span> <span>{productData?.packagingType}</span></span></li>
-                                            <li>Category: <span className="value">{productData?.catName}</span></li>
-                                        </ul>
-                                    </div>
-                                </div>
-
-                                <div className="addCartSection pt-4 pb-4 d-flex align-items-center">
-                                    <div>
-                                        <QuantitySelector stock={productData?.countInStock} productId={productData?._id} initialQuantity={quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
-                                    </div>
-                                 
-                                  
-                                    <div className="detailsIcon ml-3">
-                                        <WishlistBtn productData={productData}></WishlistBtn>
-                                    </div>
-
-                                    <Button className="detailsIcon ml-3">
-                                        <ShareBtn productData={productData}></ShareBtn>
-                                    </Button>
-                                </div>
-
-                                <div className="addToCart">
-                                       <Button onClick={() => context.addToCart(productData, quantity)} className={`w-100 addToCartBtn ml-3  cartBtn ${context?.isInCart(productData?._id) ? "active" : ""}`}>
-                                        <IoCartOutline className="cartIcon" /> &nbsp;
-                                        {context?.isInCart(productData?._id) ? "In Cart" : "Add to Cart"}
-                                    </Button>
-                                </div>
-
                             </div>
-                        </div>
-                        
-                        <hr className="mt-4" />
-                        <div className="">
-                            <div className="mt-3 mb-5  detailsPageTabs container-fluid">
-                                <div className="customTabs">
-                                    <ul className="list list-inline">
-                                        <li className="list-inline-item">
-                                            <Button className={`${activeTabs === 0 && 'active'}`} onClick={()=> setActiveTabs(0)}>Product Details</Button>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Button className={`${activeTabs === 2 && 'active'}`} onClick={()=> setActiveTabs(2)}>Review(s) ({reviewsData?.length !== 0 ? reviewsData.length: 0})</Button>
-                                        </li>
-                                        <li className="list-inline-item">
-                                            <Button className={`${activeTabs === 3 && 'active'}`} onClick={()=> setActiveTabs(3)}>Business Details</Button>
-                                        </li>
-                                    </ul>
-                                </div>
 
-                                <br />
+                            {/* Product Info */}
+                            <div className="col-lg-6">
+                                <div className="product-info">
+                                    <div className="product-header">
+                                        <h1 className="product-title">{productData?.name}</h1>
+                                        <div className="product-meta">
+                                            <div className="rating-container">
+                                                <Rating 
+                                                value={reviewsData?.length > 0 ? parseFloat(reviewsData[0]?.rating) : 0}
+                                                precision={0.5}
+                                                readOnly
+                                                size="medium"
+                                                className="product-rating"
+                                                />
+                                                <span className="review-count">
+                                                ({reviewsData?.length || 0} review{reviewsData?.length !== 1 ? 's' : ''})
+                                                </span>
+                                            </div>
+                                            <div className="brand-info">
+                                                <span className="label">Sold by:</span>
+                                                <Link to={`/seller/${productData?.sellerId}`} className="brand-link">
+                                                {productData?.brand}
+                                                </Link>
+                                            </div>
+                                            <div className={`availability ${productData?.countInStock > 0 ? 'in-stock' : 'out-of-stock'}`}>
+                                                {productData?.countInStock > 0 ? 
+                                                `${productData.countInStock} ${productData.packagingType} available` : 
+                                                'Temporarily out of stock'}
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                {
-                                    activeTabs === 0 &&
-                                    <div className="tabContent" id="productDetails">
-                                        <h4>Product Desctiption</h4>
+                                    <div className="price-section">
+                                        <div className="current-price">
+                                        ${productData?.price?.toFixed(2)}
+                                        {productData?.oldPrice && (
+                                            <span className="old-price">${productData.oldPrice.toFixed(2)}</span>
+                                        )}
+                                        </div>
+                                        {productData?.discount > 0 && (
+                                        <div className="price-savings">
+                                            You save ${(productData.oldPrice - productData.price).toFixed(2)} ({productData.discount}%)
+                                        </div>
+                                        )}
+                                    </div>
+
+                                    <div className="product-description">
                                         <p>{productData?.description}</p>
-                                        
-                                        <br />
-
-                                        <h4>Product Specifications</h4>
-                                        <table class="spec-table">
-                                            <tr>
-                                                <th>Product Name</th>
-                                                <td>{productData?.name}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Product Price</th>
-                                                <td>USD {productData?.price} per {productData?.productWeight} {productData?.packagingType}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Category</th>
-                                                <td>{productData?.catName}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>In Stock</th>
-                                                <td>{productData?.countInStock}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Minimum Order Quantity</th>
-                                                <td>{productData?.minOrder} {productData?.productWeight} {productData?.packagingType}</td>
-                                            </tr>
-                                            <tr>
-                                                <th>Origin</th>
-                                                <td>{productData?.location}</td>
-                                            </tr>
-                                            {/* <tr>
-                                                <th>Shelf Life</th>
-                                                <td>1 Year</td>
-                                            </tr> */}
-                                            {/* <tr>
-                                                <th>Certification</th>
-                                                <td>FDA Approved</td>
-                                            </tr> */}
-                                        </table>
                                     </div>
-                                }
 
-                                {
-                                    activeTabs === 2 &&
-                                    <div className="tabContent">
-                                         <ProductReviews productId={productData._id} user={user} />
+                                    <div className="product-specs">
+                                        <div className="spec-item">
+                                        <span className="spec-label">Size/Weight:</span>
+                                        <span className="spec-value">{productData?.productWeight} {productData?.packagingType}</span>
+                                        </div>
+                                        <div className="spec-item">
+                                        <span className="spec-label">Minimum Order:</span>
+                                        <span className="spec-value">{productData?.minOrder} {productData?.packagingType}</span>
+                                        </div>
+                                        <div className="spec-item">
+                                        <span className="spec-label">Origin:</span>
+                                        <span className="spec-value">{productData?.location}</span>
+                                        </div>
                                     </div>
-                                }
 
-                                {
-                                    activeTabs === 3 &&
-                                    <div className="tabContent">
-                                        <h4>About Our Business</h4>
-                                        <p></p>
+                                    <div className="product-actions">
+                                        <div className="quantity-selector-wrapper">
+                                        <QuantitySelector 
+                                            stock={productData?.countInStock} 
+                                            initialQuantity={quantity}
+                                            onQuantityChange={handleQuantityChange}
+                                            minOrder={productData?.minOrder}
+                                        />
+                                        </div>
+
+                                        <div className="action-buttons">
+                                        <Button 
+                                            variant="contained" 
+                                            className={`add-to-cart-btn ${context?.isInCart(productData?._id) ? 'in-cart' : ''}`}
+                                            onClick={() => context.addToCart(productData, quantity)}
+                                            disabled={productData?.countInStock <= 0}
+                                            startIcon={<IoCartOutline />}
+                                        >
+                                            {context?.isInCart(productData?._id) ? 'Added to Cart' : 'Add to Cart'}
+                                        </Button>
+
+                                        <div className="secondary-actions">
+                                            <WishlistBtn 
+                                            productData={productData} 
+                                            className={`wishlist-btn ${isWishlisted ? 'active' : ''}`}
+                                            />
+                                            <ShareBtn 
+                                            productData={productData} 
+                                            className="share-btn"
+                                            />
+                                        </div>
+                                        </div>
                                     </div>
-                                }
+                                </div>
+                            </div>
+                            </div>
+
+                            {/* Product Tabs */}
+                            <div className="product-tabs-section">
+                            <div className="tabs-header">
+                                <button 
+                                className={`tab-btn ${activeTab === 0 ? 'active' : ''}`}
+                                onClick={() => setActiveTab(0)}
+                                >
+                                Product Details
+                                </button>
+                                <button 
+                                className={`tab-btn ${activeTab === 1 ? 'active' : ''}`}
+                                onClick={() => setActiveTab(1)}
+                                >
+                                Reviews ({reviewsData?.length || 0})
+                                </button>
+                                <button 
+                                className={`tab-btn ${activeTab === 2 ? 'active' : ''}`}
+                                onClick={() => setActiveTab(2)}
+                                >
+                                Seller Information
+                                </button>
+                            </div>
+
+                            <div className="tabs-content">
+                                {activeTab === 0 && (
+                                <div className="tab-panel">
+                                    <div className="detailed-description">
+                                    <h3>Product Description</h3>
+                                    <div className="description-content">
+                                        {productData?.detailedDescription || productData?.description}
+                                    </div>
+                                    </div>
+
+                                    <div className="specifications">
+                                    <h3>Product Specifications</h3>
+                                    <div className="specs-grid">
+                                        <div className="spec-row">
+                                        <div className="spec-name">Product Name</div>
+                                        <div className="spec-value">{productData?.name}</div>
+                                        </div>
+                                        <div className="spec-row">
+                                        <div className="spec-name">Price</div>
+                                        <div className="spec-value">
+                                            ${productData?.price} per {productData?.productWeight} {productData?.packagingType}
+                                        </div>
+                                        </div>
+                                        <div className="spec-row">
+                                        <div className="spec-name">Category</div>
+                                        <div className="spec-value">{productData?.catName}</div>
+                                        </div>
+                                        <div className="spec-row">
+                                        <div className="spec-name">Stock Available</div>
+                                        <div className="spec-value">{productData?.countInStock} {productData?.packagingType}</div>
+                                        </div>
+                                        <div className="spec-row">
+                                        <div className="spec-name">Minimum Order</div>
+                                        <div className="spec-value">
+                                            {productData?.minOrder} {productData?.productWeight} {productData?.packagingType}
+                                        </div>
+                                        </div>
+                                        <div className="spec-row">
+                                        <div className="spec-name">Origin</div>
+                                        <div className="spec-value">{productData?.location}</div>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                )}
+
+                                {activeTab === 1 && (
+                                <div className="tab-panel">
+                                    <ProductReviews 
+                                    productId={productData?._id} 
+                                    user={user}
+                                    reviews={reviewsData}
+                                    />
+                                </div>
+                                )}
+
+                                {activeTab === 2 && (
+                                <div className="tab-panel">
+                                    <SellerInfo 
+                                    seller={productData?.seller} 
+                                    rating={productData?.sellerRating}
+                                    />
+                                </div>
+                                )}
+                            </div>
                             </div>
                         </div>
                     </div>
-
-                    <div className="col-md-3 p-0 rightPart sidebarContainer">
-                        {/* <Sidebar /> */}
-
-                        <div className="sidebar">
-                            <div>
-                                <div className="item">
-                                    <div className="imgDiv">
-                                        <LocalShippingOutlinedIcon /> 
-                                    </div>
-                                    <div className="textDiv">
-                                        <h5 className="p-0">Free Delivery</h5>
-                                        <p className="m-0">For orders over $150</p>
-
-                                    </div>
-                                </div>
-                                <Button className="btn-g btn-large w-100 mt-4" onClick={() => setModalShow(true)}>Request Delivery</Button>
-
-                                <VerticallyCenteredModal
-                                    show={modalShow}
-                                    onHide={() => setModalShow(false)}
-                                />
-
-                               
-                            </div>
-                            <hr />
-                            <div className="item">
-                                <div className="imgDiv">
-                                    <PaymentsOutlinedIcon /> 
-                                </div>
-                                <div className="textDiv">
-                                    <h5 className="p-0">Money Back Gaurantee</h5>
-                                    <p className="m-0">15 days refund Gaurantee</p>
-                                </div>
-                            </div>
-                            <hr />
-                            <div className="item">
-                                <div className="imgDiv">
-                                    <CreditScoreOutlinedIcon /> 
-                                </div>
-                                <div className="textDiv">
-                                    <h5 className="p-0">Secure Payment</h5>
-                                    <p className="m-0">For orders over $150</p>
-                                </div>
-                            </div>
-                        </div>
-                        {/* <ProductDetailsSidebar></ProductDetailsSidebar> */}
-                    </div>  
                 </div>
             </div>
 
-            <div className="relatedProducts pt-2 pb-4">
+            
+        </div>
+        <div className="relatedProducts pt-2 pb-4">
                 <br />
                 {
                     context?.mostPopular?.products?.length !== 0 &&
-                    <section className="homeProducts homeProductsSection2 pt-0"> 
+                    <section className="pt-0"> 
                         <RelatedProductSliderContainer products={relatedProducts} title={"Most Popular Items"}></RelatedProductSliderContainer>
                     </section>
                 }
             </div>
-        </div>
+        </>
+   
     )
 }
 

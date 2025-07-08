@@ -98,7 +98,6 @@ const SubCategoryListingTable = ({thData, tableData, searchPlaceholder, filterDa
 
                         }
                     })
-
                 }                    
                 {filteredTableData?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((category, index) => {

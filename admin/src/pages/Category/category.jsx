@@ -1,16 +1,12 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./category.css";
 import { Button, Pagination } from "@mui/material";
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import food from "../../assets/images/food.jpg"
 import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Link } from "react-router-dom";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, deleteDataFromApi } from "../../utils/apiCalls";
 import CatgoryListingTable from "../../components/listingTable/CategoryListingTable";
 
 
@@ -28,7 +24,6 @@ const Category = () =>{
     
     const fetchCategory = () => {
 		fetchDataFromApi('/api/category').then((res) => {
-            console.log(res)
 			context.setProgress(30)
 			setCategoryData(res);
 			context.setProgress(100)
@@ -57,7 +52,7 @@ const Category = () =>{
                             href="#"
                             label="Home"
                             icon={<HomeIcon fontSize="small" />}
-                            />
+                        />
 
                             <StyledBreadcrumb
                             component="a"
@@ -69,22 +64,18 @@ const Category = () =>{
                             component="a"
                             href="#"
                             label="Category"
-                            // deleteIcon={<ExpandMoreIcon />}
                             />
                             </Breadcrumbs>
 
-                            <Link to={'/category/add'}><Button className="addCategoryBtn btn-blue ml-3 pl-3 pr-3">Add Category</Button></Link>
+                            <Link to={'/category/add'}><Button className="addCategory Btn btn-g ml-3 pl-3 pr-3">Add Category</Button></Link>
 
                         </div>
-                     
-
                 </div>
 
                 <CatgoryListingTable thData={["UID", "CATEGORY", "IS FEATURED", "COLOR", "ACTION"]} tableData={context?.categoryData?.categoryList} searchPlaceholder="Search by category" filterData={[]} filterHeader="Category" onDelete={deleteCategory}></CatgoryListingTable>
 
             </div>
         </>
-
         
     )
 }

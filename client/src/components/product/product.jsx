@@ -1,17 +1,13 @@
 import React, {useContext, useState, useEffect} from "react";
 import "./product.css";
-import food from "../../assets/images/food.jpg";
 import { Button, Rating } from "@mui/material";
 import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-// import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { MdFavorite } from "react-icons/md";
 import { MdFavoriteBorder } from "react-icons/md";
-
-
 import ShareIcon from '@mui/icons-material/Share';
 import { MyContext } from "../../App";
 import { Link } from "react-router-dom";
-import { postData } from "../../utils/api2";
+import { postDataToApi, fetchDataFromApi } from "../../utils/apiCalls";
 
 const ProductCard = (props) =>{
     const [productData, setProductData] = useState([]);
@@ -35,10 +31,7 @@ const ProductCard = (props) =>{
 				image: product.images[0]
 			}
 
-			console.log("product", productData);
-
-	
-			postData(`/api/wishList/add`, productData).then((res) => {
+			postDataToApi(`/api/wishList/add`, productData).then((res) => {
 				if (res?.error !== true){
 					context.setAlertBox({
 						open: true,
@@ -64,9 +57,6 @@ const ProductCard = (props) =>{
 			})
 		}
 
-
-		// context.addToCart(item);
-		// setIsAdded(true);
 	}
 
     const setProductCat =() => {
@@ -79,52 +69,9 @@ const ProductCard = (props) =>{
         setIsAdded(true);
     }
 
-    // const addToWishList = (product) => {
-    //     if (context?.isLogin === true) {
-    //         const productData = {
-    //             userId: context.userData.userId,
-    //             productId: product._id,
-    //             productName: product.name, 
-    //             rating: product.rating, 
-    //             price: product.price, 
-    //             image: product.images[0]
-    //         }
-
-    //         console.log("product", productData);
-
-    
-    //         postData(`/api/wishList/add`, productData).then((res) => {
-    //             console.log("---",res)
-    //             if (res?.error !== true){
-    //                 context.setAlertBox({
-    //                     open: true,
-    //                     error: false,
-    //                     msg: res?.msg
-    //                 });
-
-    //                 setAddedToWishList(true);
-    //             }
-    //         });
-    //     }else{
-    //         context.setAlertBox({
-    //             open: true,
-    //             error: true,
-    //             msg: "Please login to continue." 
-    //         })
-    //     }
-
-
-    //     // context.addToCart(item);
-    //     // setIsAdded(true);
-    // }
-
     return (
 
         <div className="productCard">
-            {/* { 
-                props.tag !== null && props.tag !== undefined &&
-                <span className={`badge ${props.tag}`}>{props.tag}</span>
-            } */}
 
             {
                 productData !== undefined &&

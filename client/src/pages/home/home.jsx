@@ -1,59 +1,20 @@
-import React, {useState, useContext, useEffect, useRef} from "react";
-import HomeSlider from "./slider/homeSlider";
-import CartSlider from "../../components/cartSlider/cartSlider";
-import Banner from "../../components/banner/banner";
+import React, {useState, useContext, useEffect} from "react";
 import "./style.css";
-import ProductCardBanner from "../../components/product/productBanner";
-import bannerImg from "../../assets/images/images3.jpg";
-import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import image from "../../assets/images/fruits-vegetables .png"
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import { MyContext } from "../../App";
 import HomeBannerSlider from "../../components/homeBannerSlder/homeBannerSlider";
 import { fetchDataFromApi } from "../../utils/apiCalls";
 import Category from "../../components/categories/category";
-import HomeProductCard from "../../components/product/homeProductCard";
 import ProductSliderContainer from "../../components/sliderContainer/SliderContainer";
 import ProductInspirations from "../../components/productInspiration/ProductInspiration";
-import ProductListingCard from "../../components/productListingCard/ProductListingCard";
 
 const Home = () => {
 
     const [categories, setCategories] = useState('');
-    const [value, setValue] = useState(0);
-    const [selectedCat, setSelectedCat] = useState("");
-    const [selectedCatId, setSelectedCatId] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
-    const [filterData, setFilterData] = useState([]);
-    const [isLoadingProducts, setIsLoadingProducts] = useState(false);
-    const [productData, setProductData] = useState([]);
     const [homeSliderBannerData, setHomeSliderBannerData] = useState([]);
-    const [featuredProducts, setFeaturedProducts] = useState([]);
-    const [topSeller, setTopSeller] = useState([]);
-    const [recentlyViewed, setRecentlyViewed] = useState([]);
-    const [mostPopular, setMostPopular] = useState([]);
-    const [newArrival, setNewArrival] = useState([]);
-
-
-    const productRow = useRef();
-    
-    const handleChange = (event, newValue) => {
-        setValue(newValue);
-    }
 
     const context = useContext(MyContext)
-
-    const bannerSlider ={
-        dots: false,
-        infinite: true,
-        speed: 500,
-        slidesToShow: 4,
-        slidesToScroll: 1,
-        fade: false,
-        arrows: true
-    }; 
 
     useEffect(() => {
         if (context.categoryData?.categoryList?.length > 0){
@@ -66,46 +27,28 @@ const Home = () => {
      
         fetchDataFromApi("/api/homeSliderBanner/")
         .then((res) => {
-            console.log("HomeBanner", res);
             setHomeSliderBannerData(res.homeSliderBanner);
         });
         
     }, []);
 
 
-    const filterProducts = (catId) => {
-        setIsLoading(true);
-        // const location = localStorage.getItem("location");
-
-        // fetchDataFromApi(`/api.products?catId=${catId}?page=1&perPage=100`)
-        fetchDataFromApi(`/api/product?catId=${catId}`)
-        .then((res) => {
-            // setFilterData(res.products);
-            setIsLoading(false);
-        });
-    }
-
     return(
         <>
-            {/* {
-                homeSliderBanner?.data?.length > 0 &&  <HomeSlider data={homeSliderBanner} />
-            } */}
             {
                 homeSliderBannerData?.length > 0 &&  <HomeBannerSlider sliderData={homeSliderBannerData} />
             }
            
             {/* <CartSlider /> */}
 
-            <div className="categories">
-                <div className="container-fluid">
-                    <div className="categoryRow mt-4">
-                        { 
-                            context.categoryData?.categoryList?.map((category, index) => (
-                                <div className="d-flex">
-                                    <Category catData={category} key={index}/>
-                                </div>
-                            ))
-                        }
+            <div className="categories-container">
+                <div className="categories-wrapper">
+                    <div className="categories-grid">
+                        {context.categoryData?.categoryList?.map((category, index) => (
+                            <div className="category-item" key={index}>
+                            <Category catData={category} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>
@@ -133,16 +76,14 @@ const Home = () => {
             grid-template-columns: repeat(4, 1fr) !important */}
 
             {/* Category section */}                       
-            <div className="categories">
-                <div className="container-fluid">
-                    <div className="categoryRow mt-4">
-                        { 
-                            context.categoryData?.categoryList?.map((category, index) => (
-                                <div className="d-flex">
-                                    <Category catData={category} key={index}/>
-                                </div>
-                            ))
-                        }
+            <div className="categories-container">
+                <div className="categories-wrapper">
+                    <div className="categories-grid">
+                        {context.categoryData?.categoryList?.map((category, index) => (
+                            <div className="category-item" key={index}>
+                            <Category catData={category} />
+                            </div>
+                        ))}
                     </div>
                 </div>
             </div>

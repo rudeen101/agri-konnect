@@ -15,7 +15,6 @@ const SellerGuide = () => {
             >
             </HeroSection>
             <Guide></Guide>
-            <Newsletter></Newsletter>
         </>
     )
 }

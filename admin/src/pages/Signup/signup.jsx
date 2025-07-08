@@ -2,7 +2,6 @@ import React, { useState, useContext, useEffect } from "react";
 import "./signup.css";
 import logo from "../../assets/images/logo.png";
 import { MyContext } from "../../App";
-import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
 import { FaEye, FaGoogle, FaLock, FaUserCircle } from "react-icons/fa";
 import { Button, CircularProgress } from "@mui/material";
 import { IoMdEyeOff, IoMdEye, IoMdHome } from "react-icons/io";
@@ -98,7 +97,6 @@ const Signup = () =>{
 
             setIsLoading(true);
             postDataToApi("/api/user/signup", formFields).then((res) => {
-                console.log(res)
                 if (res.error !== true) {
                     context.setAlertBox({
                         open: true,

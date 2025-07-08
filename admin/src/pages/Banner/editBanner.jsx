@@ -7,10 +7,7 @@ import { Button, CircularProgress } from "@mui/material";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
+import { fetchDataFromApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,11 +16,6 @@ import MenuItem from '@mui/material/MenuItem';
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, editData } from "../../utils/api";
-
-
 
 const EditBanner = () =>{
 
@@ -31,6 +23,7 @@ const EditBanner = () =>{
     const [uploading, setUploading] = useState(false);
     const [formFields, setFormFields] = useState({
         images: [],
+        name: "",
         catId: "",
         catName: "",
         subCatId: "",
@@ -52,17 +45,6 @@ const EditBanner = () =>{
     const { id } = useParams();
     
 
-    // useEffect(() => {
-    //     window.scrollTo(0, 0);
-
-    //     fetchDataFromApi("/api/category").then((res) => {
-    //         context.setProgress(20);
-    //         setCatData(res);
-    //         context.setProgress(100);
-    //     });
-
-    // }, []);
-
     useEffect(() => {
         const subCatArray = [];
 
@@ -80,14 +62,15 @@ const EditBanner = () =>{
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        fetchDataFromApi("/api/imageUpload").then((res) => {
+
+        fetchDataFromApi('/api/imageUpload').then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/banner/deleteImage?img=${img}`).then((res) => {
+                    deleteImages(`/api/imageUpload/deleteImage?img=${img}`).then((res => {
                         deleteData('/api/imageUpload/deleteAllImages');
-                    });
-                });
-            });
+                    }));
+                })
+            })
         });
 
         fetchDataFromApi(`/api/banner/${id}`).then((res) => {
@@ -96,6 +79,7 @@ const EditBanner = () =>{
             setPreviews(res.images);
             setFormFields({
                 images: res?.images,
+                name: res?.name,
                 catId: res?.catId,
                 catName: res?.catName,
                 subCatId: res?.subCatId,
@@ -109,12 +93,6 @@ const EditBanner = () =>{
         });
     }, [id]);
 
-    // const changeInput = (e) => {
-    //     setFormFields({
-    //         ...formFields,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
 
     const handleChangeCategory = (event) => {
         setCategoryValue(event.target.value);
@@ -122,6 +100,13 @@ const EditBanner = () =>{
 
     const handleChangeSubCategory = (event) => {
         setSubCategoryValue(event.target.value);
+    }
+
+    const changeInput = (e) => {
+        setFormFields({
+            ...formFields,
+            [e.target.name]: e.target.value
+        })
     }
 
     const selectCategory = (catName, catId) => {
@@ -201,7 +186,7 @@ const EditBanner = () =>{
 
     const removeImage = async (index, imgUrl) => {
         const imgIndex = previews.indexOf(imgUrl);
-        deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
+        deleteImages(`/api/imageUpload/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({
                 open: true,
                 error: false,
@@ -354,6 +339,17 @@ const EditBanner = () =>{
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div className="form-group">
+                                            <h6>Banner Name</h6>
+                                            <input 
+                                                type="text" 
+                                                name="name"
+                                                value={formFields.name}
+                                                onChange={changeInput} 
+                                            />
+                                            
+                                        </div>
 
                                 
 

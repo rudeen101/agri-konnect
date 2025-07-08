@@ -4,33 +4,19 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button, Rating } from "@mui/material";
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import emptyCart from "../../assets/images/cart-icon.png";
-import KeyboardArrowUpOutlinedIcon from '@mui/icons-material/KeyboardArrowUpOutlined';
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined';
-import QuantityBox from "../../components/quantityBox/quantityBox";
 import { MyContext } from "../../App";
-import { deleteDataFromApi, fetchDataFromApi} from "../../utils/apiCalls";
 import { FaHome } from "react-icons/fa";
 import QuantitySelector from "../../components/quantitySelector/quantitySelector";
 import CircularProgress from '@mui/material/CircularProgress';
 
 const Cart = ({user}) => {
-    // const [cartData, setCartData] = useState([]);
-    const [productQuantity, setProductQuantity] = useState();
-    const [changeQuantity, setChangeQuantity] = useState(0);
-    const [cartFields, setCartFields] = useState({});
+
     const [isLoading, setIsLoading] = useState(false);
-    const [isLogin, setIsLogin] = useState();
-    const [quantity, setQuantity] = useState(1);
-
-
-    const [cartData, setCartData] = useState([]);
 
     const context = useContext(MyContext);
-    const history = useNavigate();
 
     useEffect(() => {
         window.scrollTo(0, 0);
-
     }, []);
 
 
@@ -40,8 +26,6 @@ const Cart = ({user}) => {
 
     // Calculate grand total
     const calculateTotal = () => {
-        console.log("****", context?.cart)
-
         return context?.cart?.items?.reduce((total, item) => total + item.product.price * item.quantity, 0).toFixed(2);
     };
 
@@ -73,7 +57,6 @@ const Cart = ({user}) => {
                                     <p><span className="text-g"><b>{context?.cart?.length}</b></span> product(s) in your cart</p>
                                 </div>
 
-                                {/* <span className="ml-auto clearCart d-flex align-items-center"><DeleteOutlineOutlinedIcon /> Clear Cart</span> */}
                             </div>
                             {
                                 context?.cart?.items?.length !== 0 ? (
@@ -116,15 +99,7 @@ const Cart = ({user}) => {
                                                                         <span className="">${item?.product?.price}</span>
                                                                     </td>
                                                                     <td>
-                                                                        {/* <QuantityBox 
-                                                                            value={item?.quantity}
-                                                                            item={item} 
-                                                                            selectedItem={selectedItem}
-                                                                            quantity={quantity}
-                                                                        /> */}
-
                                                                         <QuantitySelector stock={parseInt(item?.product?.countInStock)} productId={item?.product?._id} initialQuantity={item?.quantity} onQuantityChange={handleQuantityChange}></QuantitySelector>
-
                                                                     </td>
                     
                                                                     <td>

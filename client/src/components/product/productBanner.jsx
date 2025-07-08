@@ -9,10 +9,7 @@ import ShareIcon from '@mui/icons-material/Share';
 const ProductCardBanner = (props) =>{
     return (
         <div className="productCard">
-            {/* { 
-                props.tag !== null && props.tag !== undefined &&
-                <span className={`badge ${props.tag}`}>{props.tag}</span>
-            } */}
+ 
             <div>
                 Lorem ipsum dolor sit, amet consectetur adipisicing elit. Placeat omnis amet voluptas magnam, minus veritatis vel cupiditate natus distinctio nam voluptatem magni deserunt perferendis sequi facilis mollitia autem officiis! Possimus.
             </div>

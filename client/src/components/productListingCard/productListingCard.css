@@ -28,7 +28,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     max-height: 3em; /* Adjust based on line height */
-    line-height: 1.5em; /* Set line height */
+    line-height: 1em; /* Set line height */
     font-size: 0.9em;
     color: var(--dark-teal);
     margin-bottom: 0.5em;
@@ -96,13 +96,13 @@
 
 .cardAtions .btnWrapper {
     display: flex !important;
-    gap: 1em !important;
+    /* gap: 1em !important; */
     justify-content: center !important;
    
 }
 
 .product-card .actionBtn {
-    padding: 0.5em 1em;
+    padding: 0.2em 1em;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -110,6 +110,7 @@
     background-color: var(--primary-teal) !important;
     color: var(--white);
     transition: background-color 0.3s ease;
+    width: 100% !important
 }
 
 .product-card .actionBtn:hover {
@@ -140,6 +141,6 @@ footer p {
 @media (max-width: 768px) {
 
     .product-card {
-        width: 90%;
+        width: 100%;
     }
 }

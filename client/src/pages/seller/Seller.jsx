@@ -8,7 +8,7 @@ import NewsLetter from "../../components/seller/NewsLetter";
 
 const Seller = () => {
 
-    return(
+    return (
         <>
             <HeroSection headline="Grow Your Agri-Business with Agri-Konnect" subHeadline="Reach thousands of buyers, sell more produce, and get paid fast—
             all in one powerful platform." btnText="Start Selling Today"></HeroSection>
@@ -19,7 +19,6 @@ const Seller = () => {
 
             <Services></Services>
 
-            <NewsLetter></NewsLetter>
         </>
     )
 }

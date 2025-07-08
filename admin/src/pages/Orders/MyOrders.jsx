@@ -1,16 +1,5 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./order.css";
-import { FaUserCircle } from "react-icons/fa";
-import { IoMdCart } from "react-icons/io";
-import { MdShoppingBag } from "react-icons/md";
-import { GiStarsStack } from "react-icons/gi";
-import { Button, Pagination, Rating } from "@mui/material";
-import { HiDotsVertical } from "react-icons/hi";
-import { Chart } from "react-google-charts";
-import { FaEye } from "react-icons/fa";
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import food from "../../assets/images/food.jpg"
 import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';

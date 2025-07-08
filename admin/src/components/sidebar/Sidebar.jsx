@@ -11,6 +11,12 @@ import { IoIosSettings } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IoMdLogOut } from "react-icons/io";
 import { MyContext } from "../../App";
+import { BiSolidPurchaseTagAlt } from "react-icons/bi";
+import { TfiLayoutSlider } from "react-icons/tfi";
+import { FaImage } from "react-icons/fa";
+import { RiAdminFill } from "react-icons/ri";
+import { BiSolidCategoryAlt } from "react-icons/bi";
+import { FaHashtag } from "react-icons/fa";
 
 
 const Sidebar = () => {
@@ -58,7 +64,7 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 6 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(6)}>                        
-                        <span className="icon"><FaProductHunt /></span>
+                        <span className="icon"><BiSolidCategoryAlt /></span>
                         Category
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
@@ -78,7 +84,7 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 9 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(9)}>                        
-                        <span className="icon"><FaProductHunt /></span>
+                        <span className="icon"><FaHashtag /></span>
                         Tag
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
@@ -118,7 +124,7 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 12 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(12)}>                        
-                            <span className="icon"><FaCartArrowDown /></span>
+                            <span className="icon"><BiSolidPurchaseTagAlt /></span>
                             Sales
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
@@ -158,8 +164,8 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 7 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(7)}>                        
-                        <span className="icon"><FaProductHunt /></span>
-                        Home Banner Slide
+                        <span className="icon"><TfiLayoutSlider /></span>
+                        Home Slider
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
                     <div className={`submenuContainer ${activeTab === 7 && isToggleSubmenu === true ?
@@ -178,7 +184,7 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 8 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(8)}>                        
-                        <span className="icon"><FaProductHunt /></span>
+                        <span className="icon"><FaImage /></span>
                         Banner
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>
@@ -198,7 +204,7 @@ const Sidebar = () => {
                 <li>
                     <Button className={`w-100 ${activeTab === 10 && isToggleSubmenu ? 'active' : ''}`}
                         onClick={()=> isOpenSubmenu(10)}>                        
-                        <span className="icon"><FaProductHunt /></span>
+                        <span className="icon"><RiAdminFill /></span>
                         Admin Account
                         <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
                     </Button>

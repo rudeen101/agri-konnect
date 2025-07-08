@@ -1,49 +1,65 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./signup.css";
 import { MyContext } from "../../App";
-import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
-import { FaEye, FaGoogle, FaLock, FaUserCircle } from "react-icons/fa";
-import { Button, CircularProgress } from "@mui/material";
-import { IoMdEyeOff, IoMdEye, IoMdHome } from "react-icons/io";
-import { FaPhone } from "react-icons/fa";
+// import { FaEye, FaGoogle, FaLock, FaUserCircle } from "react-icons/fa";
+// import { Button, CircularProgress } from "@mui/material";
+// import { IoMdEyeOff, IoMdEye, IoMdHome } from "react-icons/io";
+// import { FaPhone } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
-import FormControlLabel from "@mui/material/FormControlLabel";
+// import FormControlLabel from "@mui/material/FormControlLabel";
 import logo from "../../assets/images/logo3.png";
-import { MdContactPhone } from "react-icons/md";
+// import { MdContactPhone } from "react-icons/md";
 
 
-import Checkbox from "@mui/material/Checkbox";
-// import backgroundPattern from "../../assets/images/background-pattern.jpg"
+// import Checkbox from "@mui/material/Checkbox";
+// // import backgroundPattern from "../../assets/images/background-pattern.jpg"
 import {postDataToApi} from "../../utils/apiCalls";
 
-const Signup = () =>{
 
-    const [inputIndex, setInputIndex] = useState(0);
-    const [isShowPassword, setIsShowPassword] = useState(false);
-    const [isShowConfirmPassword, setIsShowConfirmPassword] = useState(false);  
-    const [isLoading, setIsLoading] = useState(false);
-    const [formFields, setFormFields] = useState({
+
+import { FaUser, FaEnvelope, FaLock, FaPhone } from 'react-icons/fa';
+import { IoMdEye, IoMdEyeOff } from 'react-icons/io';
+import { Button, Checkbox, CircularProgress } from '@mui/material';
+
+const SignupForm = () => {
+	const [formFields, setFormFields] = useState({
 		name: '',
 		contact: '',
-		confirmPassword: '',
+		password: '',
+		confirmPassword: ''
 	});
 
-    const context = useContext(MyContext);	
-    const history = useNavigate();
+  // const [formFields, setFormFields] = useState({
+	// 	name: '',
+	// 	contact: '',
+	// 	confirmPassword: '',
+	// });
+  
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [activeField, setActiveField] = useState(null);
+	const [isLoading, setIsLoading] = useState(false);
+	const [acceptedTerms, setAcceptedTerms] = useState(false);
 
-    const focusInput = (index) => {
-        setInputIndex(index);
-    }
+	const context = useContext(MyContext);	
+    const navigate = useNavigate();
 
-    const changeInput = (e) => {
-        setFormFields(() => ({
-            ...formFields,
-            [e.target.name]: e.target.value
-        }));
-    }
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setFormFields(prev => ({ ...prev, [name]: value }));
+	};
 
-    const submitForm = (e) => {
-        e.preventDefault()
+	// const handleSubmit = (e) => {
+	// 	e.preventDefault();
+	// 	setIsLoading(true);
+	// 	// Handle form submission logic here
+	// 	console.log('Form submitted:', formFields);
+	// 	setTimeout(() => setIsLoading(false), 1500);
+	// };
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+		setIsLoading(true);
 
         if (formFields.name === "") {
             context.setAlertBox({
@@ -95,83 +111,176 @@ const Signup = () =>{
             return false;
         }
 
-        try {
-            const response = postDataToApi("/api/auth/signup", formFields);
-            context.signup(response.data);
-            
-            context.setAlertBox({
-                open: true,
-                error: false,
-                msg: "Registered successfully"
-            });
-        } catch (error) {
-            console.error("Signup failed:", error.response?.data?.error || error.message);
-        }
+        
+		const response = await postDataToApi("/api/auth/signup", formFields);
+
+		if (response) {
+			context.setAlertBox({
+				open: true,
+				error: false,
+				msg: "Account registered successfully"
+			});
+			
+			setIsLoading(false);
+			navigate("/login")
+		} else {
+
+			context.setAlertBox({
+				open: true,
+				error: true,
+				msg: "Erro registering this account. Please make sure all information is provided"
+			});
+			setIsLoading(false);
+
+		}
+
+		
+	
+  
     }
 
-    return(
-        <>
-            <section className="loginSection">
-                <div className="loginBox">
-                    <div className="headerContainer">
-                        <img src={logo} alt="" />
-                        <h4 className="hd">Signup</h4>
-                    </div>
 
-                    <div className="wrapper mt-3 card border p-4">
-                        <form action="" onSubmit={submitForm}>
-                            <div className={`form-group mb-3 position-relative ${inputIndex === 0 && 'focus'}`}>
-                                    <span className="icon"><FaUserCircle /></span>
-                                    <input type="text" className="form-control" placeholder="Enter your fullname" name="name" onChange={changeInput} onFocus={() => focusInput(0)} onBlur={() => setInputIndex(null)} />
-                            </div>
+	return (
+		<div className="auth-container">
+			<div className="auth-card">
+			{/* Header */}
+			<div className="auth-header">
+				<img src={logo} alt="Company Logo" className="auth-logo" />
+				<h2>Create Your Account</h2>
+				<p>Join our community today</p>
+			</div>
 
-                            <div className={`form-group mb-3 position-relative ${inputIndex === 1 && 'focus'}`}>
-                                    <span className="icon"><MdContactPhone /></span>
-                                    <input type="text" className="form-control" placeholder="Enter your email or phone number" name="contact" onChange={changeInput} onFocus={() => focusInput(1)} onBlur={() => setInputIndex(null)} />
-                            </div>
+			{/* Signup Form */}
+			<form onSubmit={handleSubmit} className="auth-form">
+				{/* Full Name */}
+				<div className={`form-group ${activeField === 0 ? 'active' : ''}`}>
+				<FaUser className="input-icon" />
+				<input
+					type="text"
+					name="name"
+					placeholder="Enter your full name"
+					value={formFields.name}
+					onChange={handleChange}
+					onFocus={() => setActiveField(0)}
+					onBlur={() => setActiveField(null)}
+					required
+				/>
+				</div>
 
-                            <div className={`form-group mb-4 position-relative ${inputIndex === 2 && 'focus'}`}>
-                                <span className="icon"><FaLock /></span>
-                                <input type={`${isShowPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="Enter your password" name="password" onChange={changeInput} onFocus={() => focusInput(2)} onBlur={() => setInputIndex(null)} />
+				{/* Email */}
+				<div className={`form-group ${activeField === 1 ? 'active' : ''}`}>
+				<FaEnvelope className="input-icon" />
+				<input
+					type="contact"
+					name="contact"
+					placeholder="Enter your email or phone number"
+					value={formFields.contact}
+					onChange={handleChange}
+					onFocus={() => setActiveField(1)}
+					onBlur={() => setActiveField(null)}
+					required
+				/>
+				</div>
 
-                                <span className="toggleShowPassword" onClick={() => setIsShowPassword(!isShowPassword)}>
-                                    {
-                                        isShowPassword === true ? <IoMdEyeOff></IoMdEyeOff> : <IoMdEye></IoMdEye>
-                                    }
-                                </span>
-                            </div>
-                            <div className={`form-group mb-4 position-relative ${inputIndex === 2 && 'focus'}`}>
-                                <span className="icon"><FaLock /></span>
-                                <input type={`${isShowConfirmPassword === true ? 'text' : 'password'}`} className="form-control" placeholder="Confirm your password" name="confirmPassword" onChange={changeInput} onFocus={() => focusInput(3)} onBlur={() => setInputIndex(null)} />
+				{/* Phone */}
+				{/* <div className={`form-group ${activeField === 2 ? 'active' : ''}`}>
+				<FaPhone className="input-icon" />
+				<input
+					type="tel"
+					name="phone"
+					placeholder="Phone Number"
+					value={formFields.phone}
+					onChange={handleChange}
+					onFocus={() => setActiveField(2)}
+					onBlur={() => setActiveField(null)}
+				/>
+				</div> */}
 
-                                <span className="toggleShowPassword" onClick={() => setIsShowConfirmPassword(!isShowConfirmPassword)}>
-                                    {
-                                        isShowPassword === true ? <IoMdEyeOff></IoMdEyeOff> : <IoMdEye></IoMdEye>
-                                    }
-                                </span>
-                            </div>
-                            
-                            <FormControlLabel control={<Checkbox />} label="I agree to all Terms & Conditions"></FormControlLabel>
-                            <div className="form-group mt-3">
-                                <Button type="submit" className="btn-blue btn-large w-100 btn-big">
-                                    { isLoading === true ? <CircularProgress /> : "Register"}
-                                </Button>
-                            </div>
+				{/* Password */}
+				<div className={`form-group ${activeField === 3 ? 'active' : ''}`}>
+				<FaLock className="input-icon" />
+				<input
+					type={showPassword ? 'text' : 'password'}
+					name="password"
+					placeholder="Password"
+					value={formFields.password}
+					onChange={handleChange}
+					onFocus={() => setActiveField(3)}
+					onBlur={() => setActiveField(null)}
+					required
+				/>
+				<button
+					type="button"
+					className="password-toggle"
+					onClick={() => setShowPassword(!showPassword)}
+					aria-label={showPassword ? "Hide password" : "Show password"}
+				>
+					{showPassword ? <IoMdEyeOff /> : <IoMdEye />}
+				</button>
+				</div>
 
-                        </form>
-                    </div>
+				{/* Confirm Password */}
+				<div className={`form-group ${activeField === 4 ? 'active' : ''}`}>
+				<FaLock className="input-icon" />
+				<input
+					type={showConfirmPassword ? 'text' : 'password'}
+					name="confirmPassword"
+					placeholder="Confirm Password"
+					value={formFields.confirmPassword}
+					onChange={handleChange}
+					onFocus={() => setActiveField(4)}
+					onBlur={() => setActiveField(null)}
+					required
+				/>
+				<button
+					type="button"
+					className="password-toggle"
+					onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+					aria-label={showConfirmPassword ? "Hide password" : "Show password"}
+				>
+					{showConfirmPassword ? <IoMdEyeOff /> : <IoMdEye />}
+				</button>
+				</div>
 
-                    <div className="wrapper mt-3 card border footer p-3 d-flex">
-                        <span className="text-center">Do have an acount? 
-                            <Link to={'/login'} className="link color ml-3" style={{color: "#00a99d"}}>Signin</Link>
-                        </span>
-                    </div>
+				{/* Terms and Conditions */}
+				<div className="terms-group">
+				<Checkbox
+					checked={acceptedTerms}
+					onChange={(e) => setAcceptedTerms(e.target.checked)}
+					color="primary"
+					required
+				/>
+				<span>
+					I agree to the <Link to="/terms">Terms of Service</Link> and <Link to="/privacy">Privacy Policy</Link>
+				</span>
+				</div>
 
-                </div>
-            </section>
-        </>
-  
-    )
-}
+				{/* Submit Button */}
+				<Button
+				type="submit"
+				variant="contained"
+				className="submit-btn"
+				disabled={isLoading}
+				fullWidth
+				>
+				{isLoading ? (
+					<>
+					<CircularProgress size={24} style={{ color: 'white', marginRight: '10px' }} />
+					Creating Account...
+					</>
+				) : (
+					'Sign Up'
+				)}
+				</Button>
+			</form>
 
-export default Signup;
+			{/* Login Link */}
+			<div className="auth-footer">
+				Already have an account? <Link to="/login">Log In</Link>
+			</div>
+			</div>
+		</div>
+	);
+};
+
+export default SignupForm;

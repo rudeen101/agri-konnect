@@ -1,22 +1,9 @@
 import React, { useState, useContext, useEffect } from "react";
 import "./sales.css";
-import { FaUserCircle } from "react-icons/fa";
-import { IoMdCart } from "react-icons/io";
-import { MdShoppingBag } from "react-icons/md";
-import { GiStarsStack } from "react-icons/gi";
-import { Button, Pagination, Rating } from "@mui/material";
-import { HiDotsVertical } from "react-icons/hi";
-import { Chart } from "react-google-charts";
-import { FaEye } from "react-icons/fa";
-import { FaPencilAlt } from "react-icons/fa";
-import { MdDelete } from "react-icons/md";
-import food from "../../assets/images/food.jpg"
 import { MyContext } from "../../App";
 import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb";
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
-import Orders from "../../components/orders/Orders";
-import SalesListingTable from "../../components/sales/salesListingTable";
 import TextExpand from "../../components/text/TextExpand";
 import { fetchDataFromApi } from "../../utils/apiCalls";
 

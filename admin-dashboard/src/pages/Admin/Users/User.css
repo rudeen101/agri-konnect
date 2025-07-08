@@ -1,0 +1,36 @@
+
+.customer-detail {
+  padding: 20px;
+}
+
+.customer-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.customer-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 20px;
+}
+
+.customer-info h4 {
+  font-size: 1.4rem;
+  margin-bottom: 5px;
+}
+
+.customer-info p {
+  color: var(--gray);
+  margin-bottom: 10px;
+}
+
+.customer-status {
+  display: inline-block;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 500;
+}

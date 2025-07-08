@@ -5,23 +5,11 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
-
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
-
-
+import { fetchDataFromApi, deleteImages, uploadImage, updateDataToApi } from "../../utils/apiCalls";
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, postData } from "../../utils/api";
-
-
 
 const EditCategory = () =>{
 
@@ -37,17 +25,10 @@ const EditCategory = () =>{
     });
 
     const [previews, setPreviews] = useState([])
-
     const context = useContext(MyContext);
-
     const { id } = useParams();
-    // const id = "672dc6170993f8d550111cd2";
-    console.log("cat-id",id)
-
     const formData = new FormData();
-
     const history = useNavigate();
-
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -55,7 +36,7 @@ const EditCategory = () =>{
         fetchDataFromApi("/api/imageUpload").then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {
-                    deleteImages(`/api/category/deleteImage?img=${img}`).then((res) => {
+                    deleteImages(`/api/imageUpload/deleteImage?img=${img}`).then((res) => {
                         deleteData('/api/imageUpload/deleteAllImages');
                     });
                 });
@@ -64,7 +45,6 @@ const EditCategory = () =>{
 
 
         fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
-            console.log("*******",res)
             context.setProgress(20);  
             setCategory(res);
             setPreviews(res.images);
@@ -129,7 +109,6 @@ const EditCategory = () =>{
                     });
         
                     uniqueArray = img_arr.filter((item, index) => img_arr.indexOf(item) === index);
-        
                     const appendedArray = [...uniqueArray]; 
                     
                     setPreviews(appendedArray);
@@ -150,10 +129,7 @@ const EditCategory = () =>{
         })
     }
 
-
-
     const removeImage = async (index, imgUrl) => {
-        console.log(imgUrl);
         const imgIndex = previews.indexOf(imgUrl);
         deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({
@@ -181,7 +157,7 @@ const EditCategory = () =>{
         if (formFields.name !== "" && formFields.color !== "" && previews.length !== 0){
             setIsLoading(true);
 
-            editData(`/api/category/${id}`, formFields).then((res) => {
+            updateDataToApi(`/api/category/${id}`, formFields).then((res) => {
                 setIsLoading(false)
                 context.fetchCategory();
 

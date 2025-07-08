@@ -24,7 +24,6 @@ const ProductListing = () =>{
 
         fetchDataFromApi('/api/product?page=1&perPage=10').then((res) => {
             res?.products?.length !== 0 && res?.products !== undefined && setProductList(res);
-            console.log(res)
             context.setProgress(100)
         });
 

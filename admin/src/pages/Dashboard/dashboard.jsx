@@ -11,33 +11,6 @@ const StrategicDashboard = () => {
 
   return (
     <div>
-
-    {/* <div className="card adminDashboardHeader shadow border-0 w-100 d-flex justify-content-between flex-row">
-        <h5 className="mb-0">Admin Dashboard</h5>
-
-        <Breadcrumbs aria-label="breadcrumb" className="breadcrumbs_">
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Home"
-            icon={<HomeIcon fontSize="small" />}
-            />
-
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Products"
-            />
-
-            <StyledBreadcrumb
-            component="a"
-            href="#"
-            label="Product View"
-            />
-        </Breadcrumbs>
-    </div> */}
-
-
       {/* Key Metrics */}
       <div className="metrics-container">
         <DashboardCard

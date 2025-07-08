@@ -39,6 +39,10 @@ ul, .col{
     margin: 0px !important
 }
 
+.isLoading-icon{
+    color: var(--white) !important
+}
+
 hr {
 
     border-top: 1px solid #d5d9d9 !important;
@@ -455,8 +459,8 @@ Sidebar
     box-shadow: rgba(0, 0, 0, 0.1) 0px 1px 3px 0px, rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
         margin: 10px 0px;
     border-radius: 4px;
-    /* transition: all 0.3s ease-in-out; */
-    outline: none;
+    transition: none !important;
+    outline: none !important;
     gap: 5px;
     opacity: 0.9;
 
@@ -484,9 +488,12 @@ Sidebar
 .filters{
     padding: 10px 0px
 }
+.filters h6{
+    font-weight: 600;
+}
 .filters ul{
-    max-height: 200px;
-    overflow-y: scroll;
+    /* max-height: 200px; */
+    /* overflow-y: scroll; */
 }
 /* .filters ul::-webkit-scrollbar{
     width: 7px !important
@@ -946,7 +953,6 @@ Login Style
     margin-bottom: 15px !important;
 }
 
-
 .loginSection .loginBox .wrapper .form-control{
     background-color: #fff  !important;
     box-shadow: none !important;
@@ -961,9 +967,8 @@ Login Style
 .loginSection .loginBox .wrapper .form-group.focus .icon svg{
     color: var(--primary-teal) !important;
 }
-.loginSection .loginBox .wrapper .form-group:focus {
-    border: 1px solid var(--primary-teal) !important;
-
+.loginSection .loginBox .wrapper .form-control:focus {
+    border: 1px solid var(--light-teal) !important;
 }
 .loginSection .loginBox .wrapper .form-group .icon {
     position: absolute;
@@ -1008,6 +1013,48 @@ Login Style
     border-radius: 50%
 }
 
+.loginSection .loginBox .wrapper .form-group select{
+    width: 100%;
+    /* padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px; */
+
+    border: 1px solid #ccc;
+    color: #5e5d72;
+
+    background-color: #fff  !important;
+    box-shadow: none !important;
+    outline: none;
+    border-radius: 8px !important;
+    font-size: 14px;
+    font-weight: 600 !important;
+    height: 45px;
+    padding-left: 40px;
+}
+.loginSection .loginBox .wrapper .form-group select option:hover{
+    background-color: #e6f2e6 !important; /* Change background color of options */
+    color: #333;
+}
+
+.loginSection .loginBox .wrapper .form-group select:focus {
+    border: 1px solid var(--light-teal) !important;
+}
+
+.loginSection .loginBox .wrapper .form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #5e5d72 !important;
+    outline: none;   
+  }
+
+  .loginSection .loginBox .wrapper .form-group textarea:focus {
+    border: 1px solid var(--light-teal) !important;
+}
+
 .loginWithGoogle{
     text-transform: capitalize !important;
     font-weight: bold !important;
@@ -1021,44 +1068,11 @@ Login Style
 
 
 
+
+
 /**************************
 Signup Sttyle
 *****************************/
-
-.signupSection{
-    background-color: #f1f1f1 !important;
-    padding: 0px 0px;
-    height: auto !important
-}
-.signupSection .loginBox {
-    background-color: #e4e4e4 !important;
-    position: relative;
-    z-index: 100;
-    width: 100% !important;
-    padding: 25px 5px !important;
-}
-.signupSection .loginBox .wrapper {
-    border: 0px !important;
-    background-color: transparent !important;
-    padding-top: 10px !important
-}
-.signupSection .signupContent {
-    padding-left: 100px;
-    padding-right: 100px
-}
-.signupSection .signupContent h1 {
-    font-size: 40px;
-    font-weight: 800;
-}
-.signupSection .signupContent p {
-    font-size: 18px;
-    font-weight: 600;
-}
-
-.loading {
-    width: 100% !important;
-    height: 100px
-}
 
 
 /* Ensure consistent container sizing */
@@ -1150,7 +1164,7 @@ Product Card
 
 .product-card img {
     width: 100%;
-    height: 150px !important; 
+    /* height: 150px !important;  */
     object-fit: cover;
 
 }
@@ -1309,6 +1323,19 @@ Product Card
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 100;
     white-space: nowrap;
+}
+
+.formElem:focus {
+    border-color: var(--primary-teal) !important;
+    outline: none !important;
+}
+
+
+@media (max-width: 576px) {
+    .container-fluid{
+        padding: 0px 0px !important;
+        width: 100%;
+    }
 }
 
 

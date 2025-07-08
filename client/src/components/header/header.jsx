@@ -1,292 +1,365 @@
-import React from "react";
-import { useState, useContext, useRef, useEffect } from "react";
-import "../header/header.css";
+import React, { useState, useContext, useEffect, useRef } from "react";
+import { FaBars, FaShoppingCart, FaUser, FaSearch, FaQuestionCircle, FaTimes } from "react-icons/fa";
+import "./Header.css";
 import Logo from '../../assets/images/logo.png';
-// import Button from 'react-bootstrap/Button';
-import SearchIcon from '@mui/icons-material/Search';
-import Search from "@mui/icons-material/Search";
-import Select from "../selectDropdown/select";
-import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
-import ShoppingCartOutlinedIcon from '@mui/icons-material/ShoppingCartOutlined';
-import PersonOutlinedIcon from '@mui/icons-material/PersonOutlined';
+import GridViewOutlinedIcon from '@mui/icons-material/GridViewOutlined';
 import { Button } from "@mui/material";
-import TuneOutlinedIcon from '@mui/icons-material/TuneOutlined';import LogoutOutlinedIcon from '@mui/icons-material/LogoutOutlined';
-import Navbar from "../header/nav/nav.jsx";
-import food from "../../assets/images/food.jpg"
-import { fetchDataFromApi } from "../../utils/api2.js";
-import { IoMdHelpCircleOutline } from "react-icons/io";
-import { FaRegCircleUser } from "react-icons/fa6";
-import MenuDropdown from "../menuDropdown/menuDropdown.jsx";
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import CircularProgress from '@mui/material/CircularProgress';
-import SearchBar from "../searchBar/SerarchBar.jsx";
-
-
-
-import MenuItem from "@mui/material/MenuItem";
-import Menu from "@mui/material/Menu";
-import MailOutlinedIcon from '@mui/icons-material/MailOutlined';
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+import { MdArrowDropDown } from "react-icons/md";
 import { MyContext } from "../../App";
+import { fetchDataFromApi } from "../../utils/apiCalls";
+import CircularProgress from '@mui/material/CircularProgress';
+import Cookies from "js-cookie";
+import QuickNav from "../nav/Nav";
 
-
-
-
-
-// import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
-// import KeyboardArrowRightIcon from '@mui/icons-material/KeyboardArrowRight';
-// import SendIcon from '@mui/icons-material/Send';
-
-const Header =  ()=>{
-
-    const [categories, setCategories] = useState([
-        "All Categories",
-        "Milds and Dairy",
-        "Wines and Drinks",
-        "Clothing and Beauty",
-        "Fresh Sea Food",
-        "Bread and Juice",
-        "Pet Food",
-        "Fresh Fruits",
-        "Baking Materials",
-        "Vegetables"
-    ])
-    const [counties, setCounties] = useState([
-        "Nimba",
-        "Bong",
-        "Lofa",
-        "Grand Bassa",
-        "Sinoe",
-        "Grand Gedeh",
-        "Grand Cape Mount",
-        "Maryland",
-        "Bomi",
-        "River Gee",
-        "River Cess"  
-    ]);
-    const [isOpenDropdown, setIsOpenDropdown] = useState(false);
-    const [isOpenCartDropdown, setIsOpenCartDropdown] = useState(false);
-    const [anchorEl, setAnchorEl] = React.useState(null);
-    const [anchorElHelp, setAnchorElHelp] = React.useState(null);
+const Header = () => {
+    const [selectedCategory, setSelectedCategory] = useState("Categories");
+    const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [query, setQuery] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [searchFields, setSearchFields] = useState("");
+    const [categories, setCategories] = useState([]);  
+    const [showMobileSearch, setShowMobileSearch] = useState(false);
+    const [activeDropdown, setActiveDropdown] = useState(null); // 'categories', 'help', 'account', 'browse';
+    const [closingDropdown, setClosingDropdown] = useState(null);
+
 
     const context = useContext(MyContext);
-    const history = useNavigate();
+    const navigate = useNavigate();
     const searchInput = useRef();
-
-    const handleClose = () => {
-        setAnchorEl(null);
+    const dropdownRefs = {
+        categories: useRef(null),
+        help: useRef(null),
+        account: useRef(null),
+        browse: useRef(null)
     };
 
-    const handleCloseHelp = () => {
-        setAnchorElHelp(null);
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            Object.keys(dropdownRefs).forEach(key => {
+                if (dropdownRefs[key].current && !dropdownRefs[key].current.contains(event.target)) {
+                    setActiveDropdown(null);
+                }
+            });
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    // const toggleDropdown = (dropdownName) => {
+    //     setActiveDropdown(activeDropdown === dropdownName ? null : dropdownName);
+    // };
+
+    const handleMouseEnter = (dropdownName) => {
+        setActiveDropdown(dropdownName);
     };
 
-    const handleClickHelp = (event) => {
-        setAnchorElHelp(event.currentTarget);
-    };
+      // In your dropdown items, add:
+  const handleDropdownAction = (action) => {
+    setClosingDropdown(null); // Cancel pending close
+    action();
+  };
 
-    const handleClick = (event) => {
-        setAnchorEl(event.currentTarget);
+        // Only auto-close if not on mobile
+       const handleMouseLeave = () => {
+    if (window.innerWidth > 768) {
+      setClosingDropdown(activeDropdown);
+      setTimeout(() => {
+        if (closingDropdown === activeDropdown) {
+          setActiveDropdown(null);
+        }
+      }, 300); // 300ms delay
+    }
     };
 
     const handleLogout = () => {
         alert()
-        context.setIsLogin(false);
-        localStorage.removeItem("user");
-        localStorage.removeItem("token");
-        history("/");
-    }
+        context.logout();
+        navigate("/login");
+    };
 
-    const handleLogin = () => {
-        setAnchorEl(null);
-        // context.setIsLogin(true);
+      // Modified toggleDropdown
+  const toggleDropdown = (dropdownName) => {
+    if (activeDropdown === dropdownName) {
+      setClosingDropdown(dropdownName);
+      setTimeout(() => {
+        setActiveDropdown(null);
+        setClosingDropdown(null);
+      }, 300);
+    } else {
+      setActiveDropdown(dropdownName);
+      setClosingDropdown(null);
     }
+  };
+
+    const handleDashboardRedirect = () => {
+        const isLoggedIn = Cookies.get("accessToken");
+        const link = document.createElement('a');
+        link.href = import.meta.env.VITE_DASHBOARD_URL;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.click();
+    };
 
     const searchProducts = (e) => {
-        alert(searchInput.current.value)
-        setSearchFields(searchInput.current.value)
-
         if (searchInput.current.value !== "") {
             setIsLoading(true);
             fetchDataFromApi(`/api/search?q=${searchInput.current.value}`).then((res) => {
                 context.setSearchedItems(res);
                 setTimeout(() => {
-                    history("/search");
+                    navigate(`/search/${searchInput.current.value}`);
                     setIsLoading(false);
                     searchInput.current.value = "";
                 }, 2000);
                 setIsLoading(false);
             })
+        } else {
+            context.setAlertBox({
+                open: true,
+                error: true,
+                msg: "Provide search query!"
+            })
         }
-    }
+    };
 
-    useEffect(()=>{
-        fetchDataFromApi('/api/category/').then((res)=> {
+    useEffect(() => {
+        fetchDataFromApi('/api/category/').then((res) => {
             setCategories(res);
-        })
+        });
+    }, []);
 
-    }, [])
+    const cartCount = context?.cart?.items?.reduce((total, item) => total + item.quantity, 0);
 
-    return(
+    return (
         <>
-            <div className="headerContainer">
-                <header>
-                    <div className="container-fluid">
-                        <div className="row">
-                            <div className="col-sm-2">
-                                <img className="logo" src={Logo} /> 
-                            </div>
+            <header className="header">
+                {/* Top Section */}
+                <div className="header-top">
+                    {/* Mobile Menu Button */}
+                    <div className="mobile-header-left">
+                        <button
+                            className="header-mobile-menu-button"
+                            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+                        >
+                            {mobileMenuOpen ? <FaTimes /> : <FaBars />}
+                        </button>
 
-                            <div className="col-sm-6 headerSearchContainer">
-                                {/* <div className="headerSearch d-flex align-items-center">
-                                    <Select data={categories} placeholder={"All Categories"} icon={false}/>
-                                    <div className="search" >
-                                        <input type="text"  placeholder="Search for product,  brand,  category" ref={searchInput} />
-                                        
-                                    </div>
-                                    {
-                                        isLoading === true ? 
-                                        <div className="searchIconContainer">
-                                            <CircularProgress className="loading"/> 
-                                        </div> 
-                                        :
-                                        <div className="searchIconContainer">
-                                            <SearchIcon className="searchIcon cursor" onClick={searchProducts} />
-                                        </div>
+                        {/* Mobile Search Button */}
+                        <button 
+                            className="mobile-search-toggle"
+                            onClick={() => setShowMobileSearch(!showMobileSearch)}
+                        >
+                            <FaSearch />
+                        </button>
+                    </div>
 
-                                    }
-                                   
-                                </div> */}
-                                <div className="headerSearch d-flex align-items-center">
-                                <SearchBar></SearchBar>
+                    {/* Logo */}
+                    <div className="header-logo"> 
+                        <Link to={"/"}>
+                            <img className="logo" src={Logo} alt="Logo" /> 
+                        </Link>                               
+                    </div>
 
-                                </div>
-
-                            </div>
-
-                            <div className="col-sm-4 d-flex align-items-center">
-                                <div className="m-0 d-flex align-items-center w-100">
-                                    {/* <div className="countyWrapper">
-                                        <Select data={counties} placeholder={"County"} icon={<LocationOnOutlinedIcon className="icon" style={{opacity: "0.5"}} />} />
-                                    </div> */}
-
-                                    <ul className="list list-inline w-100 d-flex align-items-center justify-content-end mb-0 headerTabs">
-                                   
-                                        <li className="list-inline-item">
-           
-                                            <Button 
-                                                className=" mr-3 res-hide"
-                                                aria-controls="simple-menu2"
-                                                aria-haspopup="true"
-                                                onClick={handleClickHelp}> 
-                                                <IoMdHelpCircleOutline className="actionsIcon" /> 
-                                                <span className="iconText" >Help</span>
-                                            </Button>
-
-                                            <Menu
-                                                keepMounted
-                                                anchorEl={anchorElHelp}
-                                                onClose={handleCloseHelp}
-                                                open={Boolean(anchorElHelp)}>
-                                                <MenuItem onClick={handleCloseHelp}>
-                                                    Customer Service
-                                                </MenuItem>
-                                                <MenuItem onClick={handleCloseHelp}>
-                                                    How to Buy?
-                                                </MenuItem>
-                                                <MenuItem onClick={handleCloseHelp}>
-                                                    How to Sell?
-                                                </MenuItem>
-                                                <MenuItem onClick={handleCloseHelp}>
-                                                    Returns & Refunds
-                                                </MenuItem>
-                                            </Menu>
-                                        </li>
-
-                                        <li className="list-inline-item">
-                                            <Button 
-                                                className=" mr-3 res-hide"
-                                                aria-controls="simple-menu"
-                                                aria-haspopup="true"
-                                                >   
-                                                {/* <Link to={'/cart'}> */}
-                                                    <ShoppingCartOutlinedIcon className="actionsIcon" /> 
-                                                    <span className="badge rounded-circle">{context.cartData?.data?.length}</span>
-                                                    
-                                                    {/* <div className="d-flex align-items-end"> */}
-                                                        <span className="iconText" onClick={() => setIsOpenCartDropdown(!isOpenCartDropdown)}>Cart</span>
-                                                    {/* </div> */}
-                                                {/* </Link> */}
-                                            </Button> 
-                                        </li>
-
-                                        <li className="list-inline-item">
-                                            <Button 
-                                                className="mr-3 res-hide"
-                                                aria-controls="simple-menu"
-                                                aria-haspopup="true"
-                                                onClick={handleClick}> 
-                                                    <FaRegCircleUser className="actionsIcon" /> 
-                                                    {
-                                                        context.isLogin &&
-                                                        <span className="iconText">Account <KeyboardArrowDownIcon/></span>
-
-                                                    }
-
-                                            </Button>
-                                            <Menu
-                                                keepMounted
-                                                anchorEl={anchorEl}
-                                                onClose={handleClose}
-                                                open={Boolean(anchorEl)}>
-                                                <MenuItem onClick={handleClose}>
-                                                    My Account
-                                                </MenuItem>
-                                                <MenuItem onClick={handleClose}>
-                                                    <Link to={"/wishList"}>WishList</Link>
-                                                </MenuItem>
-                                                <MenuItem onClick={handleClose}>
-                                                    Settings
-                                                </MenuItem>
-                                                <MenuItem onClick={handleClose}>
-                                                    Profile
-                                                </MenuItem>
-                                                <MenuItem >
-                                                    {
-                                                        context.isLogin ? <Button className="btn-g signup btn-l" onClick={handleLogout}>Logout</Button>
-                                                        :<Button className="btn-g signup" onClick={handleLogin}><Link to={'/login'}>Login</Link></Button>
-                                                    }
-                                                </MenuItem>
-                                            </Menu>
-                                        </li>  
-
-
-                                        <li className="list-inline-item">
-                                            {
-                                                !context.isLogin &&
-                                                <Button className="btn-g signup"><Link to={'/signup'}>signup</Link></Button>
-                                            }
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
+                    {/* Desktop Search Bar */}
+                    <div className="desktop-search">
+                        <div
+                            className="category-dropdown-container"
+                            ref={dropdownRefs.categories}
+                            onMouseEnter={() => handleMouseEnter('categories')}
+                            onMouseLeave={handleMouseLeave}
+                        >
+                            <span className="category-selected">
+                                {selectedCategory} <span className="dropdown-arrow">▼</span>
+                            </span>
+                            {activeDropdown === 'categories' && (
+                                <ul className="category-dropdown">
+                                    {categories?.categoryList?.length !== 0 &&
+                                    categories?.categoryList !== undefined &&
+                                    categories?.categoryList.map((cat, index) => (
+                                        <Link to={`/product/category/${cat?._id}`} key={index}>
+                                            <li
+                                                onClick={() => {
+                                                    setSelectedCategory(cat.name);
+                                                    setActiveDropdown(null);
+                                                }}
+                                            >
+                                                {cat.name}
+                                            </li>
+                                        </Link>
+                                    ))}
+                                </ul>
+                            )}
                         </div>
 
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Search for product, brand, category" 
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            ref={searchInput}
+                            onKeyPress={(e) => e.key === 'Enter' && searchProducts()}
+                        />
+
+                        {isLoading ? 
+                            <button className="search-button">
+                                <CircularProgress className="loading" size={20} />
+                            </button>
+                            :
+                            <button className="search-button" onClick={searchProducts}>
+                                <FaSearch />
+                            </button>
+                        }
                     </div>
-                </header>
 
-                {
-                    categories?.categoryList?.length !== 0 &&
-                    categories?.categoryList !== undefined &&
-                    <Navbar data={categories?.categoryList} />
+                    {/* Icons */}
+                    <div className="header-icons">
+                        <div className="icon-group">
+                            <button className="icon-button shopping-cart">
+                                <Link to={"/cart"}>
+                                    <FaShoppingCart />
+                                    {cartCount > 0 && <span className="badge">{cartCount}</span>}
+                                </Link>
+                            </button>
 
-                }
-            </div>
-        </>    
-    )
-}
+                            <div 
+                                className="user-dropdown-container"
+                                ref={dropdownRefs.help}
+                                onMouseEnter={() => handleMouseEnter('help')}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <button 
+                                    className="icon-button help-button"
+                                    onClick={() => toggleDropdown('help')}
+                                >
+                                    <FaQuestionCircle />
+                                    <span className="iconText">Help <MdArrowDropDown className={`dropdownArrow ${activeDropdown === 'help' ? 'rotate' : ''}`} /></span>
+                                </button>
+                                {activeDropdown === 'help' && (
+                                    <div className="user-dropdown">
+                                        <button className="dropdown-item">Customer Service</button>
+                                        <button className="dropdown-item">How to Buy?</button>
+                                        <button className="dropdown-item">How to Sell?</button>
+                                        <button className="dropdown-item">Returns & Refunds</button>
+                                    </div>
+                                )}
+                            </div>
+                        
+                            <div 
+                                className="user-dropdown-container"
+                                ref={dropdownRefs.account}
+                                onMouseEnter={() => handleMouseEnter('account')}
+                                onMouseLeave={handleMouseLeave}
+                            >
+                                <button 
+                                    className="icon-button account-button"
+                                    onClick={() => toggleDropdown('account')}
+                                >
+                                    <FaUser /> 
+                                    <span className="iconText">Account <MdArrowDropDown className={`dropdownArrow ${activeDropdown === 'account' ? 'rotate' : ''}`} /></span>
+                                </button>
+                                {activeDropdown === 'account' && (
+                                    <div className="user-dropdown">
+                                        <button className="dropdown-item" onClick={handleDashboardRedirect}>My Account</button>
+                                        <Link to="/wishList">
+                                            <button className="dropdown-item">WishList</button>
+                                        </Link>
+                                        <button className="dropdown-item">Profile</button>
+                                        {context.isLogin ? 
+                                            <Button 
+                                                type="button"
+                                                className="btn-g signup w-100"   
+                                                onClick={(e) => {
+                                                            e.stopPropagation();
+
+                                                e.preventDefault();
+
+                                                alert()
+                                                    handleLogout();
+                                                }}
+                                            >
+                                                Logout--
+                                            </Button>
+                                            : 
+                                            <Button className="btn-g signup w-100">
+                                                <Link to="/login">Login</Link>
+                                            </Button>
+                                        }
+                                    </div>
+                                )}
+                            </div>
+
+                            {!context.isLogin && (
+                                <Button className="btn-g signup mobile-hide">
+                                    <Link to="/signup">Signup</Link>
+                                </Button>
+                            )}
+                        </div>
+                    </div>
+                </div>
+
+                {/* Mobile Search Bar - Only shown when toggled */}
+                {showMobileSearch && (
+                    <div className="mobile-search active">
+                        <input
+                            type="text"
+                            className="search-input"
+                            placeholder="Search for products..."
+                            value={query}
+                            onChange={(e) => setQuery(e.target.value)}
+                            ref={searchInput}
+                            onKeyPress={(e) => e.key === 'Enter' && searchProducts()}
+                        />
+                        <button className="search-button" onClick={searchProducts}>
+                            {isLoading ? <CircularProgress size={20} /> : <FaSearch />}
+                        </button>
+                    </div>
+                )}
+
+                {/* Mobile Dropdown Menu */}
+                <div className={`mobile-menu ${mobileMenuOpen ? 'active' : ''}`}>
+                    <ul>
+                        {categories?.categoryList?.map((cat, index) => (
+                            <li key={index}>
+                                <Link 
+                                    to={`/product/category/${cat?._id}`}
+                                    onClick={() => {
+                                        setSelectedCategory(cat?.name);
+                                        setMobileMenuOpen(false);
+                                    }}
+                                >
+                                    {cat?.name}
+                                </Link>
+                            </li>
+                        ))}
+                        <li className="mobile-auth-links">
+                            {!context.isLogin && (
+                                <>
+                                    <Link to="/login" onClick={() => setMobileMenuOpen(false)}>Login</Link>
+                                    <Link to="/signup" onClick={() => setMobileMenuOpen(false)}>Signup</Link>
+                                </>
+                            )}
+                            {context.isLogin && (
+                                <button onClick={() => {
+                                    handleLogout();
+                                    setMobileMenuOpen(false);
+                                }}>
+                                    Logout
+                                </button>
+                            )}
+                        </li>
+                    </ul>
+                </div>
+            </header>
+
+            {/* Quick Link Navigation Bar */}
+            <QuickNav />
+
+        </>
+    );
+};
 
 export default Header;

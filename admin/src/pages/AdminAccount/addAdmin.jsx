@@ -13,14 +13,8 @@ import MenuItem from '@mui/material/MenuItem';
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
 
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-
-import { IoMdClose } from "react-icons/io";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
+import { fetchDataFromApi, updateDataToApi } from "../../utils/apiCalls";
 
 
 const AddAdmin = () =>{
@@ -41,15 +35,6 @@ const AddAdmin = () =>{
     const context = useContext(MyContext);
     const navigate = useNavigate();
 
-    // useEffect(() => {
-
-
-    //     fetchDataFromApi('/api/admin/users').then((res) => {
-    //         const filteredUsers = res.allUsers.filter(user => user._id !== context?.userData?.userId);
-    //         setAllUsers(filteredUsers);
-    //     });
-
-    // }, []);
 
     // Fetch Users (GET)
     useEffect(() => {
@@ -59,7 +44,6 @@ const AddAdmin = () =>{
         fetchDataFromApi("/api/admin/users")
             .then((res) => {
                 if (res.allUsers) {
-                    console.log("users", res.allUsers)
                     const filteredUsers = res.allUsers.filter(user => user._id !== context?.userData?.userId);
                     setAllUsers(filteredUsers);
                 }

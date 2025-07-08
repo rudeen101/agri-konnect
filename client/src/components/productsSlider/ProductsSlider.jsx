@@ -12,7 +12,6 @@ const ProductsSlider = ({ subCatId }) => {
 
     useEffect(() => {
         fetchDataFromApi(`/api/product?subCatId=${subCatId}`).then((res) =>{
-            console.log("related", res);
             setRelatedProducts(res.products);
         }); 
     }, [subCatId]);

@@ -110,14 +110,6 @@ function VerticallyCenteredModal(props) {
   );
 }
 
-// function App() {
-//   const [modalShow, setModalShow] = React.useState(false);
 
-//   return (
-//     <>
-   
-//     </>
-//   );
-// }
 
 export default VerticallyCenteredModal; 

@@ -4,23 +4,11 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
-import ImageUpload from "../../components/imageUpload/ImageUpload";
-
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
-
-
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, postData } from "../../utils/api";
-
 
 
 const EditHomeBannerSlide = () =>{
@@ -160,9 +148,6 @@ const EditHomeBannerSlide = () =>{
         e.preventDefault();
 
         const appendedArray = [...previews, ...uniqueArray];
-        console.log(formFields);
-
-        // return
 
         img_arr = [];
 

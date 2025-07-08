@@ -85,11 +85,8 @@ const ProductUpload = () =>{
 
     }, [context.categoryData]);
 
+    //clear unsaved images from database upon refresh
     useEffect(() => {
-        window.scrollTo(0,0);
-
-        // setSubCategoryData(context.categoryData);
-
         fetchDataFromApi('/api/imageUpload').then((res) => {
             res?.map((item) => {
                 item?.images?.map((img) => {

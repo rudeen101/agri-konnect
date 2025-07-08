@@ -40,6 +40,7 @@ export const postDataToApi = async (url, payload) => {
 
         return response.data; // Ensure data exists
     } catch (error) {
+        console.log("ErrMsg",error)
         console.error("GET Error:", error.response?.data?.message || error.message);
         return null; // Return null so app doesn’t crash
     }

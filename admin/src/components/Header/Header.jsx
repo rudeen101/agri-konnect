@@ -87,10 +87,7 @@ const Header = () => {
                         }
                        
                         <div className="col-sm-7 d-flex align-items-center justify-content-end part3">
-                            <Button className="rounded-circle mr-3" onClick={() => context.setThemeMode(!context.themeMode)}><LightModeOutlinedIcon /></Button>
-                            {/* <Button className="rounded-circle mr-3 res-hide" ><ShoppingCartOutlinedIcon /></Button> */}
-                            {/* <MenuDropdown icon={<ShoppingCartOutlinedIcon />}></MenuDropdown> */}
-                            {/* <MenuDropdown icon={<MailOutlinedIcon />}></MenuDropdown> */}
+                  
                             <MenuDropdown icon={<NotificationsOutlinedIcon />}></MenuDropdown>
                             <Button className="rounded-circle mr-3" onClick={() => context.setIsOpenNav(!context.isOpenNav)}><MdMenu /></Button>
 
@@ -117,7 +114,7 @@ const Header = () => {
                                                 { 
                                                     context?.userData?.image ? 
                                                     <img src={userAvatar} className="w-100" alt="user profile picture" />
-                                                    : context?.userData?.username.charAt(0)
+                                                    : context?.userData?.username?.charAt(0)
                                                 }
                                             </span>
                                         </div>   

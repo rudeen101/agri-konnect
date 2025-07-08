@@ -5,19 +5,24 @@ import ProductListingCard from "../productListingCard/ProductListingCard";
 const ProductInspirations = ({products}) => {
 
     return (
-        <div className="container-fluid inspirations-section">
-                <div  className="inspiration-card">
-                    <br />
-                    <h4 className="mt-5 ">Insprational Product Listing..</h4>
-                    {/* <p>{inspiration.description}</p> */}
-                    <div className="productListing">
-                        {products?.map((product, index) => (
-                            <ProductListingCard productData={product}></ProductListingCard>
-
-                        ))}
-                    </div>
-                </div>
-        </div>
+	<div className="inspirations-section">
+  <div className="inspiration-container">
+    <div className="container-fluid inspiration-header">
+      <h2 className="inspiration-title">Inspirational Product Listings</h2>
+      <p className="inspiration-subtitle">Discover quality products from our farmers</p>
+    </div>
+    
+    <div className="product-listing-grid">
+      {products?.map((product, index) => (
+        <ProductListingCard 
+          key={index} 
+          productData={product}
+          className="product-card"
+        />
+      ))}
+    </div>
+  </div>
+</div>
 
         
     );

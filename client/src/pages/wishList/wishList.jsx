@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import "./wishList.css";
 import { Link} from "react-router-dom";
 import { Button, Rating } from "@mui/material";
@@ -10,6 +10,10 @@ import { FaHome } from "react-icons/fa";
 const WishList = ({userId}) => {
 
     const context = useContext(MyContext);
+
+    useEffect(() => {
+        window.scrollTo(0,0);
+    })
 
     return (
         <>

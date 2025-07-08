@@ -4,24 +4,13 @@ import StyledBreadcrumb from "../../components/styledBreadcrumb/styledBreadcrumb
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
-import ImageUpload from "../../components/imageUpload/ImageUpload";
-
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 
 
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, postData } from "../../utils/api";
-
-
 
 const AddHomeBannerSlide = () =>{
 
@@ -72,28 +61,25 @@ const AddHomeBannerSlide = () =>{
     const onChangeFile = async (e, apiEndPoint) => {
         try {
             const files = e.target.files;
+            setUploading(files);
 
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
 
-            setUploading(true);
-
-           
-for (let i = 0; i < files.length; i++) {
-    const file = files[i];
-
-    // ✅ Corrected Condition (Properly Check Image Type)
-    if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp')) {
-        selectedImages.push(file);
-        formData.append("images", file); // ✅ Append each file to FormData
-    } 
-    else {
-        context.setAlertBox({
-            open: true,
-            error: true,
-            msg: "Please select a valid JPG or PNG image file"
-        });
-        return false;
-    }
-}
+                // ✅ Corrected Condition (Properly Check Image Type)
+                if (file && (file.type === 'image/jpeg' || file.type === 'image/jpg' || file.type === 'image/png' || file.type === 'image/webp')) {
+                    selectedImages.push(file);
+                    formData.append("images", file); // ✅ Append each file to FormData
+                } 
+                else {
+                    context.setAlertBox({
+                        open: true,
+                        error: true,
+                        msg: "Please select a valid JPG or PNG image file"
+                    });
+                    return false;
+                }
+            }
         } catch (error) {
             console.log(error)
         }
@@ -146,9 +132,6 @@ for (let i = 0; i < files.length; i++) {
         e.preventDefault();
 
         const appendedArray = [...previews, ...uniqueArray];
-        console.log(formFields);
-
-        // return
 
         img_arr = [];
 

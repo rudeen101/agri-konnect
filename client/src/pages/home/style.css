@@ -9,10 +9,6 @@
     --white: #ffffff;
 }
 
-.homeProducts{
-    /* margin-bottom: 200px; */
-    /* padding-bottom: 70px; */
-}
 
 .homeProducts .container-fluid .wrapper{
     margin-top: 20px;
@@ -22,17 +18,17 @@
     /* justify-content: space-between;
     align-items: center; */
 }
-.homeProducts .container-fluid .wrapper .row{
+.homeProducts  .wrapper .row{
     padding: 0px 5px !important
 }
-.homeProducts .container-fluid .wrapper .productCardHeader{
+.homeProducts .wrapper .productCardHeader{
     display: flex;
     justify-content: space-between;
     padding: 10px 10px;
     background-color: var(--dark-teal);
     color: white
 }
-.homeProducts .container-fluid .wrapper .productCardHeader h3{
+.homeProducts .wrapper .productCardHeader h3{
     font-size: 18px !important;
     text-transform:capitalize;
 }
@@ -98,39 +94,61 @@
 /******************************
 Category style
 *******************************/
-
-
-.categoryRow {
-    /* display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 16px;
-    padding: 16px; */
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* 4 equal columns */
-    gap: 20px; /* Space between boxes */
-    padding: 30px 0px;
-
+/* Categories Container */
+.categories-container {
+  padding: 50px 0;
+  width: 100%;
 }
 
-/* Responsive Design */
+.categories-wrapper {
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Categories Grid */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  width: 100%;
+}
+
+.category-item {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.category-item:hover {
+  transform: translateY(-5px);
+}
+
+/* Responsive Adjustments */
 @media (max-width: 1024px) {
-    .category-container {
-        justify-content: space-evenly;
-    }
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
 }
 
 @media (max-width: 768px) {
-    .categoryRow {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
+  .categories-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 15px;
+  }
 }
 
-@media (max-width: 480px) {
-    .categoryRow {
-        flex-direction: column;
-        align-items: center;
-    }
+@media (max-width: 576px) {
+  .categories-container {
+    padding: 15px 0;
+  }
+
+  .categories-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+@media (max-width: 400px) {
+  .categories-grid {
+    grid-template-columns: 1fr;
+  }
 }

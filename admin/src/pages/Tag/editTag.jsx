@@ -7,20 +7,10 @@ import HomeIcon from '@mui/icons-material/Home';
 import { Button, CircularProgress } from "@mui/material";
 
 import { FaCloudUploadAlt, FaRegImages } from "react-icons/fa";
-
-import MultipleFileUpload from "../../components/fileUploader/fileIploader";
-
-import image from "../../assets/images/quality.png"
-import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "../../utils/apiCalls";
-
-
+import { fetchDataFromApi, uploadImage, deleteImages } from "../../utils/apiCalls";
 import { IoMdClose } from "react-icons/io";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { MyContext } from "../../App";
-// import { uploadImage } from "../../utils/api";
-// import { deleteImages } from "../../utils/api";
-// import { deleteData, postData } from "../../utils/api";
-
 
 
 const EditTag = () =>{
@@ -37,13 +27,8 @@ const EditTag = () =>{
     });
 
     const [previews, setPreviews] = useState([])
-
     const context = useContext(MyContext);
-
     const { id } = useParams();
-    // const id = "672dc6170993f8d550111cd2";
-    console.log("cat-id",id)
-
     const formData = new FormData();
 
     const history = useNavigate();
@@ -64,7 +49,6 @@ const EditTag = () =>{
 
 
         fetchDataFromApi(`/api/category/${id.trim()}`).then((res) => {
-            console.log("*******",res)
             context.setProgress(20);  
             setCategory(res);
             setPreviews(res.images);
@@ -153,7 +137,6 @@ const EditTag = () =>{
 
 
     const removeImage = async (index, imgUrl) => {
-        console.log(imgUrl);
         const imgIndex = previews.indexOf(imgUrl);
         deleteImages(`/api/category/deleteImage?img=${imgUrl}`).then((res) => {
             context.setAlertBox({

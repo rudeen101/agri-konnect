@@ -50,7 +50,6 @@ const ListingTable = ({thData, tableData, searchPlaceholder, filterData, headerT
     };
 
     const handleStatusFilterChange = (event) => {
-        console.log("testing..", event.target.value)
         setStatusFilter(event.target.value);
         setPage(0); // Reset to the first page when filtering
     };

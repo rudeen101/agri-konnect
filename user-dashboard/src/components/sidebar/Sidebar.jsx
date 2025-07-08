@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import "./sidebar.css";
 import { Button } from "@mui/material";
 import { MdDashboard } from "react-icons/md";
@@ -11,13 +11,17 @@ import { IoIosSettings } from "react-icons/io";
 import { Link } from "react-router-dom";
 import { IoMdLogOut } from "react-icons/io";
 import { MyContext } from "../../App";
+import { BiSolidPurchaseTagAlt } from "react-icons/bi";
+
 
 
 const Sidebar = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [isToggleSubmenu, setIsToggleSubmenu] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     
     const context = useContext(MyContext)
+
 
     const isOpenSubmenu = (index) =>{
         setActiveTab(index);
@@ -49,9 +53,21 @@ const Sidebar = () => {
                      }`}>
                         <ul className="submenu">
                             <li>
-                                <Link to={"/product/listing"}>Product Listing</Link>
-                                <Link to={"/product/upload"}>Add Product</Link>
+                                <Link to={"/product/wishlist"}>My Wishlist</Link>
                             </li>
+                        {
+                            context?.isSeller &&
+                            <>
+                                <li>
+                                    <Link to={"/product/listing"}>Product Listing</Link>
+                                </li>
+                                <li>
+                                    <Link to={"/product/upload"}>Add Product</Link>
+                                </li>
+                            </>
+                        }
+
+                           
                         </ul>
                     </div>
                 </li>
@@ -70,30 +86,31 @@ const Sidebar = () => {
                             <li>
                                 <Link to={"/admin/myOrders/listing"}>My Orders</Link>
                             </li>
-                            <li>
-                                <Link to={"/admin/orders/listing"}>Orders</Link>
-                            </li>
                         </ul>
                     </div>
                 </li>
 
-                <li>
-                    <Button className={`w-100 ${activeTab === 12 && isToggleSubmenu ? 'active' : ''}`}
-                        onClick={()=> isOpenSubmenu(12)}>                        
-                            <span className="icon"><FaCartArrowDown /></span>
-                            Sales
-                        <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
-                    </Button>
-                    <div className={`submenuContainer ${activeTab === 12 && isToggleSubmenu === true ?
-                        'openMenu' : 'closeMenu'
-                     }`}>
-                        <ul className="submenu">
-                            <li>
-                                <Link to={"/admin/sales/listing"}>Sales Listing</Link>
-                            </li>
-                        </ul>
-                    </div>
-                </li>
+                {
+                    context?.isSeller &&
+                    <li>
+                        <Button className={`w-100 ${activeTab === 12 && isToggleSubmenu ? 'active' : ''}`}
+                            onClick={()=> isOpenSubmenu(12)}>                        
+                            <span className="icon"><BiSolidPurchaseTagAlt /></span>
+                                Sales
+                            <span className="arrow"><KeyboardArrowRightOutlinedIcon /></span>
+                        </Button>
+                        <div className={`submenuContainer ${activeTab === 12 && isToggleSubmenu === true ?
+                            'openMenu' : 'closeMenu'
+                        }`}>
+                            <ul className="submenu">
+                                <li>
+                                    <Link to={"/admin/sales/listing"}>Sales Listing</Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                }
+               
             
                 <li>
                     <Button className="w-100">

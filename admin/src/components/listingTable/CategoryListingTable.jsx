@@ -60,16 +60,17 @@ const CatgoryListingTable = ({thData, tableData, searchPlaceholder, filterData, 
             <h4>{headerText}</h4>
 
             {/* Search and Filter Controls */}
-                <div className="search-filter-container">
+                <div className="search-filter-container formElem">
                 <TextField
                     placeholder={searchPlaceholder}
+                    className='formElem'
                     variant="outlined"
                     size="small"
                     value={searchQuery}
                     onChange={handleSearchChange}
                     InputProps={{
                     startAdornment: (
-                        <InputAdornment position="start" >
+                        <InputAdornment position="start"className='formElem' >
                             <SearchIcon />
                         </InputAdornment>
                     ),

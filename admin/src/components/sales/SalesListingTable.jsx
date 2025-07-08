@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Table,
   TableBody,
@@ -66,7 +66,6 @@ const SalesListingTable = () => {
   };
 
   // Filter orders based on search query and status filter
-  console.log("orders",orders)
   const filteredOrders = orders?.filter((order) => {
     const matchesSearch = order?.orderedBy?.name.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
@@ -190,7 +189,6 @@ const SalesListingTable = () => {
 				</TableRow>
 				</TableHead>
 			<TableBody>
-				{console.log("sorted",sortedOrders)}
 			{sortedOrders?.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
 				.map((order, index) => (
 				<TableRow key={index}>

@@ -145,18 +145,7 @@ const AdminDetails = () => {
                         <div className="wrapper col-md-4 pt-3 pb-3 pl-4 pr-4">
                             <div className="sliderContainer">
                                 <h6 className="mb-5">Product Gallery</h6>
-                                {/* <Slider {...productSliderOptions} className="heroSlider">
-                                    {
-                                        productData?.images?.length !== 0 && productData?.images?.map((img, index) => {
-                                            return (
-                                                <div className="item" key={index}>
-                                                    <img src={img} alt="Farm product" className="w-100"/>
-                                                </div>
-                                            )
-                                        })
-                                    }
-                                    
-                                </Slider> */}
+                    
                                 <div className="heroSlider">
                                     <InnerImageZoom
                                         src={zoomImage}
@@ -189,15 +178,7 @@ const AdminDetails = () => {
                                 <h4>{productData?.name}</h4>
 
                                 <div className="productInfo mt-3">
-                                    {/* <div className="row">
-                                        <div className="col-sm-3 d-flex align-items-center">
-                                            <span className="icon"><MdBrandingWatermark /></span>
-                                            <span className="name">Brand</span>
-                                        </div>
-                                        <div className="col-sm-9">
-                                          <span>Agri-biz</span>
-                                        </div>
-                                    </div> */}
+                       
                                     <div className="row">
                                         <div className="col-sm-4 d-flex align-items-center">
                                             <span className="icon"><MdBrandingWatermark /></span>

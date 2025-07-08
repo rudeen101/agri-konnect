@@ -7,13 +7,11 @@ import Header from './components/Header/Header';
 import Dashboard from './pages/Dashboard/dashboard';
 import SearchBox from './components/searchbox/SearchBox';
 import Login from './pages/Login/login';
-import Signup from './pages/Signup/signup';
 import ProductListing from './pages/Products/products';
 import ProductDetails from './pages/Products/productDetails';
 import ProductUpload from './pages/Products/addProducts';
 import { createContext, useEffect, useState } from 'react';
 import Sidebar from './components/Sidebar/sidebar';
-import { FaSignHanging } from 'react-icons/fa6';
 import { fetchDataFromApi, postDataToApi, updateDataToApi, deleteDataFromApi } from "./utils/apiCalls";
 import Category from './pages/Category/category';
 import LoadingBar from 'react-top-loading-bar';
@@ -26,13 +24,6 @@ import EditCategory from './pages/Category/editCategory';
 import SubCategory from './pages/Category/SubCategory';
 import EditSubCategory from './pages/Category/editSubCategory';
 import AddSubCategory from './pages/Category/addSubCategory';
-
-import ProductSize from './pages/Products/productSize';
-import AddProductSize from './pages/Products/addProductSize';
-import EditProductSize from './pages/Products/editProductSize';
-import ProductWeight from './pages/Products/productWeight';
-import AddProductWeight from './pages/Products/addProductWeight';
-import EditProductWeight from './pages/Products/editProductWeight';
 import EditProduct from './pages/Products/editProduct';
 
 import HomeBannerSlideList from './pages/HomeBannerSlider/homeBannerSlideList';
@@ -160,18 +151,8 @@ const App = () => {
 
 	// Resize
 	useEffect(() => {
-		// const handleResize = () =>{
-		// 	setWindowwidth(window.innerWidth);
-		// }
-
-		// window.addEventListener('resize', handleResize);
-
 		fetchCategory();
 		fetchBanner()
-
-		// return () => {
-		// 	window.removeEventListener('resize', handleResize)
-		// }
 	}, []);
 
 	// Get category
@@ -321,12 +302,6 @@ const App = () => {
 									<ProductListing />
 								</PrivateRoute>
 
-							} />
-
-							<Route exact={true} path="/productSize" element={
-								<PrivateRoute>
-									<ProductSize />
-								</PrivateRoute>
 							} />
 
 							<Route exact={true} path="/product/edit/:id" element={<EditProduct />} /> 
