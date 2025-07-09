@@ -12,7 +12,6 @@ import './App.css';
 import LoginPage from './pages/Auth/LoginPage';
 import RegisterPage from "./pages/Auth/RegisterPage";
 import UnauthorizedPage from './pages/Auth/UnauthorizedPage';
-import OrderHistory from './pages/OrdersHistory/OrderHistory';
 import BuyerDashboard from './pages/Dashboard/BuyerDashboard';
 import SellerDashboard from './pages/Dashboard/SellerDashboard';
 import AdminDashboard from './pages/Dashboard/AdminDashboard';
@@ -28,6 +27,8 @@ import CreateCategory from "./pages/Admin/Category/createCategory";
 import Product from "./pages/Admin/Product/Product";
 import UpdateProduct from "./pages/Admin/Product/UpdateProduct";
 import CreateProduct from "./pages/Admin/Product/CreateProduct";
+import CreateOrder from "./pages/Orders/CreateOrder";
+import Orders from "./pages/Orders/Orders";
 
 const App = () => {
 	const { handleOverlayClick, isSidebarOpen } = useAppContext();
@@ -64,7 +65,9 @@ const App = () => {
 							{/* Buyer routes */}
 							<Route element={<ProtectedRoute roles={['buyer']} />}>
 								{/* <Route path="/products" element={<ProductList />} /> */}
-								<Route path="/orders" element={<OrderHistory />} />
+								{/* <Route path="/orders" element={<Order />} /> */}
+								<Route path="/orders" element={<Orders />} />
+								<Route path="/orders/create-order" element={<CreateOrder />} />
 								<Route path="/dashboard" element={<BuyerDashboard />} />
 							</Route>
 

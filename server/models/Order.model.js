@@ -6,9 +6,9 @@ const orderItemSchema = new mongoose.Schema({
         ref: 'Product',
         required: true
     },
-    variant: {
-        type: mongoose.Schema.Types.ObjectId
-    },
+    // variant: {
+    //     type: mongoose.Schema.Types.ObjectId
+    // },
     name: {
         type: String,
         required: true
@@ -27,22 +27,14 @@ const orderItemSchema = new mongoose.Schema({
         type: Number,
         default: 0
     },
-    taxRate: {
-        type: Number,
-        default: 0
-    },
-    image: String,
-    sku: String
-}, { _id: false });
-
-const shippingAddressSchema = new mongoose.Schema({
-    street: String,
-    city: String,
-    state: String,
-    postalCode: String,
-    country: String,
-    isBusiness: Boolean,
-    companyName: String
+    // taxRate: {
+    //     type: Number,
+    //     default: 0
+    // },
+       images: [{
+        url: String,
+    }],
+    // sku: String
 }, { _id: false });
 
 const paymentResultSchema = new mongoose.Schema({
@@ -52,73 +44,90 @@ const paymentResultSchema = new mongoose.Schema({
     email_address: String
 }, { _id: false });
 
+const paymentDetailsSchema = new mongoose.Schema({
+    accountName: String,
+    phoneNumber: String,
+}, { _id: false });
+
+const shippingAddressSchema = new mongoose.Schema({
+  address: String,
+  city: String,
+  county: String,
+  country: {
+    type: String,
+    default: "Liberia"
+  },
+  isBusiness: Boolean,
+  businessName: String
+}, { _id: false });
+
 const orderSchema = new mongoose.Schema({
-    user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    orderItems: [orderItemSchema],
-    shippingAddress: shippingAddressSchema,
-    paymentMethod: {
-        type: String,
-        required: true,
-        enum: ['paypal', 'stripe', 'bank', 'cod']
-    },
-    paymentResult: paymentResultSchema,
-    itemsPrice: {
-        type: Number,
-        required: true,
-        default: 0.0
-    },
-    taxPrice: {
-        type: Number,
-        required: true,
-        default: 0.0
-    },
-    shippingPrice: {
-        type: Number,
-        required: true,
-        default: 0.0
-    },
-    discountAmount: {
-        type: Number,
-        default: 0.0
-    },
-    totalPrice: {
-        type: Number,
-        required: true,
-        default: 0.0
-    },
-    isPaid: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    paidAt: Date,
-    isDelivered: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
-    deliveredAt: Date,
-    status: {
-        type: String,
-        enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'],
-        default: 'pending'
-    },
-    trackingNumber: String,
-    carrier: String,
-    notes: String
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
+  orderItems: [orderItemSchema],
+  shippingAddress: shippingAddressSchema,
+  paymentDetails: paymentDetailsSchema,
+  paymentMethod: {
+    type: String,
+    required: true
+  },
+  itemsPrice: {
+    type: Number,
+    required: true,
+    default: 0.0
+  },
+  shippingPrice: {
+    type: Number,
+    required: true,
+    default: 0.0
+  },
+  shippingMethod: {
+    type: String,
+    required: true,
+    default: "Standard"
+  },
+  discountAmount: {
+    type: Number,
+    default: 0.0
+  },
+  totalPrice: {
+    type: Number,
+    required: true,
+    default: 0.0
+  },
+  isPaid: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  paidAt: Date,
+  isDelivered: {
+    type: Boolean,
+    required: true,
+    default: false
+  },
+  deliveredAt: Date,
+  status: {
+    type: String,
+    enum: ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'refunded'],
+    default: 'pending'
+  },
+  trackingNumber: String,
+  carrier: String,
+  notes: String
 }, {
-    timestamps: true,
-    toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+  timestamps: true,
+  toJSON: { virtuals: true },
+  toObject: { virtuals: true }
 });
 
-// Virtual for formatted order number
+// Virtual for order ID
 orderSchema.virtual('orderNumber').get(function() {
-    return `ORD-${this._id.toString().substring(18, 24).toUpperCase()}`;
+  if (!this._id) return 'ORD-N/A';
+  return `ORD-${this._id.toString().substring(18, 24).toUpperCase()}`;
 });
 
 // Virtual for estimated delivery date
@@ -130,21 +139,22 @@ orderSchema.virtual('estimatedDelivery').get(function() {
 
 // Pre-save hook to calculate prices
 orderSchema.pre('save', function(next) {
-    // Calculate items price
+  try {
     this.itemsPrice = this.orderItems.reduce(
-        (acc, item) => acc + (item.price * item.quantity),
-        0
+      (acc, item) => acc + (item.price * item.quantity),
+      0
     );
-
-    // Calculate total price
+    
     this.totalPrice = (
-        this.itemsPrice +
-        this.taxPrice +
-        this.shippingPrice -
-        this.discountAmount
+      this.itemsPrice +
+      this.shippingPrice -
+      this.discountAmount
     ).toFixed(2);
-
+    
     next();
+  } catch (err) {
+    next(err);
+  }
 });
 
 // Static method to get orders by user
@@ -178,6 +188,43 @@ orderSchema.statics.getOrderStats = async function() {
     ]);
 
     return stats[0] || {};
+};
+
+orderSchema.statics.getOrderStats = async function() {
+  try {
+    const stats = await this.aggregate([
+        {
+            $group: {
+                _id: null,
+                numOrders: { $sum: 1 },
+                totalSales: { $sum: '$totalPrice' },
+                avgOrderValue: { $avg: '$totalPrice' },
+                minOrder: { $min: '$totalPrice' },
+                maxOrder: { $max: '$totalPrice' }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                numOrders: 1,
+                totalSales: 1,
+                avgOrderValue: { $round: ['$avgOrderValue', 2] },
+                minOrder: 1,
+                maxOrder: 1
+            }
+        }
+    ]);
+    return stats[0] || {};
+  } catch (err) {
+    console.error('Order stats error:', err);
+    return {
+      numOrders: 0,
+      totalSales: 0,
+      avgOrderValue: 0,
+      minOrder: 0,
+      maxOrder: 0
+    };
+  }
 };
 
 // Indexes

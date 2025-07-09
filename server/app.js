@@ -109,8 +109,6 @@ app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
 
-
-
 app.use((err, req, res, next) => {
   console.error('Express error:', err);
   res.status(err.statusCode || 500).json({

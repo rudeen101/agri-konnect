@@ -494,6 +494,40 @@ body {
     }
 }
 
+/**************
+Status Style
+****************/
+        .status-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+
+        .status-pending {
+            background-color: rgba(255, 190, 11, 0.1);
+            color: var(--warning);
+        }
+
+        .status-processing {
+            background-color: rgba(58, 134, 255, 0.1);
+            color: var(--primary);
+        }
+
+        .status-completed {
+            background-color: rgba(6, 214, 160, 0.1);
+            color: var(--success);
+        }
+
+        .status-cancelled {
+            background-color: rgba(239, 71, 111, 0.1);
+            color: var(--danger);
+        }
+
+
+
+
 
 
 

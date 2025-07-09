@@ -1,5 +1,4 @@
-import express from 'express';
-import Order from '../models/Order.model.js';
+import Order from "../models/Order.model.js";
 
 // Create order (buyer only)
 export const createOrder = async (req, res) => {
@@ -11,6 +10,11 @@ export const createOrder = async (req, res) => {
     });
     res.status(201).json({ success: true, data: order });
 }
+
+export const getOrders = async (req, res) => {
+    res.status(200).json(res.orderAdvancedResults);
+
+};
 
 // Get user's orders (buyer)
 export const myOrders = async (req, res) => {

@@ -10,7 +10,7 @@ import {
     // removeUserRole
 } from '../controllers/user.controller.js';
 // import { protect, authorize } from '../middlewares/auth.middleware.js';
-import advancedResults from '../middlewares/advanceResults.middleware.js';
+import advancedResults from '../middlewares/orderAdvanceResults.middleware.js.js';
 import User from '../models/User.model.js';
 
 const router = express.Router();
