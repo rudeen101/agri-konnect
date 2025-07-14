@@ -15,7 +15,7 @@ import {
     requireRole 
 } from '../middlewares/auth.middleware.js';
 
-import advancedResults from '../middlewares/orderAdvanceResults.middleware.js.js'
+import advancedResults from '../middlewares/orderAdvancedResults.middleware.js'
 import CategoryModel from '../models/Category.model.js';
 
 const router = express.Router();

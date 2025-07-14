@@ -8,14 +8,14 @@ import {
 } from '../middlewares/auth.middleware.js';
 import {
   createOrder,
-  getOrders
+  getOrders,
   // myOrders,
-  // orderStatus,
+  orderStatus,
+  getOrderStats,
   // orderProcessing,
 } from '../controllers/order.controller.js';
 import { PERMISSIONS } from '../utils/permissions.js';
-import advanceResults from '../middlewares/orderAdvanceResults.middleware.js.js';
-import orderAdvanceResults from '../middlewares/orderAdvanceResults.middleware.js.js';
+import orderAdvancedResults from '../middlewares/orderAdvancedResults.middleware.js';
 import Order from '../models/Order.model.js';
 
 const router = express.Router();
@@ -24,14 +24,11 @@ router.get(
   '/',
   authenticate,
   requireRole('admin'),
-  orderAdvanceResults(Order, [{
-      path: 'user',
-      select: 'name email'
-    },
-    {
-      path: 'orderItems.product',
-      select: 'name price images'
-    }]),
+  orderAdvancedResults(Order, { 
+    path: 'user', 
+    select: 'name contact',
+    model: 'User' // Explicitly specify the model
+  }),
   getOrders
 );
 
@@ -50,15 +47,16 @@ router.post('/create',
 // );
 
 // Update order status (seller, agent, or admin)
-// router.put('/:id/status',
-//   authenticate,
-//   requireAnyPermission(
-//     PERMISSIONS.SELLER.UPDATE_ORDER_STATUS,
-//     PERMISSIONS.AGENT.UPDATE_ANY_ORDER,
-//     PERMISSIONS.ADMIN.MANAGE_ORDERS
-//   ),
-//   orderStatus
-// );
+router.put('/:id/status',
+  authenticate,
+  // requireAnyPermission(
+  //   PERMISSIONS.SELLER.UPDATE_ORDER_STATUS,
+  //   PERMISSIONS.AGENT.UPDATE_ANY_ORDER,
+  //   PERMISSIONS.ADMIN.MANAGE_ORDERS
+  // ),
+  requireRole('admin'),
+  orderStatus
+);
 
 // // Agent-specific order processing
 // router.post('/:id/process',
@@ -67,5 +65,12 @@ router.post('/create',
 //   requirePermission(PERMISSIONS.AGENT.PROCESS_ORDERS),
 //   orderProcessing
 // );
+
+router.get('/stats',
+  authenticate, 
+  requireRole('admin'), 
+  getOrderStats
+);
+
 
 export default router;

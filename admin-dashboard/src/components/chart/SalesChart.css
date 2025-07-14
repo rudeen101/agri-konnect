@@ -1,0 +1,48 @@
+/* SalesChart.css */
+
+.sales-chart-container {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+  max-width: 100%;
+  width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
+.sales-chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.sales-chart-header h2 {
+  font-size: 1.5rem;
+  margin: 0;
+  color: #111827;
+}
+
+.sales-chart-header select {
+  padding: 6px 12px;
+  font-size: 0.9rem;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  outline: none;
+}
+
+.sales-chart-header select:focus {
+  border-color: var(--primary);
+}
+
+.loading-text {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+}
+
+.chart-actions .active {
+    background-color: var(--primary);
+    color: white
+}

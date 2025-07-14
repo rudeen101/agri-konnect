@@ -1,9 +1,35 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import "./Dashboard.css";
 import Sidebar from "../../components/layout/Sidebar/Sidebar";
 import Header from "../../components/layout/Header/Header";
+import { fetchDataFromApi } from '../../utils/apiCalls'; 
+import SalesChart from "../../components/chart/SalesChart";
+
 
 const Dashboard = () => {
+    const [dashboardStats, setDashboardStats] = useState([])
+    const [recentActivities, setRecentActvities] = useState([])
+
+    // Fetch dashboard recent activities 
+    useEffect(() => {
+        fetchDataFromApi('/api/v1/dashboard/activity').then((res) =>{
+            console.log("Ativities", res)
+            setRecentActvities(res.activities)
+        }).catch((error) => {
+            console.error('Error fetching recent activities:', error);
+        });
+    }, []);
+
+    // Fetch dashboard stats 
+    useEffect(() => {
+        fetchDataFromApi('/api/v1/dashboard/stats').then((res) =>{
+            console.log("dashboardStats", res.data.recentOrders[0].totalCount[0].count)
+            setDashboardStats(res.data)
+        }).catch((error) => {
+            console.error('Error fetching dashboard stats:', error);
+        });
+    }, []);
+    
     return (
         <div className="container">
             <Sidebar />
@@ -18,9 +44,10 @@ const Dashboard = () => {
                                         <i className="fas fa-users"></i>
                                     </div>
                                 </div>
-                                <div className="card-value">1,248</div>
+                                <div className="card-value">{dashboardStats?.userCount}</div>
                                 <div className="card-footer">
-                                    <i className="fas fa-arrow-up"></i> 12.5% from last month
+                                    {/* <i className="fas fa-arrow-up"></i>  */}
+                                    from last month
                                 </div>
                             </div>
 
@@ -31,24 +58,25 @@ const Dashboard = () => {
                                         <i className="fas fa-box"></i>
                                     </div>
                                 </div>
-                                <div className="card-value">568</div>
+                                <div className="card-value">{dashboardStats?.productCount}</div>
                                 <div className="card-footer">
-                                    <i className="fas fa-arrow-up"></i> 5.3% from last month
+                                    {/* <i className="fas fa-arrow-up"></i>  */}
+                                    from last month
                                 </div>
                             </div>
 
-                            <div className="card">
+                            {/* <div className="card">
                                 <div className="card-header">
                                     <div className="card-title">New Orders</div>
                                     <div className="card-icon orders">
                                         <i className="fas fa-shopping-cart"></i>
                                     </div>
                                 </div>
-                                <div className="card-value">324</div>
-                                <div className="card-footer danger">
-                                    <i className="fas fa-arrow-down"></i> 2.1% from last month
+                                <div className="card-value">{dashboardStats?.recentOrders[0]?.totalCount[0]?.count}</div>
+                                <div className="card-footer primary-dark">
+                                    from last month
                                 </div>
-                            </div>
+                            </div> */}
 
                             <div className="card">
                                 <div className="card-header">
@@ -57,16 +85,17 @@ const Dashboard = () => {
                                         <i className="fas fa-dollar-sign"></i>
                                     </div>
                                 </div>
-                                <div className="card-value">$24,780</div>
+                                <div className="card-value">${dashboardStats?.revenue?.totalRevenue}</div>
                                 <div className="card-footer">
-                                    <i className="fas fa-arrow-up"></i> 8.7% from last month
+                                    {/* <i className="fas fa-arrow-up"></i>  */}
+                                    from last month
                                 </div>
                             </div>
                         </div>
 
                         {/* Charts Section */}
                         <div className="charts">
-                            <div className="chart-card">
+                            {/* <div className="chart-card">
                                 <div className="chart-header">
                                     <div className="chart-title">Revenue Overview</div>
                                     <div className="chart-actions">
@@ -75,10 +104,11 @@ const Dashboard = () => {
                                         <button>Year</button>
                                     </div>
                                 </div>
-                                <div className="chart-placeholder">
-                                    [Revenue Chart Placeholder]
+                                <div className="chart-placeolder">
+                                    <SalesChart></SalesChart>
                                 </div>
-                            </div>
+                            </div> */}
+                            <SalesChart></SalesChart>
 
                             <div className="chart-card">
                                 <div className="chart-header">
@@ -98,20 +128,25 @@ const Dashboard = () => {
                             <div className="activity-header">
                                 <div className="activity-title">Recent Activity</div>
                                 <div className="chart-actions">
-                                    <button>View All</button>
+                                    {/* <button>View All</button> */}
                                 </div>
                             </div>
                             <ul className="activity-list">
-                                <li className="activity-item">
-                                    <div className="activity-icon">
-                                        <i className="fas fa-user-plus"></i>
-                                    </div>
-                                    <div className="activity-content">
-                                        <div className="activity-message">New user registered - John Doe</div>
-                                        <div className="activity-time">10 minutes ago</div>
-                                    </div>
-                                </li>
-                                <li className="activity-item">
+                                {
+                                    recentActivities?.map((activity) => (
+                                        <li className="activity-item">
+                                            <div className="activity-icon">
+                                                <i className={activity.icon}></i>
+                                            </div>
+                                            <div className="activity-content">
+                                                <div className="activity-message">{activity.message}</div>
+                                                <div className="activity-time">{activity.timeAgo}</div>
+                                            </div>
+                                        </li>
+                                    ))
+                                }
+                             
+                                {/* <li className="activity-item">
                                     <div className="activity-icon">
                                         <i className="fas fa-shopping-cart"></i>
                                     </div>
@@ -137,7 +172,7 @@ const Dashboard = () => {
                                         <div className="activity-message">New customer review received</div>
                                         <div className="activity-time">5 hours ago</div>
                                     </div>
-                                </li>
+                                </li> */}
                             </ul>
                         </div>
                     </div>

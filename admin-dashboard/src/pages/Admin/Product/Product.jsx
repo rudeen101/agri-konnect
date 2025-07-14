@@ -64,6 +64,8 @@ const Product = () => {
     }, [activeMenuId, sidebarOpen, deleteModalOpen]);
 
     const toggleActionMenu = (id) => {
+          console.log("toggle", id)
+        console.log("activeMenuId", activeMenuId)
         setActiveMenuId(activeMenuId === id ? null : id);
     };
 
@@ -113,6 +115,8 @@ const Product = () => {
         );
     });
 
+    console.log("filteredProducts", filteredProducts)
+
     const currentProduct = currentProductId ? categories[currentProductId] : null;
     const userToDelete = categoryToDeleteId ? categories[categoryToDeleteId] : null;
 
@@ -142,7 +146,7 @@ const Product = () => {
                                             onChange={handleSearch}
                                         />
                                     </div>
-                                    <Link to={"/admin/create-category"}>
+                                    <Link to={"/admin/create-product"}>
                                         <button className="btn btn-primary">
                                             <FontAwesomeIcon icon={faPlus} /> <span className="btn-text">Add Product</span>
                                         </button>

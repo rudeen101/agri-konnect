@@ -91,6 +91,10 @@ const productSchema = new mongoose.Schema({
         min: [0, 'Inventory cannot be negative'],
         default: 0
     },
+    inventoryUpdatedAt: {
+        type: Date,
+        default: null
+    },
     // variants: [variantSchema],
     images: [{
         url: String,
@@ -124,7 +128,7 @@ const productSchema = new mongoose.Schema({
             default: 0
         }
     },
-    lowStockThreshold: {
+    lowInventoryThreshold: {
         type: Number,
         default: 10
     },
@@ -187,6 +191,10 @@ const productSchema = new mongoose.Schema({
     updatedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
+    },
+    updatedAt: {
+        type: Date,
+        default: Date.now
     }
 }, {
     timestamps: true,
@@ -194,18 +202,6 @@ const productSchema = new mongoose.Schema({
     toObject: { virtuals: true }
 });
 
-// productSchema.methods.addImage = async function(imageFile) {
-//     const fileManager = new FileManager();
-//     const { path: filePath } = await fileManager.saveFile(imageFile, `products/${this._id}`);
-    
-//     this.images.push({
-//         path: filePath,
-//         isPrimary: this.images.length === 0
-//     });
-    
-//     await this.save();
-//     return filePath;
-// };
 
 // Virtual for product URL
 productSchema.virtual('url').get(function() {
@@ -227,6 +223,26 @@ productSchema.virtual('discountPercentage').get(function() {
 },
  
 );
+
+// Middleware to update timestamps and track inventory changes
+productSchema.pre('save', function(next) {
+    const product = this;
+  
+    // Update general timestamps
+    product.updatedAt = new Date();
+  
+    // Check if inventory is being modified
+    if (product.isModified('inventory')) {
+        // Get previous inventory value
+        product.constructor.findById(product._id)
+        
+        // Update inventory update timestamp
+        product.inventoryUpdatedAt = new Date();
+    } 
+    next();
+
+});
+
 
 
 // Indexes

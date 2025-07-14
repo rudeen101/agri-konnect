@@ -25,6 +25,7 @@ import userRoutes from "./routes/user.routes.js";
 import categoryRoutes from './routes/category.routes.js';
 import productRoutes from './routes/product.routes.js';
 import orderRoutes from './routes/order.routes.js'
+import dashboardRoutes from './routes/dashboard.routes.js'
 
 const app = express();
 app.use(express.json());
@@ -108,6 +109,7 @@ app.use('/api/v1/user', userRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/product', productRoutes);
 app.use('/api/v1/order', orderRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 
 app.use((err, req, res, next) => {
   console.error('Express error:', err);
